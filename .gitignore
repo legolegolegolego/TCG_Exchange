@@ -39,3 +39,5 @@ out/
 ### Mio ###
 externo/
 *.pdf
+*.pem
+src/main/java/resources/certs/
