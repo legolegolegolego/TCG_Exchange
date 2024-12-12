@@ -1,4 +1,4 @@
-# Trading Card Game API REST
+# TCG Commerce API REST
 
 ## Descripción
 Este proyecto trata sobre la implementación de una __API REST segura__ donde se compran y venden cartas del juego
@@ -102,10 +102,11 @@ Estas son las tablas que contendrá:
 1. **Usuarios**
    - `id` autoincremental.
    - `username` único e imprescindible (not null).
-   - `password` >=6 carácteres alfanuméricos, sin símbolos.
+   - `password` >=6 carácteres alfanuméricos, sin símbolos. Comprobar que coindicen password en el login con la almacenada en la bd
+                y al registro: las dos password.
 
 2. **Cartas**
-   - `id` autoincremental.
+   - `id` adjudicado (no autoincremental).
    - `nombre` único e imprescindible (not null).
    - `tipo` que sea uno de estos: `FUEGO`, `AGUA`, `RAYO`, `LUCHA`, `DRAGON`, `PSIQUICO`, `PLANTA`, `OSCURO`, `METAL`, `NORMAL`.
    - `vida` entre 10 y 300.
@@ -115,8 +116,8 @@ Estas son las tablas que contendrá:
 3. **Transacciones**
    - `id` autoincremental.
    - `precio` mayor que 0.
-   - `id_vendedor` que esté en la base de datos.
-   - `id_comprador` que esté en la base de datos.
+   - `id_vendedor` que esté en la base de datos. No puede ser el mismo que el id_comprador.
+   - `id_comprador` que esté en la base de datos. No puede ser el mismo que el id_vendedor.
    - `id_carta` que esté en la base de datos.
 
 ## Excepciones
