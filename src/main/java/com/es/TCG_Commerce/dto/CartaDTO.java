@@ -3,6 +3,7 @@ package com.es.TCG_Commerce.dto;
 import java.util.List;
 
 public class CartaDTO {
+    private Long id;
     private String nombre;
     private String tipo;
     private int vida;
@@ -12,12 +13,29 @@ public class CartaDTO {
     public CartaDTO() {
     }
 
+    public CartaDTO(Long id, String nombre, String tipo, int vida, int ataque, List<UsuarioDTO> vendedores) {
+        this.id = id;
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.vida = vida;
+        this.ataque = ataque;
+        this.vendedores = vendedores;
+    }
+
     public CartaDTO(String nombre, String tipo, int vida, int ataque, List<UsuarioDTO> vendedores) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.vida = vida;
         this.ataque = ataque;
         this.vendedores = vendedores;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {

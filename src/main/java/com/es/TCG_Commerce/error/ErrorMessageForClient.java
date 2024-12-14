@@ -1,9 +1,10 @@
-package com.es.jwtsecurity.error;
+package com.es.TCG_Commerce.error;
 
 public class ErrorMessageForClient {
 
     private String mensaje;
     private String uri;
+
     public ErrorMessageForClient(String mensaje, String uri) {
         this.mensaje = mensaje;
         this.uri = uri;

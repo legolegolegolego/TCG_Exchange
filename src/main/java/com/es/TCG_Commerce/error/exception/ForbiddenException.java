@@ -1,7 +1,10 @@
 package com.es.TCG_Commerce.error.exception;
 
 public class ForbiddenException extends RuntimeException {
-  public ForbiddenException(String message) {
-    super(message);
-  }
+
+    private static final String DESCRIPCION = "Forbidden (403)";
+
+    public ForbiddenException(String mensaje) {
+        super(DESCRIPCION + ". " + mensaje);
+    }
 }

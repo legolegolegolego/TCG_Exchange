@@ -1,4 +1,4 @@
-package com.es.jwtsecurity.error.exception;
+package com.es.TCG_Commerce.error.exception;
 
 public class NotFoundException extends RuntimeException {
 

@@ -11,6 +11,11 @@ public class UsuarioRegisterDTO {
     public UsuarioRegisterDTO() {
     }
 
+    public UsuarioRegisterDTO(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public UsuarioRegisterDTO(String username, String password, String password2) {
         this.username = username;
         this.password = password;

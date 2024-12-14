@@ -1,9 +1,8 @@
-package com.es.jwtsecurity.error;
+package com.es.TCG_Commerce.error;
 
-import com.es.jwtsecurity.error.exception.*;
+import com.es.TCG_Commerce.error.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,24 +30,24 @@ public class APIExceptionHandler {
         return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
     }
 
-    @ExceptionHandler({DuplicateException.class, DataIntegrityViolationException.class})
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ResponseBody
-    public ErrorMessageForClient handleDuplicate(HttpServletRequest request, Exception e) {
-        return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
-    }
-
-    @ExceptionHandler({NotAuthorizedException.class, AuthenticationException.class, HttpClientErrorException.Forbidden.class})
+    @ExceptionHandler({UnauthorizedException.class, AuthenticationException.class, HttpClientErrorException.Forbidden.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    public ErrorMessageForClient handleNotAuthorized(HttpServletRequest request, Exception e) {
+    public ErrorMessageForClient handleUnauthorized(HttpServletRequest request, Exception e) {
         return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
     }
 
-    @ExceptionHandler({GenericInternalException.class, Exception.class})
+    @ExceptionHandler({InternalServerErrorException.class, Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public ErrorMessageForClient handleGeneric(HttpServletRequest request, Exception e) {
+    public ErrorMessageForClient handleInternalServerError(HttpServletRequest request, Exception e) {
+        return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
+    }
+
+    @ExceptionHandler({ForbiddenException.class, ForbiddenException.class})
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public ErrorMessageForClient handleForbidden(HttpServletRequest request, Exception e) {
         return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
     }
 

@@ -1,10 +1,13 @@
 package com.es.TCG_Commerce.utils;
 
-import com.es.TCG_Commerce.dto.CartaDTO;
-import com.es.TCG_Commerce.dto.UsuarioDTO;
+import com.es.TCG_Commerce.dto.*;
 import com.es.TCG_Commerce.model.Carta;
+import com.es.TCG_Commerce.model.Transaccion;
 import com.es.TCG_Commerce.model.Usuario;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class Mapper {
@@ -17,6 +20,20 @@ public class Mapper {
         );
     }
 
+    public UsuarioLoginDTO entityLoginToDTO(Usuario u) {
+        return new UsuarioLoginDTO(
+                u.getUsername(),
+                u.getPassword()
+        );
+    }
+
+    public UsuarioRegisterDTO entityRegisterToDTO(Usuario u) {
+        return new UsuarioRegisterDTO(
+                u.getUsername(),
+                u.getPassword()
+        );
+    }
+
     public Usuario DTOToEntity(UsuarioDTO uDTO){
         return new Usuario(
                 uDTO.getUsername(),
@@ -25,25 +42,72 @@ public class Mapper {
         );
     }
 
+    public Usuario DTOToEntity(UsuarioLoginDTO ulDTO){
+        return new Usuario(
+                ulDTO.getUsername(),
+                ulDTO.getPassword()
+        );
+    }
+
+    public Usuario DTOToEntity(UsuarioRegisterDTO urDTO){
+        return new Usuario(
+                urDTO.getUsername(),
+                urDTO.getPassword()
+        );
+    }
+
     public CartaDTO entityToDTO(Carta c){
+
+        // tengo que mapear antes la lista de usuarios, puesto que en cartaDTO son UsuariosDTO:
+        List<UsuarioDTO> uDTOs = new ArrayList<>();
+        for (Usuario u : c.getVendedores()) {
+            uDTOs.add(this.entityToDTO(u));
+        }
+
         return new CartaDTO(
+                c.getId(),
                 c.getNombre(),
                 c.getTipo(),
                 c.getVida(),
                 c.getAtaque(),
-                c.getVendedores()
+                uDTOs
         );
     }
 
     public Carta DTOToEntity(CartaDTO cDTO){
+
+        List<Usuario> us = new ArrayList<>();
+        for (UsuarioDTO uDTO : cDTO.getVendedores()) {
+            us.add(this.DTOToEntity(uDTO));
+        }
+
         return new Carta(
-                cDTO.getId,
+                cDTO.getId(),
                 cDTO.getNombre(),
                 cDTO.getTipo(),
                 cDTO.getVida(),
                 cDTO.getAtaque(),
-                cDTO.getVendedores()
+                us
         );
     }
+
+    public TransaccionDTO entityToDTO(Transaccion t) {
+        return new TransaccionDTO(
+                t.getPrecio(),
+                t.getId_vendedor(),
+                t.getId_comprador(),
+                t.getId_carta()
+        );
+    }
+
+    public Transaccion DTOToEntity(TransaccionDTO tDTO) {
+        return new Transaccion(
+                tDTO.getPrecio(),
+                tDTO.getId_vendedor(),
+                tDTO.getId_comprador(),
+                tDTO.getId_carta()
+        );
+    }
+
 
 }

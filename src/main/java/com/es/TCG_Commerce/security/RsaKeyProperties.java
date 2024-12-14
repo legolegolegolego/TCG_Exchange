@@ -1,4 +1,4 @@
-package com.es.jwtsecurity.security;
+package com.es.TCG_Commerce.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
