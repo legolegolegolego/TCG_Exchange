@@ -34,7 +34,7 @@ Estas son las tablas que contendrá:
     - `tipo`(String): Tipo de la carta.
     - `vida`(int): Puntos de vida de la carta.
     - `ataque`(int): Puntos de ataque de la carta.
-    - `vendedores` (List<Usuario>): Lista de usuarios que venden la carta.
+    - `id_user` (Long): Identificador del usuario que tiene la carta.
 
 3. **Transacciones**:
     - `id` (Long): Identificador único de la transacción.
@@ -42,6 +42,9 @@ Estas son las tablas que contendrá:
     - `id_vendedor`(Long): Identificador único del usuario vendedor.
     - `id_comprador`(Long): Identificador único del usuario comprador.
     - `id_carta`(Long): Identificador único de la carta.
+
+## Diagrama Entidad-Relación
+![Imagen Diagrama Entidad-Relación](./images/ER-TCG.png)
 
 ## Endpoints
 1. **Autenticación**:
@@ -83,16 +86,16 @@ Estas son las tablas que contendrá:
    - **RUTAS PROTEGIDAS** Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
    - `GET /cartas/{id}`: Devuelve la información de una carta.
       - **Entrada**: Path variable con el ID de la carta.
-      - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
+      - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
    - `GET /cartas/byNombre/{nombre}`: Devuelve la información de una carta.
       - **Entrada**: Path variable con el nombre de la carta.
-      - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
+      - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
    - `GET /cartas/asc`: Devuelve todos las cartas almacenadas en la base de datos ordenadas ascendentemente por su *nombre*.
       - **Entrada**: Uri.
-      - **Salida**: Lista con las cartas ordenadas ascendentemente: JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
+      - **Salida**: Lista con las cartas ordenadas ascendentemente: JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
    - `GET /cartas/desc`: Devuelve todos las cartas almacenadas en la base de datos ordenadas descendentemente por su *nombre*.
        - **Entrada**: Uri.
-      - **Salida**: Lista con los cartas ordenadas descendentemente : JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
+      - **Salida**: Lista con los cartas ordenadas descendentemente : JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
    - `POST /cartas`: Permite insertar una nueva carta.
       - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
       - **Entrada**: JSON con `nombre`, `tipo`, `vida` y `ataque`.
