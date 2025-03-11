@@ -1,7 +1,9 @@
 package com.es.TCG_Commerce.error.exception;
 
 public class DuplicateException extends RuntimeException {
-  public DuplicateException(String message) {
-    super(message);
-  }
+    private static final String DESCRIPCION = "Duplicate (419)";
+
+    public DuplicateException(String mensaje) {
+        super(DESCRIPCION +". "+ mensaje);
+    }
 }

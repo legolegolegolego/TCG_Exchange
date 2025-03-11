@@ -1,6 +1,6 @@
 # TCG Commerce API REST
 
-## Descripción
+## Descripción / idea
 Este proyecto trata sobre la implementación de una __API REST segura__ donde se compran y venden cartas del juego
 de cartas de Pokemon:
 __Trading Card Game (TCG)__.
@@ -9,8 +9,8 @@ En ella, los usuarios podrán comprar y vender cartas, sirviendo la app como pá
 Los administradores podrán insertar y eliminar cartas que cumplan los requisitos.
 
 ## Justificación
-Esta aplicación es necesaria para que los usuarios puedan completar sus mazos con las cartas que quieran si que adeuden
-a sus padres gastando dinero en sobres, a parte, esta herramienta online sirve para la inmediatez y facilidad de obtención
+Esta aplicación es necesaria para que los usuarios puedan completar sus mazos con las cartas que quieran sin que adeuden
+a sus padres gastando dinero en sobres, aparte, esta herramienta online sirve para la inmediatez y facilidad de obtención
 de estas cartas, sin que tengan que ir a eventos presenciales una vez cada lustro.
 
 ## Tablas
@@ -54,49 +54,71 @@ Estas son las tablas que contendrá:
    - `POST /usuarios/register`: Permite al usuario registrarse.
       - **RUTA PÚBLICA** Todas las peticiones a este endpoint deben permitirse.
       - **Entrada**: JSON con `nombre`, `password` y `roles`.
-      - **Salida esperada**: JSON con el usuario registrado.
+      - **Salida**: JSON con el usuario registrado.
 
-3. **Info de Usuario**:
+3. **Gestión de Usuario**:
    - `GET /usuarios/{nombre}`: Permite al usuario consultar su información.
       - **RUTA PROTEGIDA** Sólo los usuarios autenticados pueden acceder a este recurso.
       - Usuarios con rol ADMIN pueden acceder a este recurso.
       - Usuarios con el mismo nombre que el que se consulta pueden acceder a este recurso.
       - Usuarios con rol USER con nombre diferente a este recurso *NO* pueden acceder al mismo.
-      - **Salida esperada**: JSON con el usuario consultado.
+      - **Entrada**: Path variable del nombre del usuario.
+      - **Salida**: JSON con el usuario consultado.
    - `PUT /usuarios/{nombre}`: Permite actualizar la información de un usuario.
-   - **RUTA PROTEGIDA** Sólo los usuarios autenticados pueden acceder a este recurso.
-      - Usuarios con rol ADMIN pueden acceder a este recurso.
-      - Usuarios con el mismo nombre que el que se consulta pueden acceder a este recurso.
-      - Usuarios con rol USER con nombre diferente a este recurso *NO* pueden acceder al mismo.
+     - **RUTA PROTEGIDA** Sólo los usuarios autenticados pueden acceder a este recurso.
+     - Usuarios con rol ADMIN pueden acceder a este recurso.
+     - Usuarios con el mismo nombre que el que se consulta pueden acceder a este recurso.
+     - Usuarios con rol USER con nombre diferente a este recurso *NO* pueden acceder al mismo.
+     - **Entrada**: Path variable del nombre del usuario y JSON con los nuevos datos del usuario.
+     - **Salida**: JSON con los datos actualizados del usuario.
+   - `DELETE /usuarios/{nombre}`: Permite eliminar un usuario.
+     - **RUTA PROTEGIDA** Sólo los usuarios autenticados pueden acceder a este recurso.
+     - Usuarios con rol ADMIN pueden acceder a este recurso.
+     - Usuarios con el mismo nombre que el que se consulta pueden acceder a este recurso.
+     - Usuarios con rol USER con nombre diferente a este recurso *NO* pueden acceder al mismo.
+     - **Entrada**: Path variable del nombre del usuario.
+     - **Salida**: JSON con los datos del usuario eliminado.
 
 4. **Gestión de Cartas**:
-   - *RUTAS PROTEGIDAS* Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
+   - **RUTAS PROTEGIDAS** Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
    - `GET /cartas/{id}`: Devuelve la información de una carta.
-      - **Entrada**: ID de la carta.
+      - **Entrada**: Path variable con el ID de la carta.
       - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
    - `GET /cartas/byNombre/{nombre}`: Devuelve la información de una carta.
-      - **Entrada**: nombre de la carta.
+      - **Entrada**: Path variable con el nombre de la carta.
       - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
    - `GET /cartas/asc`: Devuelve todos las cartas almacenadas en la base de datos ordenadas ascendentemente por su *nombre*.
-      - **Salida**: Lista con las cartas : JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
+      - **Entrada**: Uri.
+      - **Salida**: Lista con las cartas ordenadas ascendentemente: JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
    - `GET /cartas/desc`: Devuelve todos las cartas almacenadas en la base de datos ordenadas descendentemente por su *nombre*.
-      - **Salida**: Lista con los cartas : JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
+       - **Entrada**: Uri.
+      - **Salida**: Lista con los cartas ordenadas descendentemente : JSON con `nombre`, `tipo`, `vida`, `ataque` y `vendedores`.
    - `POST /cartas`: Permite insertar una nueva carta.
-      - *SÓLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
+      - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
       - **Entrada**: JSON con `nombre`, `tipo`, `vida` y `ataque`.
+      - **Salida**: JSON con la información de la carta insertada.
    - `DELETE /cartas/{id}`: Permite eliminar una carta.
-      - *SÓLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
+       - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
+       - **Entrada**: Path variable con el id de la carta a eliminar.
+       - **Salida**: JSON con la información de la carta eliminada.
+      - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
    - `PUT /cartas/{id}`: Permite actualizar la información de una carta.
-      - *SÓLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
+      - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
+      - **Entrada**: Path variable con el id de la carta a eliminar.
+      - **Salida**: JSON con la información de la carta actualizada.
 
 5. **Gestión de Transacciones**:
-   - *RUTAS PROTEGIDAS* Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
+   - **RUTAS PROTEGIDAS** Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
    - Usuarios con rol ADMIN pueden acceder a este recurso.
-   - Usuarios con el mismo id (vendedor o comprado) que el que se consulta, pueden acceder a este recurso.
-   - Usuarios con rol USER con nombre diferente a este recurso *NO* pueden acceder al mismo.
+   - Usuarios con el mismo id (vendedor o comprador) que el que se consulta, pueden acceder a este recurso.
+   - Usuarios con rol USER con id diferente *NO* pueden acceder al mismo.
    - `GET /transacciones/{id}`: Devuelve la información de una transacción.
-     - **Entrada**: ID de la transacción.
+     - **Entrada**: Path variable con el ID de la transacción.
      - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
+   - `POST /transacciones/`: Generar nueva transacción.
+     - **Entrada**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
+     - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
+   
 
 ## Lógica de negocio
 1. **Usuarios**
@@ -122,19 +144,30 @@ Estas son las tablas que contendrá:
 
 ## Excepciones
 1. `400 Bad Request`: Cuando un usuario forme mal una petición, como un error de sintaxis.
-    - La lanzaré en los endpoints que intente ir que no existan, así como en cartas, usuarios y demas que no existan (por equivocación en su escritura).
 2. `401 Unathorized`: Cuando un usuario intente acceder a un endpoint que no le corresponde, por rol o usuario.
     - La lanzaré cuando intente acceder a endpoints solo donde puede acceder usuarios con rol ADMIN o usuarios propios de ese endpoints
-    - Tanto en los GET como en los DELETE y UPDATE (PUT), ya que solo pueden acceder a esas funciones el ADMIN.
 3. `403 Forbidden`: Cuando intente acceder a endpoints donde es necesario que se esté logueado (básicamente en todos si no está logueado primeramente).
 4. `404 Not Found`: Cuando intente ir a endpoints que no existen en la base de datos porque hayan sido borradas o haya habido un cambio en la URI.
+4. `419 Duplicate`: Cuando se intente un registro de usuario con un username que ya existe.
 5. `500 Internal Server Error`: Como error general cuando se produzca uno que no haya contemplado en la APP.
 
 ## Seguridad
 1. **Autenticación mediante JWT**
-   - Los usuarios deben autenticarse mediante el endpoint POST /usuarios/login, enviando su nombre y contraseña.
-     Si las credenciales son válidas:
-     Se genera un token que debe enviarse al cliente para que lo almacene.
+    - Se utiliza **JWT (JSON Web Token)** para la autenticación de usuarios.
+    - Los usuarios deben autenticarse a través del endpoint `POST /usuarios/login`, enviando su nombre y contraseña.
+    - Si las credenciales son correctas, el servidor devuelve un token JWT que el cliente deberá incluir en cada petición protegida.
+    - Los tokens tienen una expiración definida para mejorar la seguridad.
 
 2. **Acceso a endpoints**
-   - Control de acceso a distintos endpoints, según usuario y roles (ver en cada endpoint).
+   - Todos los endpoints protegidos requieren un **token JWT válido** para su acceso.
+   - Se realiza control de acceso basado en **roles** (`USER`, `ADMIN`) y **propiedad de los datos** (los usuarios solo pueden ver/editar su propia información, salvo que sean administradores).  
+
+3. **Cifrado de contraseñas**
+   - Las contraseñas se almacenan utilizando **hashing seguro**.
+   - En el registro y autenticación, se compara la contraseña ingresada con el hash almacenado en la base de datos.
+
+4. **Validaciones de seguridad**
+   - Se impide el registro de usuarios con nombres duplicados.
+   - Se valida que las contraseñas cumplan con requisitos mínimos de seguridad (mínimo 6 caracteres alfanuméricos, sin símbolos).
+   - Se impide que un usuario **compre sus propias cartas**, evitando fraudes en transacciones.
+   - Se verifica que los vendedores y compradores existan en la base de datos antes de procesar transacciones.

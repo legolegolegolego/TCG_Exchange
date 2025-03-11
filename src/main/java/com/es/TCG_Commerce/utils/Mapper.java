@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class Mapper {
 
-    public UsuarioDTO entityToDTO(Usuario u) {
+    public static UsuarioDTO entityToDTO(Usuario u) {
         return new UsuarioDTO(
                 u.getUsername(),
                 u.getPassword(),
@@ -20,21 +20,21 @@ public class Mapper {
         );
     }
 
-    public UsuarioLoginDTO entityLoginToDTO(Usuario u) {
+    public static UsuarioLoginDTO entityLoginToDTO(Usuario u) {
         return new UsuarioLoginDTO(
                 u.getUsername(),
                 u.getPassword()
         );
     }
 
-    public UsuarioRegisterDTO entityRegisterToDTO(Usuario u) {
+    public static UsuarioRegisterDTO entityRegisterToDTO(Usuario u) {
         return new UsuarioRegisterDTO(
                 u.getUsername(),
                 u.getPassword()
         );
     }
 
-    public Usuario DTOToEntity(UsuarioDTO uDTO){
+    public static Usuario DTOToEntity(UsuarioDTO uDTO){
         return new Usuario(
                 uDTO.getUsername(),
                 uDTO.getPassword(),
@@ -42,21 +42,21 @@ public class Mapper {
         );
     }
 
-    public Usuario DTOToEntity(UsuarioLoginDTO ulDTO){
+    public static Usuario DTOToEntity(UsuarioLoginDTO ulDTO){
         return new Usuario(
                 ulDTO.getUsername(),
                 ulDTO.getPassword()
         );
     }
 
-    public Usuario DTOToEntity(UsuarioRegisterDTO urDTO){
+    public static Usuario DTOToEntity(UsuarioRegisterDTO urDTO){
         return new Usuario(
                 urDTO.getUsername(),
                 urDTO.getPassword()
         );
     }
 
-    public CartaDTO entityToDTO(Carta c){
+    public static CartaDTO entityToDTO(Carta c){
 
         // tengo que mapear antes la lista de usuarios, puesto que en cartaDTO son UsuariosDTO:
         List<UsuarioDTO> uDTOs = new ArrayList<>();
@@ -74,7 +74,7 @@ public class Mapper {
         );
     }
 
-    public Carta DTOToEntity(CartaDTO cDTO){
+    public static Carta DTOToEntity(CartaDTO cDTO){
 
         List<Usuario> us = new ArrayList<>();
         for (UsuarioDTO uDTO : cDTO.getVendedores()) {
@@ -91,7 +91,7 @@ public class Mapper {
         );
     }
 
-    public TransaccionDTO entityToDTO(Transaccion t) {
+    public static TransaccionDTO entityToDTO(Transaccion t) {
         return new TransaccionDTO(
                 t.getPrecio(),
                 t.getId_vendedor(),
@@ -100,7 +100,7 @@ public class Mapper {
         );
     }
 
-    public Transaccion DTOToEntity(TransaccionDTO tDTO) {
+    public static Transaccion DTOToEntity(TransaccionDTO tDTO) {
         return new Transaccion(
                 tDTO.getPrecio(),
                 tDTO.getId_vendedor(),
