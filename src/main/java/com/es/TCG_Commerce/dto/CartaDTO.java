@@ -1,5 +1,7 @@
 package com.es.TCG_Commerce.dto;
 
+import com.es.TCG_Commerce.model.Usuario;
+
 import java.util.List;
 
 public class CartaDTO {
@@ -8,26 +10,26 @@ public class CartaDTO {
     private String tipo;
     private int vida;
     private int ataque;
-    private List<UsuarioDTO> vendedores;
+    private Usuario vendedor;
 
     public CartaDTO() {
     }
 
-    public CartaDTO(Long id, String nombre, String tipo, int vida, int ataque, List<UsuarioDTO> vendedores) {
+    public CartaDTO(Long id, String nombre, String tipo, int vida, int ataque, Usuario vendedor) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
         this.vida = vida;
         this.ataque = ataque;
-        this.vendedores = vendedores;
+        this.vendedor = vendedor;
     }
 
-    public CartaDTO(String nombre, String tipo, int vida, int ataque, List<UsuarioDTO> vendedores) {
+    public CartaDTO(String nombre, String tipo, int vida, int ataque, Usuario vendedor) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.vida = vida;
         this.ataque = ataque;
-        this.vendedores = vendedores;
+        this.vendedor = vendedor;
     }
 
     public Long getId() {
@@ -54,8 +56,8 @@ public class CartaDTO {
         return ataque;
     }
 
-    public List<UsuarioDTO> getVendedores() {
-        return vendedores;
+    public Usuario getVendedor() {
+        return vendedor;
     }
 
     public void setNombre(String nombre) {
@@ -74,7 +76,7 @@ public class CartaDTO {
         this.ataque = ataque;
     }
 
-    public void setVendedores(List<UsuarioDTO> vendedores) {
-        this.vendedores = vendedores;
+    public void setVendedor(Usuario vendedor) {
+        this.vendedor = vendedor;
     }
 }

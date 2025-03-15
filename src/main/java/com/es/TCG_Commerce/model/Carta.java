@@ -24,24 +24,20 @@ public class Carta {
     @Column(nullable = false)
     private int ataque;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "vendedores",
-            joinColumns = @JoinColumn(name = "id_carta"),
-            inverseJoinColumns = @JoinColumn(name = "id_vendedor")
-    )
-    private List<Usuario> vendedores;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_vendedor")
+    private Usuario vendedor;
 
     public Carta() {
     }
 
-    public Carta(Long id, String nombre, String tipo, int vida, int ataque, List<Usuario> vendedores) {
+    public Carta(Long id, String nombre, String tipo, int vida, int ataque, Usuario vendedor) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
         this.vida = vida;
         this.ataque = ataque;
-        this.vendedores = vendedores;
+        this.vendedor = vendedor;
     }
 
     public Carta(Long id, String nombre, String tipo, int vida, int ataque) {
@@ -92,11 +88,11 @@ public class Carta {
         this.ataque = ataque;
     }
 
-    public List<Usuario> getVendedores() {
-        return vendedores;
+    public Usuario getVendedor() {
+        return vendedor;
     }
 
-    public void setVendedores(List<Usuario> vendedores) {
-        this.vendedores = vendedores;
+    public void setVendedor(Usuario vendedor) {
+        this.vendedor = vendedor;
     }
 }

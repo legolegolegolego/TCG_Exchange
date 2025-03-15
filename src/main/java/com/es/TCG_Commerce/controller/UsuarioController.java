@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@RestController
-@RequestMapping("/usuarios")
+@RestController // indica a Spring Boot que es un controller, maneja solicitudes HTTP
+@RequestMapping("/usuarios") // mapear solicitudes http (todas las que lleguen a /usuarios/... seran manejadas aqui)
 public class UsuarioController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    @Autowired // inyecta auto instancias de repo
+    private AuthenticationManager authenticationManager; // manejar autenticacion (SpringBoot)
 
     @Autowired
     private UsuarioService usuarioService;
@@ -45,7 +45,7 @@ public class UsuarioController {
             );
         } catch (Exception e) {
             System.out.println("Excepción en authentication");
-            throw new NotFoundException("Credenciales del usuario incorrectas");
+            throw new UnauthorizedException("Credenciales del usuario incorrectas");
         }
 
         String token = "";

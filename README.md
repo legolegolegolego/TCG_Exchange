@@ -152,7 +152,7 @@ Estas son las tablas que contendrá:
     - La lanzaré cuando intente acceder a endpoints solo donde puede acceder usuarios con rol ADMIN o usuarios propios de ese endpoint.
 4. `404 Not Found`: Cuando intente ir a endpoints que no existen en la base de datos porque hayan sido borrados o haya habido un cambio en la URI.
 4. `409 Duplicate`: Cuando se intente un registro de usuario con un username que ya existe.
-5. `500 Internal Server Error`: Como error general cuando se produzca uno que no haya contemplado en la APP.
+5. `500 Internal Server Error`: Como error general que no sea ninguno de los anteriores.
 
 ## Seguridad
 1. **Autenticación mediante JWT**

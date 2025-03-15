@@ -59,10 +59,10 @@ public class Mapper {
     public static CartaDTO entityToDTO(Carta c){
 
         // tengo que mapear antes la lista de usuarios, puesto que en cartaDTO son UsuariosDTO:
-        List<UsuarioDTO> uDTOs = new ArrayList<>();
-        for (Usuario u : c.getVendedores()) {
-            uDTOs.add(this.entityToDTO(u));
-        }
+//        List<UsuarioDTO> uDTOs = new ArrayList<>();
+//        for (Usuario u : c.getVendedores()) {
+//            uDTOs.add(this.entityToDTO(u));
+//        }
 
         return new CartaDTO(
                 c.getId(),
@@ -70,16 +70,16 @@ public class Mapper {
                 c.getTipo(),
                 c.getVida(),
                 c.getAtaque(),
-                uDTOs
+                c.getVendedor()
         );
     }
 
     public static Carta DTOToEntity(CartaDTO cDTO){
 
-        List<Usuario> us = new ArrayList<>();
+/*        List<Usuario> us = new ArrayList<>();
         for (UsuarioDTO uDTO : cDTO.getVendedores()) {
             us.add(this.DTOToEntity(uDTO));
-        }
+        }*/
 
         return new Carta(
                 cDTO.getId(),
@@ -87,7 +87,7 @@ public class Mapper {
                 cDTO.getTipo(),
                 cDTO.getVida(),
                 cDTO.getAtaque(),
-                us
+                cDTO.getVendedor()
         );
     }
 

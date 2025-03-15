@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,6 +26,9 @@ public class Usuario implements UserDetails {
 
     // Se establece por defecto como USER en los distintos constructores (menos el específico para pasarle uno)
     private String roles; // o ADMIN"
+
+    @OneToMany(mappedBy = "vendedor")
+    private List<Carta> cartas;
 
     public Usuario() {
         this.roles = "USER";
@@ -48,6 +52,7 @@ public class Usuario implements UserDetails {
         this.password = password;
         this.roles = roles;
     }
+
 
     public Long getId() {
         return id;
@@ -86,5 +91,13 @@ public class Usuario implements UserDetails {
 
     public void setRoles(String roles) {
         this.roles = roles;
+    }
+
+    public List<Carta> getCartas() {
+        return cartas;
+    }
+
+    public void setCartas(List<Carta> cartas) {
+        this.cartas = cartas;
     }
 }
