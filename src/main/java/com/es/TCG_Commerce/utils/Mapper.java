@@ -6,9 +6,6 @@ import com.es.TCG_Commerce.model.Transaccion;
 import com.es.TCG_Commerce.model.Usuario;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class Mapper {
 
@@ -70,7 +67,7 @@ public class Mapper {
                 c.getTipo(),
                 c.getVida(),
                 c.getAtaque(),
-                c.getVendedor()
+                c.getId_user()
         );
     }
 
@@ -87,7 +84,7 @@ public class Mapper {
                 cDTO.getTipo(),
                 cDTO.getVida(),
                 cDTO.getAtaque(),
-                cDTO.getVendedor()
+                cDTO.getId_user()
         );
     }
 
