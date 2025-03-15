@@ -134,14 +134,16 @@ Estas son las tablas que contendrá:
    - `username` único e imprescindible (not null).
    - `password` >=6 carácteres alfanuméricos, sin símbolos. Comprobar que coindicen password en el login con la almacenada en la bd
                 y al registro: las dos password.
+   - `roles` USER o ADMIN.
+   - `cartas` que existan en la base de datos.
 
 2. **Cartas**
    - `id` adjudicado (no autoincremental).
    - `nombre` único e imprescindible (not null).
-   - `tipo` que sea uno de estos: `FUEGO`, `AGUA`, `RAYO`, `LUCHA`, `DRAGON`, `PSIQUICO`, `PLANTA`, `OSCURO`, `METAL`, `NORMAL`.
+   - `tipo` que sea uno de estos: `FUEGO`, `AGUA`, `PLANTA`.
    - `vida` entre 10 y 300.
    - `ataque` entre 10 y 300.
-   - `vendedores` que existan en la base de datos.
+   - `usuario` que exista en la base de datos.
 
 3. **Transacciones**
    - `id` autoincremental.

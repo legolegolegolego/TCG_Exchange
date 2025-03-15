@@ -16,7 +16,7 @@ public class Carta {
     private String nombre;
 
     @Column(nullable = false)
-    private String tipo; // FUEGO, AGUA, RAYO, LUCHA, DRAGON, PSIQUICO, PLANTA, OSCURO, METAL, NORMAL.
+    private String tipo; // FUEGO, AGUA, PLANTA
 
     @Column(nullable = false)
     private int vida;

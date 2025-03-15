@@ -43,7 +43,8 @@ public class Mapper {
     public static UsuarioRegisterDTO entityRegisterToDTO(Usuario u) {
         return new UsuarioRegisterDTO(
                 u.getUsername(),
-                u.getPassword()
+                u.getPassword(),
+                u.getRoles()
         );
     }
 
@@ -65,7 +66,8 @@ public class Mapper {
     public static Usuario DTOToEntity(UsuarioRegisterDTO urDTO){
         return new Usuario(
                 urDTO.getUsername(),
-                urDTO.getPassword()
+                urDTO.getPassword(),
+                urDTO.getRoles()
         );
     }
 
