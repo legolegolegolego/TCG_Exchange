@@ -34,6 +34,7 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     private Mapper mapper;
 
+//    para el login
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -41,6 +42,11 @@ public class UsuarioService implements UserDetailsService {
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario No encontrado"));
 
+        /* RETORNAMOS UN USERDETAILS
+        El método loadUserByUsername nos fuerza a devolver un objeto de tipo UserDetails.
+        Tenemos que convertir nuestro objeto de tipo Usuario a un objeto de tipo UserDetails
+        ¡No os preocupéis, esto es siempre igual!
+         */
         List<GrantedAuthority> authorities = Arrays.stream(usuario.getRoles().split(","))
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.trim()))
                 .collect(Collectors.toList());
@@ -61,14 +67,22 @@ public class UsuarioService implements UserDetailsService {
             throw new DuplicateException("El nombre de usuario ya existe");
         }
 
+        // Logica de pass
+        if (usuarioRegisterDTO.getPassword().length() < 6){
+            throw new BadRequestException("La longitud de la contraseña debe ser superior o igual da 6 caracteres");
+        }
+
+        // Compruebo que es alfanumérica sin símbolos
+        if (usuarioRegisterDTO.getPassword().matches("[A-Za-z0-9]+")) {
+            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
+        }
+
         // Compruebo que ambas contrasenias coinciden
         if (!usuarioRegisterDTO.getPassword().equals(usuarioRegisterDTO.getPassword2())) {
             throw new BadRequestException("Ambas contraseñas deben ser iguales");
         }
 
-        Usuario newUsuario = new Usuario();
-
-        newUsuario.setUsername(usuarioRegisterDTO.getUsername());
+        Usuario newUsuario = Mapper.DTOToEntity(usuarioRegisterDTO);
         newUsuario.setPassword(passwordEncoder.encode(usuarioRegisterDTO.getPassword()));
 
         usuarioRepository.save(newUsuario);
@@ -76,6 +90,7 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRegisterDTO;
     }
 
+//    pa buscar al user x nombre
     public UsuarioDTO findByNombre(String nombre) {
 
         Usuario u = usuarioRepository
@@ -84,5 +99,11 @@ public class UsuarioService implements UserDetailsService {
 
         return Mapper.entityToDTO(u);
 
+    }
+
+//    obtener todos los usuarios de la bd
+    public List<UsuarioDTO> getAll(){
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return Mapper.entitiesToDTOs(usuarios);
     }
 }

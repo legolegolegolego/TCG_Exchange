@@ -3,18 +3,18 @@ package com.es.TCG_Commerce.dto;
 // apuntesDTO: si el id es autoincremental, no poner en el DTO
 public class TransaccionDTO {
     private double precio;
-    private Long id_vendedor;
-    private Long id_comprador;
-    private Long id_carta;
+    private UsuarioDTO vendedor;
+    private UsuarioDTO comprador;
+    private CartaDTO carta;
 
     public TransaccionDTO() {
     }
 
-    public TransaccionDTO(double precio, Long id_vendedor, Long id_comprador, Long id_carta) {
+    public TransaccionDTO(double precio, UsuarioDTO vendedor, UsuarioDTO comprador, CartaDTO carta) {
         this.precio = precio;
-        this.id_vendedor = id_vendedor;
-        this.id_comprador = id_comprador;
-        this.id_carta = id_carta;
+        this.vendedor = vendedor;
+        this.comprador = comprador;
+        this.carta = carta;
     }
 
     public double getPrecio() {
@@ -25,27 +25,27 @@ public class TransaccionDTO {
         this.precio = precio;
     }
 
-    public Long getId_vendedor() {
-        return id_vendedor;
+    public UsuarioDTO getVendedor() {
+        return vendedor;
     }
 
-    public void setId_vendedor(Long id_vendedor) {
-        this.id_vendedor = id_vendedor;
+    public void setVendedor(UsuarioDTO vendedor) {
+        this.vendedor = vendedor;
     }
 
-    public Long getId_comprador() {
-        return id_comprador;
+    public UsuarioDTO getComprador() {
+        return comprador;
     }
 
-    public void setId_comprador(Long id_comprador) {
-        this.id_comprador = id_comprador;
+    public void setComprador(UsuarioDTO comprador) {
+        this.comprador = comprador;
     }
 
-    public Long getId_carta() {
-        return id_carta;
+    public CartaDTO getCarta() {
+        return carta;
     }
 
-    public void setId_carta(Long id_carta) {
-        this.id_carta = id_carta;
+    public void setCarta(CartaDTO carta) {
+        this.carta = carta;
     }
 }

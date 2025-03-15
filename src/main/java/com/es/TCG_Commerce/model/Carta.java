@@ -25,19 +25,19 @@ public class Carta {
     private int ataque;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_vendedor")
-    private Long id_user;
+    @JoinColumn(name = "id_user")
+    private Usuario usuario;
 
     public Carta() {
     }
 
-    public Carta(Long id, String nombre, String tipo, int vida, int ataque, Long id_user) {
+    public Carta(Long id, String nombre, String tipo, int vida, int ataque, Usuario usuario) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
         this.vida = vida;
         this.ataque = ataque;
-        this.id_user = id_user;
+        this.usuario = usuario;
     }
 
     public Carta(Long id, String nombre, String tipo, int vida, int ataque) {
@@ -88,11 +88,11 @@ public class Carta {
         this.ataque = ataque;
     }
 
-    public Long getId_user() {
-        return id_user;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setId_user(Long id_user) {
-        this.id_user = id_user;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

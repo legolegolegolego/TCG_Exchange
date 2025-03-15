@@ -8,26 +8,26 @@ public class CartaDTO {
     private String tipo;
     private int vida;
     private int ataque;
-    private Long id_user;
+    private UsuarioDTO usuarioDTO;
 
     public CartaDTO() {
     }
 
-    public CartaDTO(Long id, String nombre, String tipo, int vida, int ataque, Long id_user) {
+    public CartaDTO(Long id, String nombre, String tipo, int vida, int ataque, UsuarioDTO usuarioDTO) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
         this.vida = vida;
         this.ataque = ataque;
-        this.id_user = id_user;
+        this.usuarioDTO = usuarioDTO;
     }
 
-    public CartaDTO(String nombre, String tipo, int vida, int ataque, Long id_user) {
+    public CartaDTO(String nombre, String tipo, int vida, int ataque, UsuarioDTO usuarioDTO) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.vida = vida;
         this.ataque = ataque;
-        this.id_user = id_user;
+        this.usuarioDTO = usuarioDTO;
     }
 
     public Long getId() {
@@ -54,10 +54,6 @@ public class CartaDTO {
         return ataque;
     }
 
-    public Long getId_user() {
-        return id_user;
-    }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -74,7 +70,11 @@ public class CartaDTO {
         this.ataque = ataque;
     }
 
-    public void setId_user(Long id_user) {
-        this.id_user = id_user;
+    public UsuarioDTO getUsuarioDTO() {
+        return usuarioDTO;
+    }
+
+    public void setUsuarioDTO(UsuarioDTO usuarioDTO) {
+        this.usuarioDTO = usuarioDTO;
     }
 }

@@ -6,6 +6,9 @@ import com.es.TCG_Commerce.model.Transaccion;
 import com.es.TCG_Commerce.model.Usuario;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class Mapper {
 
@@ -17,7 +20,20 @@ public class Mapper {
         );
     }
 
-    public static UsuarioLoginDTO entityLoginToDTO(Usuario u) {
+    // usuarioS
+    public static List<UsuarioDTO> entitiesToDTOs(List<Usuario> usuarios) {
+        List<UsuarioDTO> usuarioDTOs = new ArrayList<>();
+
+        // Iterar sobre cada Usuario y convertirlo a UsuarioDTO
+        usuarios.forEach(u -> {
+            UsuarioDTO dto = entityToDTO(u); // Utiliza el método de la propia clase para convertir
+            usuarioDTOs.add(dto); // Agregar el DTO a la lista
+        });
+
+        return usuarioDTOs; // Retorna la lista de DTOs
+    }
+
+        public static UsuarioLoginDTO entityLoginToDTO(Usuario u) {
         return new UsuarioLoginDTO(
                 u.getUsername(),
                 u.getPassword()
@@ -67,7 +83,7 @@ public class Mapper {
                 c.getTipo(),
                 c.getVida(),
                 c.getAtaque(),
-                c.getId_user()
+                Mapper.entityToDTO(c.getUsuario())
         );
     }
 
@@ -84,25 +100,25 @@ public class Mapper {
                 cDTO.getTipo(),
                 cDTO.getVida(),
                 cDTO.getAtaque(),
-                cDTO.getId_user()
+                Mapper.DTOToEntity(cDTO.getUsuarioDTO())
         );
     }
 
     public static TransaccionDTO entityToDTO(Transaccion t) {
         return new TransaccionDTO(
                 t.getPrecio(),
-                t.getId_vendedor(),
-                t.getId_comprador(),
-                t.getId_carta()
+                Mapper.entityToDTO(t.getVendedor()),
+                Mapper.entityToDTO(t.getComprador()),
+                Mapper.entityToDTO(t.getCarta())
         );
     }
 
     public static Transaccion DTOToEntity(TransaccionDTO tDTO) {
         return new Transaccion(
                 tDTO.getPrecio(),
-                tDTO.getId_vendedor(),
-                tDTO.getId_comprador(),
-                tDTO.getId_carta()
+                Mapper.DTOToEntity(tDTO.getVendedor()),
+                Mapper.DTOToEntity(tDTO.getComprador()),
+                Mapper.DTOToEntity(tDTO.getCarta())
         );
     }
 

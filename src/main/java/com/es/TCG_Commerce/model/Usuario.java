@@ -27,7 +27,7 @@ public class Usuario implements UserDetails {
     // Se establece por defecto como USER en los distintos constructores (menos el específico para pasarle uno)
     private String roles; // o ADMIN"
 
-    @OneToMany(mappedBy = "vendedor")
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Carta> cartas;
 
     public Usuario() {

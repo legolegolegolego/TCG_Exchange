@@ -60,7 +60,11 @@ Estas son las tablas que contendrá:
       - **Salida**: JSON con el usuario registrado.
 
 3. **Gestión de Usuario**:
-   - `GET /usuarios/{nombre}`: Permite al usuario consultar su información.
+   - `GET /usuarios/{id}`: Permite al usuario consultar su información.
+      - **RUTA PROTEGIDA** Sólo los usuarios autenticados como ADMIN pueden acceder a este recurso.
+      - **Entrada**: Path variable del nombre del usuario.
+      - **Salida**: JSON con el usuario consultado.
+     - `GET /usuarios/byNombre/{nombre}`: Permite al usuario consultar su información.
       - **RUTA PROTEGIDA** Sólo los usuarios autenticados pueden acceder a este recurso.
       - Usuarios con rol ADMIN pueden acceder a este recurso.
       - Usuarios con el mismo nombre que el que se consulta pueden acceder a este recurso.
@@ -85,6 +89,7 @@ Estas son las tablas que contendrá:
 4. **Gestión de Cartas**:
    - **RUTAS PROTEGIDAS** Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
    - `GET /cartas/{id}`: Devuelve la información de una carta.
+      - **PROTECCIÓN**: Solo los usuarios ADMIN pueden acceder a este recurso.
       - **Entrada**: Path variable con el ID de la carta.
       - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
    - `GET /cartas/byNombre/{nombre}`: Devuelve la información de una carta.

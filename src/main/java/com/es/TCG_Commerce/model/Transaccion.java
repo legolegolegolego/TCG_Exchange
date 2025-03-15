@@ -15,32 +15,32 @@ public class Transaccion {
 
     @ManyToOne
     @JoinColumn(name = "id_vendedor", nullable = false)
-    private Long id_vendedor;
+    private Usuario vendedor;
 
     @ManyToOne
     @JoinColumn(name = "id_comprador", nullable = false)
-    private Long id_comprador;
+    private Usuario comprador;
 
     @ManyToOne // una carta solo por transaccion
     @JoinColumn(name = "id_carta", nullable = false)
-    private Long id_carta;
+    private Carta carta;
 
     public Transaccion() {
     }
 
-    public Transaccion(double precio, Long id_vendedor, Long id_comprador, Long id_carta) {
-        this.precio = precio;
-        this.id_vendedor = id_vendedor;
-        this.id_comprador = id_comprador;
-        this.id_carta = id_carta;
-    }
-
-    public Transaccion(Long id, double precio, Long id_vendedor, Long id_comprador, Long id_carta) {
+    public Transaccion(Long id, double precio, Usuario vendedor, Usuario comprador, Carta carta) {
         this.id = id;
         this.precio = precio;
-        this.id_vendedor = id_vendedor;
-        this.id_comprador = id_comprador;
-        this.id_carta = id_carta;
+        this.vendedor = vendedor;
+        this.comprador = comprador;
+        this.carta = carta;
+    }
+
+    public Transaccion(double precio, Usuario vendedor, Usuario comprador, Carta carta) {
+        this.precio = precio;
+        this.vendedor = vendedor;
+        this.comprador = comprador;
+        this.carta = carta;
     }
 
     public Long getId() {
@@ -59,27 +59,27 @@ public class Transaccion {
         this.precio = precio;
     }
 
-    public Long getId_vendedor() {
-        return id_vendedor;
+    public Usuario getVendedor() {
+        return vendedor;
     }
 
-    public void setId_vendedor(Long id_vendedor) {
-        this.id_vendedor = id_vendedor;
+    public void setVendedor(Usuario vendedor) {
+        this.vendedor = vendedor;
     }
 
-    public Long getId_comprador() {
-        return id_comprador;
+    public Usuario getComprador() {
+        return comprador;
     }
 
-    public void setId_comprador(Long id_comprador) {
-        this.id_comprador = id_comprador;
+    public void setComprador(Usuario comprador) {
+        this.comprador = comprador;
     }
 
-    public Long getId_carta() {
-        return id_carta;
+    public Carta getCarta() {
+        return carta;
     }
 
-    public void setId_carta(Long id_carta) {
-        this.id_carta = id_carta;
+    public void setCarta(Carta carta) {
+        this.carta = carta;
     }
 }
