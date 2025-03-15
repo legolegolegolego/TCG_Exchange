@@ -147,11 +147,11 @@ Estas son las tablas que contendrá:
 
 ## Excepciones
 1. `400 Bad Request`: Cuando un usuario forme mal una petición, como un error de sintaxis.
-2. `401 Unathorized`: Cuando un usuario intente acceder a un endpoint que no le corresponde, por rol o usuario.
-    - La lanzaré cuando intente acceder a endpoints solo donde puede acceder usuarios con rol ADMIN o usuarios propios de ese endpoints
-3. `403 Forbidden`: Cuando intente acceder a endpoints donde es necesario que se esté logueado (básicamente en todos si no está logueado primeramente).
-4. `404 Not Found`: Cuando intente ir a endpoints que no existen en la base de datos porque hayan sido borradas o haya habido un cambio en la URI.
-4. `419 Duplicate`: Cuando se intente un registro de usuario con un username que ya existe.
+2. `401 Unathorized`:Cuando intente acceder a endpoints donde es necesario que se esté logueado.
+3. `403 Forbidden`: Cuando un usuario intente acceder a un endpoint que no le corresponde, por rol o usuario.
+    - La lanzaré cuando intente acceder a endpoints solo donde puede acceder usuarios con rol ADMIN o usuarios propios de ese endpoint.
+4. `404 Not Found`: Cuando intente ir a endpoints que no existen en la base de datos porque hayan sido borrados o haya habido un cambio en la URI.
+4. `409 Duplicate`: Cuando se intente un registro de usuario con un username que ya existe.
 5. `500 Internal Server Error`: Como error general cuando se produzca uno que no haya contemplado en la APP.
 
 ## Seguridad

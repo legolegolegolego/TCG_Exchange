@@ -4,6 +4,7 @@ import com.es.TCG_Commerce.dto.TransaccionDTO;
 import com.es.TCG_Commerce.dto.UsuarioDTO;
 import com.es.TCG_Commerce.dto.UsuarioLoginDTO;
 import com.es.TCG_Commerce.dto.UsuarioRegisterDTO;
+import com.es.TCG_Commerce.error.exception.ForbiddenException;
 import com.es.TCG_Commerce.error.exception.InternalServerErrorException;
 import com.es.TCG_Commerce.error.exception.NotFoundException;
 import com.es.TCG_Commerce.error.exception.UnauthorizedException;
@@ -69,7 +70,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/byNombre/{nombre}")
-    public ResponseEntity<UsuarioDTO> findByNombre(@PathVariable String nombre, Authentication authentication, Principal principal) {
+    public ResponseEntity<UsuarioDTO> findByNombre(@PathVariable String nombre, Authentication authentication) {
 
 
         if(authentication.getAuthorities()
@@ -78,7 +79,7 @@ public class UsuarioController {
             UsuarioDTO usuarioDTO = usuarioService.findByNombre(nombre);
             return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
         } else {
-            throw new UnauthorizedException("No tienes los permisos para acceder al recurso");
+            throw new ForbiddenException("No tienes los permisos para acceder al recurso");
         }
 
     }
