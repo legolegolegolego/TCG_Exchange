@@ -25,8 +25,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth // Filtros para securizar diferentes endpoints de la aplicación
                                 .requestMatchers(HttpMethod.POST, "/usuarios/login", "/usuarios/register").permitAll() // Filtro que deja pasar todas las peticiones que vayan a los endpoints que definamos
                                 // solo pueden acceder a estar rutas usuarios logueados con rol ADMIN:
+                                .requestMatchers(HttpMethod.GET, "/usuarios/").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/usuarios/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/cartas/").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/cartas/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/transacciones/").hasRole("ADMIN")
 
                                 //ejemplos:
 //                                .requestMatchers(HttpMethod.GET,"/usuarios/byNombre/{nombre}").authenticated()

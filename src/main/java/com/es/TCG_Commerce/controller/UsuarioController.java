@@ -20,6 +20,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController // indica a Spring Boot que es un controller, maneja solicitudes HTTP
 @RequestMapping("/usuarios") // mapear solicitudes http (todas las que lleguen a /usuarios/... seran manejadas aqui)
@@ -34,6 +35,11 @@ public class UsuarioController {
     @Autowired
     private TokenService tokenService;
 
+    /*
+    * ¿Por qué no usar ResponseEntity en login?
+    En este caso, el método devuelve solo el token de autenticación como String.
+    Como Spring Boot lo envuelve automáticamente en una respuesta HTTP, no es estrictamente necesario usar ResponseEntity.
+    * */
     @PostMapping("/login")
     public String login(
             @RequestBody UsuarioLoginDTO usuarioLoginDTO
@@ -59,6 +65,15 @@ public class UsuarioController {
         return token;
     }
 
+    /*
+    * ResponseEntity<T> es una clase de Spring que representa una respuesta HTTP completa, incluyendo:
+
+    El cuerpo de la respuesta (en este caso, UsuarioRegisterDTO).
+    El código de estado HTTP (ejemplo: 200 OK, 404 Not Found, etc.).
+    Encabezados HTTP opcionales.
+    Es útil cuando quieres controlar más detalles de la respuesta HTTP en lugar de solo devolver un objeto.
+    * */
+
     @PostMapping("/register")
     public ResponseEntity<UsuarioRegisterDTO> register(
             @RequestBody UsuarioRegisterDTO usuarioRegisterDTO) {
@@ -82,6 +97,14 @@ public class UsuarioController {
             throw new ForbiddenException("No tienes los permisos para acceder al recurso");
         }
 
+    }
+
+    // obtener todos los usuarios
+    @GetMapping("/")
+    public ResponseEntity<List<UsuarioDTO>> getAll(){
+        List<UsuarioDTO>usuarioDTOS = usuarioService.getAll();
+
+        return new ResponseEntity<List<UsuarioDTO>>(usuarioDTOS, HttpStatus.OK);
     }
 
     // apartir de aqui ejemplos

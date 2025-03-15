@@ -60,6 +60,10 @@ Estas son las tablas que contendrá:
       - **Salida**: JSON con el usuario registrado.
 
 3. **Gestión de Usuario**:
+   - `GET /usuarios/`: Obtener los datos de todos los usuarios.
+      - **RUTA PROTEGIDA** Sólo los usuarios autenticados como ADMIN pueden acceder a este recurso.
+      - **Entrada**: Uri
+      - **Salida**: JSON con el usuario consultado.
    - `GET /usuarios/{id}`: Permite al usuario consultar su información.
       - **RUTA PROTEGIDA** Sólo los usuarios autenticados como ADMIN pueden acceder a este recurso.
       - **Entrada**: Path variable del nombre del usuario.
@@ -89,18 +93,12 @@ Estas son las tablas que contendrá:
 4. **Gestión de Cartas**:
    - **RUTAS PROTEGIDAS** Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
    - `GET /cartas/{id}`: Devuelve la información de una carta.
-      - **PROTECCIÓN**: Solo los usuarios ADMIN pueden acceder a este recurso.
+      - **SOLO ADMIN**: Solo los usuarios ADMIN pueden acceder a este recurso.
       - **Entrada**: Path variable con el ID de la carta.
       - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
    - `GET /cartas/byNombre/{nombre}`: Devuelve la información de una carta.
       - **Entrada**: Path variable con el nombre de la carta.
       - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
-   - `GET /cartas/asc`: Devuelve todos las cartas almacenadas en la base de datos ordenadas ascendentemente por su *nombre*.
-      - **Entrada**: Uri.
-      - **Salida**: Lista con las cartas ordenadas ascendentemente: JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
-   - `GET /cartas/desc`: Devuelve todos las cartas almacenadas en la base de datos ordenadas descendentemente por su *nombre*.
-       - **Entrada**: Uri.
-      - **Salida**: Lista con los cartas ordenadas descendentemente : JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
    - `POST /cartas`: Permite insertar una nueva carta.
       - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
       - **Entrada**: JSON con `nombre`, `tipo`, `vida` y `ataque`.
@@ -120,10 +118,20 @@ Estas son las tablas que contendrá:
    - Usuarios con rol ADMIN pueden acceder a este recurso.
    - Usuarios con el mismo id (vendedor o comprador) que el que se consulta, pueden acceder a este recurso.
    - Usuarios con rol USER con id diferente *NO* pueden acceder al mismo.
+   - `GET /transacciones/`: Devuelve todas las transacciones.
+     - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
+     - **Entrada**: Uri.
+     - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta` de cada transacción.
    - `GET /transacciones/{id}`: Devuelve la información de una transacción.
      - **Entrada**: Path variable con el ID de la transacción.
      - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
    - `POST /transacciones/`: Generar nueva transacción.
+     - **Entrada**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
+     - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
+   - `PUT /transacciones/{id}`: Permite actualizar la información de una transacción.
+     - **Entrada**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
+     - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
+   - `DELETE /transacciones/`: Permite eliminar una transacción.
      - **Entrada**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
      - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
    
@@ -148,9 +156,9 @@ Estas son las tablas que contendrá:
 3. **Transacciones**
    - `id` autoincremental.
    - `precio` mayor que 0.
-   - `id_vendedor` que esté en la base de datos. No puede ser el mismo que el id_comprador.
-   - `id_comprador` que esté en la base de datos. No puede ser el mismo que el id_vendedor.
-   - `id_carta` que esté en la base de datos.
+   - `vendedor` que esté en la base de datos. No puede ser el mismo que el comprador.
+   - `comprador` que esté en la base de datos. No puede ser el mismo que el vendedor.
+   - `carta` que esté en la base de datos.
 
 ## Excepciones
 1. `400 Bad Request`: Cuando un usuario forme mal una petición, como un error de sintaxis.
@@ -158,7 +166,7 @@ Estas son las tablas que contendrá:
 3. `403 Forbidden`: Cuando un usuario intente acceder a un endpoint que no le corresponde, por rol o usuario.
     - La lanzaré cuando intente acceder a endpoints solo donde puede acceder usuarios con rol ADMIN o usuarios propios de ese endpoint.
 4. `404 Not Found`: Cuando intente ir a endpoints que no existen en la base de datos porque hayan sido borrados o haya habido un cambio en la URI.
-4. `409 Duplicate`: Cuando se intente un registro de usuario con un username que ya existe.
+4. `409 Duplicate`: Cuando se intente un registro de usuario con un username que ya existe, por ejemplo.
 5. `500 Internal Server Error`: Como error general que no sea ninguno de los anteriores.
 
 ## Seguridad
