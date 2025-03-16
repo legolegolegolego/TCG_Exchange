@@ -63,7 +63,7 @@ Estas son las tablas que contendrá:
    - `GET /usuarios/`: Obtener los datos de todos los usuarios.
       - **RUTA PROTEGIDA** Sólo los usuarios autenticados como ADMIN pueden acceder a este recurso.
       - **Entrada**: Uri
-      - **Salida**: JSON con el usuario consultado.
+      - **Salida**: JSON con los datos de los usuarios.
    - `GET /usuarios/{id}`: Permite consultar la información de un usuario por su id.
       - **RUTA PROTEGIDA** Sólo los usuarios autenticados como ADMIN pueden acceder a este recurso.
       - **Entrada**: Path variable con el id del usuario.
@@ -92,6 +92,10 @@ Estas son las tablas que contendrá:
 
 4. **Gestión de Cartas**:
    - **RUTAS PROTEGIDAS** Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
+   - `GET /cartas/`: Obtener los datos de todas las cartas.
+       - **RUTA PROTEGIDA** Sólo los usuarios autenticados como ADMIN pueden acceder a este recurso.
+       - **Entrada**: Uri
+       - **Salida**: JSON con los datos de las cartas.
    - `GET /cartas/{id}`: Devuelve la información de una carta.
       - **SOLO ADMIN**: Solo los usuarios ADMIN pueden acceder a este recurso.
       - **Entrada**: Path variable con el ID de la carta.
@@ -103,15 +107,15 @@ Estas son las tablas que contendrá:
       - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
       - **Entrada**: JSON con `nombre`, `tipo`, `vida` y `ataque`.
       - **Salida**: JSON con la información de la carta insertada.
+   - `PUT /cartas/{id}`: Permite actualizar la información de una carta.
+       - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
+       - **Entrada**: Path variable con el id de la carta a actualizar y JSON con los nuevos datos.
+       - **Salida**: JSON con la información de la carta actualizada.
    - `DELETE /cartas/{id}`: Permite eliminar una carta.
        - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
        - **Entrada**: Path variable con el id de la carta a eliminar.
        - **Salida**: JSON con la información de la carta eliminada.
       - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
-   - `PUT /cartas/{id}`: Permite actualizar la información de una carta.
-      - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
-      - **Entrada**: Path variable con el id de la carta a eliminar.
-      - **Salida**: JSON con la información de la carta actualizada.
 
 5. **Gestión de Transacciones**:
    - **RUTAS PROTEGIDAS** Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
@@ -146,9 +150,9 @@ Estas son las tablas que contendrá:
    - `cartas` que existan en la base de datos.
 
 2. **Cartas**
-   - `id` adjudicado (no autoincremental).
+   - `id` adjudicado (no autoincremental) (que no haya otra carta en la BD con el mismo id).
    - `nombre` único e imprescindible (not null).
-   - `tipo` que sea uno de estos: `FUEGO`, `AGUA`, `PLANTA`.
+   - `tipo` que sea uno de estos: `FUEGO`, `AGUA`, `PLANTA`, `RAYO`, `PSIQUICO`, `LUCHA`, `OSCURO`, `DRAGON`, `METALICO`, `INCOLORO`.
    - `vida` entre 10 y 300.
    - `ataque` entre 10 y 300.
    - `usuario` que exista en la base de datos.
@@ -161,7 +165,7 @@ Estas son las tablas que contendrá:
    - `carta` que esté en la base de datos.
 
 ## Excepciones
-1. `400 Bad Request`: Cuando un usuario forme mal una petición, como un error de sintaxis.
+1. `400 Bad Request`: Cuando un usuario forme mal una petición, como un error de sintaxis o de lo que se espera recibir.
 2. `401 Unathorized`:Cuando intente acceder a endpoints donde es necesario que se esté logueado.
 3. `403 Forbidden`: Cuando un usuario intente acceder a un endpoint que no le corresponde, por rol o usuario.
     - La lanzaré cuando intente acceder a endpoints solo donde puede acceder usuarios con rol ADMIN o usuarios propios de ese endpoint.

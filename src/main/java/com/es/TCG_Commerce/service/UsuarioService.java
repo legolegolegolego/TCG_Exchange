@@ -103,7 +103,7 @@ public class UsuarioService implements UserDetailsService {
         }
         Usuario u = usuarioRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Usuario con id" + id + " no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Usuario con id " + id + " no encontrado"));
         return Mapper.entityToDTO(u);
     }
 
