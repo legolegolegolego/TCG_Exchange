@@ -84,9 +84,25 @@ public class UsuarioController {
 
     }
 
+    // obtener todos los usuarios
+    @GetMapping("/")
+    public ResponseEntity<List<UsuarioDTO>> getAll(){
+        List<UsuarioDTO>usuarioDTOS = usuarioService.getAll();
+
+        return new ResponseEntity<List<UsuarioDTO>>(usuarioDTOS, HttpStatus.OK);
+    }
+
+    // no hace falta el authentication aqui pq solo pueden acceder los admin
+    // y ya se contempla eso en el securityconfig
+    @GetMapping("{id}")
+    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
+        UsuarioDTO udto = usuarioService.findById(id);
+
+        return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
+    }
+
     @GetMapping("/byNombre/{nombre}")
     public ResponseEntity<UsuarioDTO> findByNombre(@PathVariable String nombre, Authentication authentication) {
-
 
         if(authentication.getAuthorities()
                 .stream()
@@ -99,43 +115,35 @@ public class UsuarioController {
 
     }
 
-    // obtener todos los usuarios
-    @GetMapping("/")
-    public ResponseEntity<List<UsuarioDTO>> getAll(){
-        List<UsuarioDTO>usuarioDTOS = usuarioService.getAll();
 
-        return new ResponseEntity<List<UsuarioDTO>>(usuarioDTOS, HttpStatus.OK);
+    @PutMapping("/{nombre}")
+    public ResponseEntity<UsuarioDTO> updateUser(
+            @PathVariable String nombreUsuario,@RequestBody UsuarioDTO udto, Authentication authentication
+    ){
+
+        // Comprobar si el usuario autenticado es el mismo que se quiere actualizar
+        String usuarioAutenticado = authentication.getName();
+        boolean esElMismoUsuario = usuarioAutenticado.equals(nombreUsuario);
+
+        if (!esElMismoUsuario){
+            throw new ForbiddenException("No tienes permiso para modificar este usuario");
+        }
+
+        UsuarioDTO usuarioActualizado = usuarioService.updateUser(nombreUsuario, udto);
+        return new ResponseEntity<UsuarioDTO>(usuarioActualizado, HttpStatus.OK);
     }
 
-    // apartir de aqui ejemplos
-
-    /*@GetMapping("/transaccion/{id}")
-    public String login(
-            @PathVariable String id
-    ) {
-        Authentication authentication = null;
-        try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(usuarioLoginDTO.getUsername(), usuarioLoginDTO.getPassword())// modo de autenticación
-            );
-        } catch (Exception e) {
-            System.out.println("Excepcion en authentication");
-            throw new NotFoundException("Credenciales del usuario incorrectas");
+    @DeleteMapping("/{nombre}")
+    public ResponseEntity<UsuarioDTO> deleteUser(
+            @PathVariable String nombreUsuario, Authentication authentication
+    ){
+        if (!authentication.getName().equals(nombreUsuario)){
+            throw new ForbiddenException("No tienes permiso para eliminar este usuario");
         }
+        // copio antes de borrar para retornarlo despues
+        UsuarioDTO udto = usuarioService.deleteUser(nombreUsuario);
+
+        return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
     }
 
-    @PostMapping("/transaccion/")
-    public String login(
-            @RequestBody TransaccionDTO tDTO
-    ) {
-        Authentication authentication = null;
-        try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(usuarioLoginDTO.getUsername(), usuarioLoginDTO.getPassword())// modo de autenticación
-            );
-        } catch (Exception e) {
-            System.out.println("Excepcion en authentication");
-            throw new NotFoundException("Credenciales del usuario incorrectas");
-        }
-    }*/
 }

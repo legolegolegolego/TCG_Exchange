@@ -53,6 +53,20 @@ public class Usuario implements UserDetails {
         this.roles = roles;
     }
 
+    public Usuario(Long id, String username, String password, String roles, List<Carta> cartas) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+        this.cartas = cartas;
+    }
+
+    public Usuario(String username, String password, String roles, List<Carta> cartas) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+        this.cartas = cartas;
+    }
 
     public Long getId() {
         return id;

@@ -16,7 +16,8 @@ public class Mapper {
         return new UsuarioDTO(
                 u.getUsername(),
                 u.getPassword(),
-                u.getRoles()
+                u.getRoles(),
+                Mapper.cartasToDTOs(u.getCartas())
         );
     }
 
@@ -52,7 +53,8 @@ public class Mapper {
         return new Usuario(
                 uDTO.getUsername(),
                 uDTO.getPassword(),
-                uDTO.getRoles()
+                uDTO.getRoles(),
+                Mapper.DTOsToEntities(uDTO.getCartas())
         );
     }
 
@@ -87,6 +89,30 @@ public class Mapper {
                 c.getAtaque(),
                 Mapper.entityToDTO(c.getUsuario())
         );
+    }
+
+    // cartaS
+    public static List<CartaDTO> cartasToDTOs(List<Carta> cartas) {
+        List<CartaDTO> cartasDTO = new ArrayList<>();
+
+        cartas.forEach(c -> {
+            CartaDTO dto = entityToDTO(c); // Utiliza el método de la propia clase para convertir
+            cartasDTO.add(dto); // Agregar el DTO a la lista
+        });
+
+        return cartasDTO; // Retorna la lista de DTOs
+    }
+
+    // cartaS
+    public static List<Carta> DTOsToEntities(List<CartaDTO> cartasDTO) {
+        List<Carta> cartas = new ArrayList<>();
+
+        cartasDTO.forEach(dto -> {
+            Carta c = DTOToEntity(dto); // Utiliza el método de la propia clase para convertir
+            cartas.add(c); // Agregar el DTO a la lista
+        });
+
+        return cartas; // Retorna la lista de DTOs
     }
 
     public static Carta DTOToEntity(CartaDTO cDTO){

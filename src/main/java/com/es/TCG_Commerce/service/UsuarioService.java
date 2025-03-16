@@ -90,7 +90,24 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRegisterDTO;
     }
 
-//    pa buscar al user x nombre
+    //    obtener todos los usuarios de la bd
+    public List<UsuarioDTO> getAll(){
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return Mapper.entitiesToDTOs(usuarios);
+    }
+
+    // buscar x id
+    public UsuarioDTO findById(Long id){
+        if (id == null){
+            throw new BadRequestException("El id no puede ser null");
+        }
+        Usuario u = usuarioRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Usuario con id" + id + " no encontrado"));
+        return Mapper.entityToDTO(u);
+    }
+
+    //    pa buscar al user x nombre
     public UsuarioDTO findByNombre(String nombre) {
 
         if (nombre.isEmpty() || nombre.isBlank()){
@@ -105,9 +122,52 @@ public class UsuarioService implements UserDetailsService {
 
     }
 
-//    obtener todos los usuarios de la bd
-    public List<UsuarioDTO> getAll(){
-        List<Usuario> usuarios = usuarioRepository.findAll();
-        return Mapper.entitiesToDTOs(usuarios);
+
+    public UsuarioDTO updateUser(String nombreUsuario, UsuarioDTO usuarioActualizado){
+        // a partir de ahora solo pongo isBlank, ya que según la info que he encontrado
+        // es redundante poner los dos, basicamente blank hace lo que empty pero mejor, pq tmb contempla espacios
+        if (usuarioActualizado.getUsername().isBlank() || usuarioActualizado.getPassword().isBlank() || usuarioActualizado.getRoles().isBlank()){
+            throw new BadRequestException("Los campos a actualizar no deben estar vacíos");
+        }
+
+        // Misma logica que registro:
+        // Compruebo que el usuario no existe en la base de datos
+        if (usuarioRepository.findByUsername(usuarioActualizado.getUsername()).isPresent()) {
+            throw new DuplicateException("El nombre de usuario ya existe");
+        }
+
+        // Logica de pass
+        if (usuarioActualizado.getPassword().length() < 6){
+            throw new BadRequestException("La longitud de la contraseña debe ser superior o igual da 6 caracteres");
+        }
+
+        // Compruebo que es alfanumérica sin símbolos
+        if (usuarioActualizado.getPassword().matches("[A-Za-z0-9]+")) {
+            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
+        }
+
+        Usuario u = usuarioRepository.findByUsername(nombreUsuario)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        u.setUsername(usuarioActualizado.getUsername());
+        u.setPassword(passwordEncoder.encode(usuarioActualizado.getPassword()));
+        u.setRoles(usuarioActualizado.getRoles());
+        u.setCartas(Mapper.DTOsToEntities(usuarioActualizado.getCartas()));
+
+        usuarioRepository.save(u);
+        return usuarioActualizado;
+    }
+
+    public UsuarioDTO deleteUser(String nombreUsuario){
+
+        Usuario u = usuarioRepository.findByUsername(nombreUsuario)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        // lo copio antes de borrarlo para retornarlo luego los datos
+        UsuarioDTO udto = Mapper.entityToDTO(u);
+
+        usuarioRepository.delete(u);
+
+        return udto;
     }
 }

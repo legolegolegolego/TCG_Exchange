@@ -64,16 +64,16 @@ Estas son las tablas que contendrá:
       - **RUTA PROTEGIDA** Sólo los usuarios autenticados como ADMIN pueden acceder a este recurso.
       - **Entrada**: Uri
       - **Salida**: JSON con el usuario consultado.
-   - `GET /usuarios/{id}`: Permite al usuario consultar su información.
+   - `GET /usuarios/{id}`: Permite consultar la información de un usuario por su id.
       - **RUTA PROTEGIDA** Sólo los usuarios autenticados como ADMIN pueden acceder a este recurso.
-      - **Entrada**: Path variable del nombre del usuario.
+      - **Entrada**: Path variable con el id del usuario.
       - **Salida**: JSON con el usuario consultado.
-     - `GET /usuarios/byNombre/{nombre}`: Permite al usuario consultar su información.
+   - `GET /usuarios/byNombre/{nombre}`: Permite al usuario consultar su información.
       - **RUTA PROTEGIDA** Sólo los usuarios autenticados pueden acceder a este recurso.
       - Usuarios con rol ADMIN pueden acceder a este recurso.
       - Usuarios con el mismo nombre que el que se consulta pueden acceder a este recurso.
       - Usuarios con rol USER con nombre diferente a este recurso *NO* pueden acceder al mismo.
-      - **Entrada**: Path variable del nombre del usuario.
+      - **Entrada**: Path variable con el nombre del usuario.
       - **Salida**: JSON con el usuario consultado.
    - `PUT /usuarios/{nombre}`: Permite actualizar la información de un usuario.
      - **RUTA PROTEGIDA** Sólo los usuarios autenticados pueden acceder a este recurso.
