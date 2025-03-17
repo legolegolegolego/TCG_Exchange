@@ -83,7 +83,7 @@ public class UsuarioService implements UserDetailsService {
             throw new BadRequestException("Ambas contraseñas deben ser iguales");
         }
 
-        if (usuarioRegisterDTO.getRoles() != "USER" || usuarioRegisterDTO.getRoles() != "ADMIN"){
+        if (!usuarioRegisterDTO.getRoles().equals("USER") && !usuarioRegisterDTO.getRoles().equals("ADMIN")){
             throw new BadRequestException("Roles inválidos");
         }
 
@@ -146,7 +146,7 @@ public class UsuarioService implements UserDetailsService {
             throw new BadRequestException("La longitud de la contraseña debe ser superior o igual da 6 caracteres");
         }
 
-        if (usuarioActualizado.getRoles() != "USER" || usuarioActualizado.getRoles() != "ADMIN"){
+        if (!usuarioActualizado.getRoles().equals("USER") && !usuarioActualizado.getRoles().equals("ADMIN")){
             throw new BadRequestException("Roles inválidos");
         }
 

@@ -203,11 +203,11 @@ Estas son las tablas que contendrá:
     - ⏳ Prueba con múltiples intentos fallidos para detectar bloqueo de IP o usuario.
 
 - **POST /usuarios/register**
-    - ✅ Prueba con datos válidos.
+    - ✅ Prueba con datos válidos.![img_6.png](img_6.png)
     - ❌ Prueba con username ya existente.
-    - ❌ Prueba con password de menos de 6 caracteres.
+    - ❌ Prueba con password de menos de 6 caracteres.![img_5.png](img_5.png)
     - ❌ Prueba con password1 y password2 diferentes.![img_3.png](img_3.png)
-    - ❌ Prueba con un rol no permitido.
+    - ❌ Prueba con un rol no permitido.![img_4.png](img_4.png)
 
 ### **Gestión de Usuarios**
 - **GET /usuarios/** (Solo ADMIN)

@@ -51,4 +51,11 @@ public class APIExceptionHandler {
         return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
     }
 
+    @ExceptionHandler({DuplicateException.class, DuplicateException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    public ErrorMessageForClient handleDuplicate(HttpServletRequest request, Exception e) {
+        return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
+    }
+
 }
