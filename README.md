@@ -254,10 +254,10 @@ Estas son las tablas que contendrá:
     - ❌ Prueba con un ID de carta inexistente.
 
 - **POST /cartas** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
-    - ❌ Prueba con nombre duplicado.
+    - ✅ Prueba con usuario ADMIN.![img_35.png](img_35.png)
+    - ❌ Prueba con usuario USER.![img_36.png](img_36.png)
+    - ❌ Prueba sin autenticación.![img_37.png](img_37.png)
+    - ❌ Prueba con nombre duplicado.![img_38.png](img_38.png)
     - ❌ Prueba con un tipo no permitido.
     - ❌ Prueba con vida o ataque fuera del rango permitido.
 

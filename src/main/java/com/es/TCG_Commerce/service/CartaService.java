@@ -5,7 +5,9 @@ import com.es.TCG_Commerce.error.exception.BadRequestException;
 import com.es.TCG_Commerce.error.exception.DuplicateException;
 import com.es.TCG_Commerce.error.exception.NotFoundException;
 import com.es.TCG_Commerce.model.Carta;
+import com.es.TCG_Commerce.model.Usuario;
 import com.es.TCG_Commerce.repository.CartaRepository;
+import com.es.TCG_Commerce.repository.UsuarioRepository;
 import com.es.TCG_Commerce.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class CartaService {
 
     @Autowired
     private CartaRepository cartaRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     // esto se he visto que se pone pero me he informado de que no hace falta
     // la clase es estática y sus métodos también, no hace falta inyectar nada para usarla
@@ -71,13 +76,12 @@ public class CartaService {
         if (cdto.getAtaque() < 10 || cdto.getAtaque() > 300){
             throw new BadRequestException("No has introducido un ataque válida");
         }
-        // doble check porque no sabemos si el van a mandar una carta con usuario o no
-        // entonces si la mandan con uno (no es null el campo) comprobamos que esté en la bd
-        if (cdto.getUsuarioDTO() != null){
-            if (!cartaRepository.findByNombre(Mapper.DTOToEntity(cdto).getNombre()).isPresent()){
+        if (cdto.getUsername() != null){
+            if (!cartaRepository.findByNombre(cdto.getNombre()).isPresent()){
                 throw new BadRequestException("El usuario de la carta no está en la base de datos");
             }
         }
+
         cartaRepository.save(Mapper.DTOToEntity(cdto));
 
         return cdto;
@@ -102,13 +106,12 @@ public class CartaService {
         if (cdto.getAtaque() < 10 || cdto.getAtaque() > 300){
             throw new BadRequestException("No has introducido un ataque válida");
         }
-        // doble check porque no sabemos si el van a mandar una carta con usuario o no
-        // entonces si la mandan con uno (no es null el campo) comprobamos que esté en la bd
-        if (cdto.getUsuarioDTO() != null){
+        if (cdto.getUsername() != null){
             if (!cartaRepository.findByNombre(Mapper.DTOToEntity(cdto).getNombre()).isPresent()){
                 throw new BadRequestException("El usuario de la carta no está en la base de datos");
             }
         }
+
 
         Carta c = cartaRepository.findById(id).orElseThrow(()
                 -> new NotFoundException("La carta no está en la bd"));
@@ -117,8 +120,14 @@ public class CartaService {
         c.setTipo(cdto.getTipo());
         c.setVida(cdto.getVida());
         c.setAtaque(cdto.getAtaque());
-        // quiza pueda generar problemas? ya que el usuario dto no tiene id
-        c.setUsuario(Mapper.DTOToEntity(cdto.getUsuarioDTO()));
+
+
+        if (cdto.getUsername() != null){ // si mandan el nombre:
+            Usuario u = usuarioRepository.findByUsername(cdto.getUsername()).orElseThrow(()
+                    -> new NotFoundException("El usuario no se encuentra en la BD"));
+            c.setUsuario(u);
+
+        }
 
         cartaRepository.save(c);
 

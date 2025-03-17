@@ -87,7 +87,7 @@ public class Mapper {
                 c.getTipo(),
                 c.getVida(),
                 c.getAtaque(),
-                Mapper.entityToDTO(c.getUsuario())
+                c.getUsuario().getUsername()
         );
     }
 
@@ -127,8 +127,7 @@ public class Mapper {
                 cDTO.getNombre(),
                 cDTO.getTipo(),
                 cDTO.getVida(),
-                cDTO.getAtaque(),
-                Mapper.DTOToEntity(cDTO.getUsuarioDTO())
+                cDTO.getAtaque()
         );
     }
 

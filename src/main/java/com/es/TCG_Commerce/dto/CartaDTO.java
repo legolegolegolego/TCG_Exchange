@@ -8,26 +8,27 @@ public class CartaDTO {
     private String tipo;
     private int vida;
     private int ataque;
-    private UsuarioDTO usuarioDTO;
+    private String username;
 
     public CartaDTO() {
     }
 
-    public CartaDTO(Long id, String nombre, String tipo, int vida, int ataque, UsuarioDTO usuarioDTO) {
+    public CartaDTO(Long id, String nombre, String tipo, int vida, int ataque, String username) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
         this.vida = vida;
         this.ataque = ataque;
-        this.usuarioDTO = usuarioDTO;
+        this.username = username;
     }
 
-    public CartaDTO(String nombre, String tipo, int vida, int ataque, UsuarioDTO usuarioDTO) {
+
+    public CartaDTO(Long id, String nombre, String tipo, int vida, int ataque) {
+        this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
         this.vida = vida;
         this.ataque = ataque;
-        this.usuarioDTO = usuarioDTO;
     }
 
     public Long getId() {
@@ -42,39 +43,39 @@ public class CartaDTO {
         return nombre;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public int getVida() {
-        return vida;
-    }
-
-    public int getAtaque() {
-        return ataque;
-    }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
+    public int getVida() {
+        return vida;
+    }
+
     public void setVida(int vida) {
         this.vida = vida;
+    }
+
+    public int getAtaque() {
+        return ataque;
     }
 
     public void setAtaque(int ataque) {
         this.ataque = ataque;
     }
 
-    public UsuarioDTO getUsuarioDTO() {
-        return usuarioDTO;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUsuarioDTO(UsuarioDTO usuarioDTO) {
-        this.usuarioDTO = usuarioDTO;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
