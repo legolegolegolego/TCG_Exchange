@@ -117,12 +117,12 @@ public class UsuarioController {
 
     @PutMapping("/{nombre}")
     public ResponseEntity<UsuarioDTO> updateUser(
-            @PathVariable String nombreUsuario,@RequestBody UsuarioDTO udto, Authentication authentication
+            @PathVariable String nombre, @RequestBody UsuarioDTO udto, Authentication authentication
     ){
 
         // Comprobar si el usuario autenticado es el mismo que se quiere actualizar
 //        String usuarioAutenticado = authentication.getName();
-//        boolean esElMismoUsuario = usuarioAutenticado.equals(nombreUsuario);
+//        boolean esElMismoUsuario = usuarioAutenticado.equals(nombre);
 //
 //        if (!esElMismoUsuario){
 //            throw new ForbiddenException("No tienes permiso para modificar este usuario");
@@ -131,8 +131,8 @@ public class UsuarioController {
                 .stream()
                 .anyMatch(authority
                         -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) ||
-                authentication.getName().equals(nombreUsuario)) {
-            UsuarioDTO usuarioDTO = usuarioService.updateUser(nombreUsuario, udto);
+                authentication.getName().equals(nombre)) {
+            UsuarioDTO usuarioDTO = usuarioService.updateUser(nombre, udto);
             return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
         } else {
             throw new ForbiddenException("No tienes los permisos para acceder al recurso");
@@ -142,18 +142,18 @@ public class UsuarioController {
 
     @DeleteMapping("/{nombre}")
     public ResponseEntity<UsuarioDTO> deleteUser(
-            @PathVariable String nombreUsuario, Authentication authentication
+            @PathVariable String nombre, Authentication authentication
     ){
-//        if (!authentication.getName().equals(nombreUsuario)){
+//        if (!authentication.getName().equals(nombre)){
 //            throw new ForbiddenException("No tienes permiso para eliminar este usuario");
 //        }
         if(authentication.getAuthorities()
                 .stream()
                 .anyMatch(authority
                         -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) ||
-                authentication.getName().equals(nombreUsuario)) {
+                authentication.getName().equals(nombre)) {
             // copio antes de borrar para retornarlo despues
-            UsuarioDTO udto = usuarioService.deleteUser(nombreUsuario);
+            UsuarioDTO udto = usuarioService.deleteUser(nombre);
 
             return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
         } else {

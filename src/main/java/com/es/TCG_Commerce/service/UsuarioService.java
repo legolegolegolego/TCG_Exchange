@@ -128,7 +128,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
 
-    public UsuarioDTO updateUser(String nombreUsuario, UsuarioDTO usuarioActualizado){
+    public UsuarioDTO updateUser(String nombre, UsuarioDTO usuarioActualizado){
         // a partir de ahora solo pongo isBlank, ya que según la info que he encontrado
         // es redundante poner los dos, basicamente blank hace lo que empty pero mejor, pq tmb contempla espacios
         if (usuarioActualizado.getUsername().isBlank() || usuarioActualizado.getPassword().isBlank() || usuarioActualizado.getRoles().isBlank()){
@@ -155,7 +155,7 @@ public class UsuarioService implements UserDetailsService {
 //            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
 //        }
 
-        Usuario u = usuarioRepository.findByUsername(nombreUsuario)
+        Usuario u = usuarioRepository.findByUsername(nombre)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
         u.setUsername(usuarioActualizado.getUsername());
@@ -167,9 +167,9 @@ public class UsuarioService implements UserDetailsService {
         return usuarioActualizado;
     }
 
-    public UsuarioDTO deleteUser(String nombreUsuario){
+    public UsuarioDTO deleteUser(String nombre){
 
-        Usuario u = usuarioRepository.findByUsername(nombreUsuario)
+        Usuario u = usuarioRepository.findByUsername(nombre)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
         // lo copio antes de borrarlo para retornarlo luego los datos

@@ -194,44 +194,44 @@ Estas son las tablas que contendrá:
    - Ver más en cada endpoint, en la parte de **seguridad**.
 
 ## **Pruebas de Endpoints**
+![img_9.png](img_9.png)
 
 ### **Autenticación**
 - **POST /usuarios/login**
-    - ✅ Prueba con credenciales correctas.
-    - ❌ Prueba con credenciales incorrectas.
-    - ⚠️ Prueba con un usuario inexistente.
-    - ⏳ Prueba con múltiples intentos fallidos para detectar bloqueo de IP o usuario.
+    - ✅ Prueba con credenciales correctas.![img_11.png](img_11.png)
+    - ❌ Prueba con credenciales incorrectas.![img_10.png](img_10.png)
+    - ⚠️ Prueba con un usuario inexistente.![img_13.png](img_13.png)
 
 - **POST /usuarios/register**
     - ✅ Prueba con datos válidos.![img_6.png](img_6.png)
-    - ❌ Prueba con username ya existente.
+    - ❌ Prueba con username ya existente.![img_7.png](img_7.png)
     - ❌ Prueba con password de menos de 6 caracteres.![img_5.png](img_5.png)
     - ❌ Prueba con password1 y password2 diferentes.![img_3.png](img_3.png)
     - ❌ Prueba con un rol no permitido.![img_4.png](img_4.png)
 
 ### **Gestión de Usuarios**
 - **GET /usuarios/** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
+    - ✅ Prueba con usuario ADMIN.![img_18.png](img_18.png)
+    - ❌ Prueba con usuario USER.![img_16.png](img_16.png)
+    - ❌ Prueba sin autenticación.![img_17.png](img_17.png)
 
 - **GET /usuarios/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
-    - ⚠️ Prueba con un ID de usuario inexistente.
+    - ✅ Prueba con usuario ADMIN.![img_19.png](img_19.png)
+    - ❌ Prueba con usuario USER.![img_14.png](img_14.png)
+    - ❌ Prueba sin autenticación.![img_15.png](img_15.png)
+    - ⚠️ Prueba con un ID de usuario inexistente.![img_20.png](img_20.png)
 
 - **GET /usuarios/byNombre/{nombre}**
-    - ✅ Prueba con usuario ADMIN.
-    - ✅ Prueba con usuario dueño de la cuenta.
-    - ❌ Prueba con usuario USER que intenta ver otra cuenta.
-    - ❌ Prueba sin autenticación.
+    - ✅ Prueba con usuario ADMIN.![img_21.png](img_21.png)
+    - ✅ Prueba con usuario dueño de la cuenta.![img_22.png](img_22.png)
+    - ❌ Prueba con usuario USER que intenta ver otra cuenta.![img_23.png](img_23.png)
+    - ❌ Prueba sin autenticación.![img_24.png](img_24.png)
 
 - **PUT /usuarios/{nombre}**
     - ✅ Prueba con usuario ADMIN.
     - ✅ Prueba con usuario dueño de la cuenta.
     - ❌ Prueba con usuario USER intentando modificar otra cuenta.
-    - ❌ Prueba sin autenticación.
+    - ❌ Prueba sin autenticación.![img_25.png](img_25.png)
     - ❌ Prueba con un nombre de usuario inexistente.
 
 - **DELETE /usuarios/{nombre}**
@@ -323,8 +323,8 @@ Estas son las tablas que contendrá:
     - Verificar si la API está protegida contra CSRF.
 
 5. **Exposición de Datos Sensibles:**
-    - Comprobar que las contraseñas están correctamente hasheadas.
-    - Asegurar que los tokens JWT no contienen información sensible.
+    - Comprobar que las contraseñas están correctamente hasheadas.![img_8.png](img_8.png)
+    - Asegurar que los tokens JWT no contienen información sensible.![img_12.png](img_12.png)
 
 6. **Rate Limiting y Protección contra Ataques de Fuerza Bruta:**
     - Verificar si hay protección contra múltiples intentos de autenticación fallidos.
