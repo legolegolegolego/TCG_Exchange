@@ -75,20 +75,26 @@ public class Mapper {
 
     public static CartaDTO entityToDTO(Carta c){
 
-        // tengo que mapear antes la lista de usuarios, puesto que en cartaDTO son UsuariosDTO:
-//        List<UsuarioDTO> uDTOs = new ArrayList<>();
-//        for (Usuario u : c.getVendedores()) {
-//            uDTOs.add(this.entityToDTO(u));
-//        }
+        // si no tiene usuario asignado no se inicializa con nombre
+        if (c.getUsuario() != null){
+            return new CartaDTO(
+                    c.getId(),
+                    c.getNombre(),
+                    c.getTipo(),
+                    c.getVida(),
+                    c.getAtaque(),
+                    c.getUsuario().getUsername()
+            );
+        } else {
+            return new CartaDTO(
+                    c.getId(),
+                    c.getNombre(),
+                    c.getTipo(),
+                    c.getVida(),
+                    c.getAtaque()
+            );
+        }
 
-        return new CartaDTO(
-                c.getId(),
-                c.getNombre(),
-                c.getTipo(),
-                c.getVida(),
-                c.getAtaque(),
-                c.getUsuario().getUsername()
-        );
     }
 
     // cartaS
@@ -116,11 +122,6 @@ public class Mapper {
     }
 
     public static Carta DTOToEntity(CartaDTO cDTO){
-
-/*        List<Usuario> us = new ArrayList<>();
-        for (UsuarioDTO uDTO : cDTO.getVendedores()) {
-            us.add(this.DTOToEntity(uDTO));
-        }*/
 
         return new Carta(
                 cDTO.getId(),

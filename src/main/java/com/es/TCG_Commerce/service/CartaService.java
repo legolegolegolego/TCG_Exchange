@@ -77,9 +77,7 @@ public class CartaService {
             throw new BadRequestException("No has introducido un ataque válida");
         }
         if (cdto.getUsername() != null){
-            if (!cartaRepository.findByNombre(cdto.getNombre()).isPresent()){
-                throw new BadRequestException("El usuario de la carta no está en la base de datos");
-            }
+            throw new BadRequestException("Una nueva carta no puede tener un usuario asignado, tiene que comprarla");
         }
 
         cartaRepository.save(Mapper.DTOToEntity(cdto));
@@ -88,10 +86,20 @@ public class CartaService {
     }
 
     public CartaDTO update(Long id, CartaDTO cdto){
-        if (cartaRepository.findById(cdto.getId()).isPresent()){
-            throw new DuplicateException("Error. El id de la carta ya existe en otra.");
+
+        Carta c = cartaRepository.findById(id).orElseThrow(()
+                -> new NotFoundException("La carta no está en la bd"));
+
+        // si el id de la carta que se quiere cambiar es distinto del que se pasa por json:
+        // esto permite que se actualice una carta con el mismo id sin cambiarlo
+        if (id != cdto.getId()){
+            if (cartaRepository.findById(cdto.getId()).isPresent()){
+                throw new DuplicateException("Error. El id de la carta ya existe en  otra.");
+            }
         }
-        if (cartaRepository.findByNombre(cdto.getNombre()).isPresent()){
+
+        // &&... para no compararse con ella misma, permitir el mismo nombre si ya es suyo
+        if (cartaRepository.findByNombre(cdto.getNombre()).isPresent() && !c.getNombre().equals(cdto.getNombre())){
             throw new DuplicateException("Ese nombre ya lo tiene otra carta");
         }
         if (!(cdto.getTipo().equals("FUEGO")  || cdto.getTipo().equals("PLANTA")  || cdto.getTipo().equals("AGUA")  ||
@@ -113,8 +121,7 @@ public class CartaService {
         }
 
 
-        Carta c = cartaRepository.findById(id).orElseThrow(()
-                -> new NotFoundException("La carta no está en la bd"));
+
 
         c.setNombre(cdto.getNombre());
         c.setTipo(cdto.getTipo());

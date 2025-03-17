@@ -153,7 +153,8 @@ Estas son las tablas que contendrá:
    - `tipo` que sea uno de estos: `FUEGO`, `AGUA`, `PLANTA`, `RAYO`, `PSIQUICO`, `LUCHA`, `OSCURO`, `DRAGON`, `METALICO`, `INCOLORO`.
    - `vida` entre 10 y 300.
    - `ataque` entre 10 y 300.
-   - `usuario` que exista en la base de datos.
+   - `usuario` que exista en la base de datos. No permitido que una nueva tenga un usuario establecido, ha de actualizarse
+                más adelante, con una compra.
 
 3. **Transacciones**
    - `id` autoincremental.
@@ -243,36 +244,37 @@ Estas son las tablas que contendrá:
 
 ### **Gestión de Cartas**
 - **GET /cartas/** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
+    - ✅ Prueba con usuario ADMIN.![img_44.png](img_44.png)
+    - ❌ Prueba con usuario USER.![img_43.png](img_43.png)
+    - ❌ Prueba sin autenticación.![img_42.png](img_42.png)
 
 - **GET /cartas/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
-    - ❌ Prueba con un ID de carta inexistente.
+    - ✅ Prueba con usuario ADMIN.![img_45.png](img_45.png)
+    - ❌ Prueba con usuario USER.![img_46.png](img_46.png)
+    - ❌ Prueba sin autenticación.![img_47.png](img_47.png)
+    - ❌ Prueba con un ID de carta inexistente.![img_48.png](img_48.png)
 
 - **POST /cartas** (Solo ADMIN)
     - ✅ Prueba con usuario ADMIN.![img_35.png](img_35.png)
     - ❌ Prueba con usuario USER.![img_36.png](img_36.png)
     - ❌ Prueba sin autenticación.![img_37.png](img_37.png)
     - ❌ Prueba con nombre duplicado.![img_38.png](img_38.png)
-    - ❌ Prueba con un tipo no permitido.
-    - ❌ Prueba con vida o ataque fuera del rango permitido.
+    - ❌ Prueba con un tipo no permitido.![img_39.png](img_39.png)
+    - ❌ Prueba con vida o ataque fuera del rango permitido.![img_40.png](img_40.png)![img_41.png](img_41.png)
+    - ❌ Prueba creando con un usuario (not null).![img_49.png](img_49.png)
 
 - **PUT /cartas/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
-    - ❌ Prueba con ID inexistente.
-    - ❌ Prueba con datos inválidos.
+    - ✅ Prueba con usuario ADMIN.![img_50.png](img_50.png)
+    - ❌ Prueba con usuario USER.![img_51.png](img_51.png)
+    - ❌ Prueba sin autenticación.![img_52.png](img_52.png)
+    - ❌ Prueba con ID inexistente.![img_53.png](img_53.png)
+    - ❌ Prueba con datos inválidos.![img_54.png](img_54.png)
 
 - **DELETE /cartas/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
-    - ❌ Prueba con ID inexistente.
+    - ✅ Prueba con usuario ADMIN.![img_55.png](img_55.png)
+    - ❌ Prueba con usuario USER.![img_57.png](img_57.png)
+    - ❌ Prueba sin autenticación.![img_56.png](img_56.png)
+    - ❌ Prueba con ID inexistente.![img_58.png](img_58.png)
 
 ### **Gestión de Transacciones**
 - **GET /transacciones/{id}** (Solo ADMIN)
@@ -309,7 +311,7 @@ Estas son las tablas que contendrá:
 1. **Autenticación y Autorización:**
     - Probar acceso a rutas protegidas sin autenticación.![img.png](img.png)![img_1.png](img_1.png)
     - Intentar acceso a recursos de otros usuarios. // ver pruebas de endpoints
-    - Verificar que los tokens expiran correctamente. // no voy a esperar una hora
+    - Verificar que los tokens expiran correctamente. // comprobado (por tiempo)
     - Intentar autenticarse con contraseñas incorrectas múltiples veces. // no quiero banearme
 
 2. **Inyección SQL:**
