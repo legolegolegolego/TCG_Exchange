@@ -39,7 +39,7 @@ public class TransaccionService {
         return Mapper.entityToDTO(t);
     }
 
-    public TransaccionDTO insert(Long idTransaccion, TransaccionDTO tdto){
+    public TransaccionDTO insert(TransaccionDTO tdto){
 
         if (tdto.getPrecio() <= 0){
             throw new BadRequestException("El precio debe ser mayor a 0");

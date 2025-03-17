@@ -32,8 +32,8 @@ public class TransaccionController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<TransaccionDTO> insert(@PathVariable Long idTransaccion, @RequestBody TransaccionDTO tdto){
-        tservice.insert(idTransaccion, tdto);
+    public ResponseEntity<TransaccionDTO> insert(@RequestBody TransaccionDTO tdto){
+        tservice.insert(tdto);
 
         return new ResponseEntity<TransaccionDTO>(tdto, HttpStatus.OK);
     }

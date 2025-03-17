@@ -45,7 +45,7 @@ public class CartaController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<CartaDTO> insertCarta(@PathVariable Long id, @RequestBody CartaDTO cdto){
+    public ResponseEntity<CartaDTO> insertCarta(@RequestBody CartaDTO cdto){
         cartaService.insert(cdto);
 
         return new ResponseEntity<CartaDTO>(cdto, HttpStatus.OK);

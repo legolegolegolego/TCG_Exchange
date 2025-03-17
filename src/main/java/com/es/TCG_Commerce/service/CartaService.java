@@ -59,10 +59,10 @@ public class CartaService {
         if (cartaRepository.findByNombre(cdto.getNombre()).isPresent()){
             throw new DuplicateException("Ese nombre ya lo tiene otra carta");
         }
-        if (cdto.getTipo() != "FUEGO" || cdto.getTipo() != "PLANTA" || cdto.getTipo() != "AGUA" ||
-                cdto.getTipo() != "RAYO" || cdto.getTipo() != "PSIQUICO" || cdto.getTipo() != "LUCHA" ||
-                cdto.getTipo() != "OSCURO" || cdto.getTipo() != "DRAGON" || cdto.getTipo() != "METALICO" ||
-                cdto.getTipo() != "INCOLORO"){
+        if (!(cdto.getTipo().equals("FUEGO")  || cdto.getTipo().equals("PLANTA")  || cdto.getTipo().equals("AGUA")  ||
+                cdto.getTipo().equals("RAYO")  || cdto.getTipo().equals("PSIQUICO")  || cdto.getTipo().equals("LUCHA")  ||
+                cdto.getTipo().equals("OSCURO")  || cdto.getTipo().equals("DRAGON")  || cdto.getTipo().equals("METALICO")  ||
+                cdto.getTipo().equals("INCOLORO") )){
             throw new BadRequestException("No has introducido un tipo válido");
         }
         if (cdto.getVida() < 10 || cdto.getVida() > 300){
@@ -90,10 +90,10 @@ public class CartaService {
         if (cartaRepository.findByNombre(cdto.getNombre()).isPresent()){
             throw new DuplicateException("Ese nombre ya lo tiene otra carta");
         }
-        if (cdto.getTipo() != "FUEGO" || cdto.getTipo() != "PLANTA" || cdto.getTipo() != "AGUA" ||
-                cdto.getTipo() != "RAYO" || cdto.getTipo() != "PSIQUICO" || cdto.getTipo() != "LUCHA" ||
-                cdto.getTipo() != "OSCURO" || cdto.getTipo() != "DRAGON" || cdto.getTipo() != "METALICO" ||
-                cdto.getTipo() != "INCOLORO"){
+        if (!(cdto.getTipo().equals("FUEGO")  || cdto.getTipo().equals("PLANTA")  || cdto.getTipo().equals("AGUA")  ||
+                cdto.getTipo().equals("RAYO")  || cdto.getTipo().equals("PSIQUICO")  || cdto.getTipo().equals("LUCHA")  ||
+                cdto.getTipo().equals("OSCURO")  || cdto.getTipo().equals("DRAGON")  || cdto.getTipo().equals("METALICO")  ||
+                cdto.getTipo().equals("INCOLORO") )){
             throw new BadRequestException("No has introducido un tipo válido");
         }
         if (cdto.getVida() < 10 || cdto.getVida() > 300){
