@@ -192,3 +192,166 @@ Estas son las tablas que contendrá:
    - Se impide que un usuario **compre sus propias cartas**, evitando fraudes en transacciones.
    - Se verifica que los vendedores y compradores existan en la base de datos antes de procesar transacciones.
    - Ver más en cada endpoint, en la parte de **seguridad**.
+
+## **Pruebas de Endpoints**
+
+### **Autenticación**
+- **POST /usuarios/login**
+    - ✅ Prueba con credenciales correctas.
+    - ❌ Prueba con credenciales incorrectas.
+    - ⚠️ Prueba con un usuario inexistente.
+    - ⏳ Prueba con múltiples intentos fallidos para detectar bloqueo de IP o usuario.
+
+- **POST /usuarios/register**
+    - ✅ Prueba con datos válidos.
+    - ❌ Prueba con username ya existente.
+    - ❌ Prueba con password de menos de 6 caracteres.
+    - ❌ Prueba con caracteres inválidos en el password.
+    - ❌ Prueba con un rol no permitido.
+
+### **Gestión de Usuarios**
+- **GET /usuarios/** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+
+- **GET /usuarios/{id}** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+    - ⚠️ Prueba con un ID de usuario inexistente.
+
+- **GET /usuarios/byNombre/{nombre}**
+    - ✅ Prueba con usuario ADMIN.
+    - ✅ Prueba con usuario dueño de la cuenta.
+    - ❌ Prueba con usuario USER que intenta ver otra cuenta.
+    - ❌ Prueba sin autenticación.
+
+- **PUT /usuarios/{nombre}**
+    - ✅ Prueba con usuario ADMIN.
+    - ✅ Prueba con usuario dueño de la cuenta.
+    - ❌ Prueba con usuario USER intentando modificar otra cuenta.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con un nombre de usuario inexistente.
+
+- **DELETE /usuarios/{nombre}**
+    - ✅ Prueba con usuario ADMIN.
+    - ✅ Prueba con usuario dueño de la cuenta.
+    - ❌ Prueba con usuario USER intentando eliminar otra cuenta.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con un nombre de usuario inexistente.
+
+### **Gestión de Cartas**
+- **GET /cartas/** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+
+- **GET /cartas/{id}** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con un ID de carta inexistente.
+
+- **POST /cartas** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con nombre duplicado.
+    - ❌ Prueba con un tipo no permitido.
+    - ❌ Prueba con vida o ataque fuera del rango permitido.
+
+- **PUT /cartas/{id}** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con ID inexistente.
+    - ❌ Prueba con datos inválidos.
+
+- **DELETE /cartas/{id}** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con ID inexistente.
+
+### **Gestión de Transacciones**
+- **GET /transacciones/{id}** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con ID inexistente.
+
+- **POST /transacciones/** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con ID de comprador/vendedor inexistente.
+    - ❌ Prueba con ID de carta inexistente.
+    - ❌ Prueba donde el vendedor es el mismo que el comprador.
+    - ❌ Prueba con precio <= 0.
+
+- **PUT /transacciones/{id}** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con ID inexistente.
+
+- **DELETE /transacciones/{id}** (Solo ADMIN)
+    - ✅ Prueba con usuario ADMIN.
+    - ❌ Prueba con usuario USER.
+    - ❌ Prueba sin autenticación.
+    - ❌ Prueba con ID inexistente.
+
+---
+
+## **Pruebas de Seguridad**
+
+1. **Autenticación y Autorización:**
+    - Probar acceso a rutas protegidas sin autenticación.
+    - Intentar acceso a recursos de otros usuarios.
+    - Verificar que los tokens expiran correctamente.
+    - Intentar autenticarse con contraseñas incorrectas múltiples veces.
+
+2. **Inyección SQL:**
+    - Probar inyección SQL en todos los campos de entrada.
+    - Intentar modificar consultas mediante inputs maliciosos.
+
+3. **Cross-Site Scripting (XSS):**
+    - Intentar inyectar código JavaScript en los campos de entrada.
+
+4. **Cross-Site Request Forgery (CSRF):**
+    - Verificar si la API está protegida contra CSRF.
+
+5. **Exposición de Datos Sensibles:**
+    - Comprobar que las contraseñas están correctamente hasheadas.
+    - Asegurar que los tokens JWT no contienen información sensible.
+
+6. **Rate Limiting y Protección contra Ataques de Fuerza Bruta:**
+    - Verificar si hay protección contra múltiples intentos de autenticación fallidos.
+    - Testear si se pueden realizar múltiples peticiones en un corto periodo de tiempo sin ser bloqueado.
+
+7. **Validación de Datos:**
+    - Asegurar que los datos enviados cumplen con las restricciones definidas en la lógica de negocio.
+    - Intentar enviar datos inválidos y observar la respuesta del servidor.
+
+---
+
+## **Pruebas de Lógica de Negocio**
+
+1. **Usuarios:**
+    - El username debe ser único.
+    - La contraseña debe cumplir con los requisitos mínimos.
+    - Solo roles USER o ADMIN permitidos.
+
+2. **Cartas:**
+    - El nombre debe ser único.
+    - Validar que el tipo de carta sea correcto.
+    - Asegurar que los valores de vida y ataque estén dentro del rango permitido.
+
+3. **Transacciones:**
+    - El precio debe ser mayor a 0.
+    - El comprador y el vendedor deben existir y no ser la misma persona.
+    - La carta debe existir en la base de datos.
+
+---
+

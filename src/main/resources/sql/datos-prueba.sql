@@ -1,21 +1,21 @@
--- Insertar usuarios
-INSERT INTO usuarios (id, username, password, rol) VALUES
-(1, 'diego', '123456', 'USER'),
-(2, 'pepe', 'admin123', 'ADMIN'),
-(3, 'maria', 'maria456', 'USER'),
-(4, 'juan', 'juan789', 'USER');
-
--- Insertar cartas
-INSERT INTO cartas (id, nombre, tipo, vida, ataque, id_user) VALUES
-(1, 'Chikorita', 'PLANTA', 100, 50, 1),
-(22, 'Charmander', 'FUEGO', 80, 40, 2),
-(38, 'Mudkip', 'AGUA', 70, 60, 3),
-(4, 'Pikachu', 'ELECTRICO', 90, 45, 4),
-(15, 'Abra', 'PSIQUICO', 110, 30, 1);
-
--- Insertar transacciones
-INSERT INTO transacciones (id, precio, id_vendedor, id_comprador, id_carta) VALUES
-(1, 500.00, 1, 2, 1),
-(2, 300.00, 2, 3, 2),
-(3, 450.00, 3, 4, 3),
-(4, 250.00, 4, 1, 4);
+---- Insertar usuarios
+--INSERT INTO `usuarios` (`id`, `username`, `password`, `rol`) VALUES
+--(1, 'diego', '123456', 'USER'),
+--(2, 'pepe', 'admin123', 'ADMIN'),
+--(3, 'maria', 'maria456', 'USER'),
+--(4, 'juan', 'juan789', 'USER');
+--
+---- Insertar cartas
+--INSERT INTO `cartas` (`id`, `nombre`, `tipo`, `vida`, `ataque`, `id_user`) VALUES
+--(1, 'Chikorita', 'PLANTA', 100, 50, 1),
+--(22, 'Charmander', 'FUEGO', 80, 40, 2),
+--(38, 'Mudkip', 'AGUA', 70, 60, 3),
+--(4, 'Pikachu', 'ELECTRICO', 90, 45, 4),
+--(15, 'Abra', 'PSIQUICO', 110, 30, 1);
+--
+---- Insertar transacciones
+--INSERT INTO `transacciones` (`id`, `precio`, `id_vendedor`, `id_comprador`, `id_carta`) VALUES
+--(1, 500.00, 1, 2, 1),
+--(2, 300.00, 2, 3, 2),
+--(3, 450.00, 3, 4, 3),
+--(4, 250.00, 4, 1, 4);
