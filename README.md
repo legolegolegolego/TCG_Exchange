@@ -1,17 +1,46 @@
 # TCG Commerce API REST
 
-## Descripción / idea
-Este proyecto trata sobre la implementación de una __API REST segura__ donde se compran y venden cartas del juego
-de cartas de Pokemon:
-__Trading Card Game (TCG)__.
+## **Descripción / Idea**
+Este proyecto consiste en la implementación de una **API REST segura** para la compra y venta de cartas del juego 
+**Pokémon: Trading Card Game (TCG)**.
 
-En ella, los usuarios podrán comprar y vender cartas, sirviendo la app como página de compra.
-Los administradores podrán insertar y eliminar cartas que cumplan los requisitos.
+La API permitirá que los **usuarios** puedan:
+- Comprar cartas de otros jugadores.
+- Vender cartas propias en la plataforma.
+- Consultar detalles de las cartas disponibles.
 
-## Justificación
-Esta aplicación es necesaria para que los usuarios puedan completar sus mazos con las cartas que quieran sin que adeuden
-a sus padres gastando dinero en sobres, aparte, esta herramienta online sirve para la inmediatez y facilidad de obtención
-de estas cartas, sin que tengan que ir a eventos presenciales una vez cada lustro.
+Los **administradores** tendrán permisos especiales para insertar, eliminar y modificar cartas.
+
+Para garantizar la **seguridad y el control de accesos**, la API implementará autenticación basada en **tokens (JWT)**, 
+permitiendo que cada solicitud realizada por un usuario sea segura sin necesidad de almacenar sesiones en el servidor.
+
+Además, la API seguirá los principios de **RESTful**, asegurando un diseño escalable y flexible, con endpoints claros y 
+estructurados que permitan una comunicación eficiente entre el cliente y el servidor.
+
+---
+
+## **Justificación**
+El **mercado de cartas coleccionables** de Pokémon TCG ha crecido enormemente en los últimos años, pero sigue teniendo 
+**limitaciones** para los jugadores:
+
+1. **Alto costo de obtención de cartas**: Las cartas raras o necesarias para ciertos mazos pueden ser difíciles de 
+conseguir sin gastar grandes sumas de dinero en sobres al azar.
+2. **Dificultad de compra y venta entre jugadores**: Actualmente, los jugadores dependen de eventos presenciales o 
+mercados en línea no especializados, lo que hace que la compra y venta no siempre sea segura ni eficiente.
+3. **Falta de inmediatez**: Conseguir una carta específica puede tardar semanas o incluso meses si se depende de 
+intercambios físicos o eventos limitados.
+
+### **¿Por qué es necesaria esta API?**
+✅ **Accesibilidad**: Permite a los jugadores obtener cartas específicas sin depender de la compra aleatoria de sobres.  
+✅ **Seguridad**: Implementación de autenticación segura y verificación de vendedores para evitar fraudes.  
+✅ **Facilidad de uso**: Funcionalidades intuitivas para que cualquier usuario pueda comprar y vender sin complicaciones.  
+✅ **Disponibilidad constante**: Permite comprar y vender cartas en cualquier momento, sin esperar eventos presenciales
+o depender de redes informales.
+
+Con esta API, los jugadores podrán **completar sus mazos con las cartas que realmente necesitan** sin que tengan que 
+gastar dinero de manera innecesaria o depender de la suerte en la apertura de sobres.
+
+---
 
 ## Tablas
 Estas son las tablas que contendrá:
@@ -337,3 +366,65 @@ Estas son las tablas que contendrá:
     - Intentar enviar datos inválidos y observar la respuesta del servidor. // ver pruebas de endpoints
 
 ---
+
+## Tecnologías Utilizadas
+
+### i. Dependencias Incluidas
+En este proyecto, se han utilizado las siguientes dependencias para facilitar el desarrollo y mejorar la funcionalidad:
+
+- **Spring Boot**: Framework para desarrollo de aplicaciones Java con arquitectura MVC.
+- **Spring Data JPA**: Simplifica la interacción con bases de datos mediante JPA (Hibernate).
+- **Spring Security**: Implementa autenticación y autorización en la aplicación.
+- **MySQL Connector**: Permite la conexión entre la aplicación y la base de datos MySQL.
+
+### ii. Software Utilizado
+Durante el desarrollo del proyecto, se ha empleado el siguiente software:
+
+- **IntelliJ IDEA**: Entorno de desarrollo integrado (IDE) para escribir y depurar código en Java.
+- **Insomnia**: Herramienta para probar la API REST desarrollada en el proyecto.
+- **XAMPP**: Paquete que incluye Apache y MySQL, entre otros, utilizado para la gestión de bases de datos en entornos de desarrollo.
+- **Git/GitHub**: Control de versiones.
+- **Navegador Web (Brave)**: Para manejar la BD desde phpMyAdmin.
+
+### iii. Descripción de Tecnologías y su Propósito
+
+- **Spring Boot**: Se ha utilizado para el desarrollo del backend, permitiendo la creación rápida de servicios RESTful.
+- **Spring Data JPA**: Facilita la persistencia de datos y la comunicación con la base de datos MySQL.
+- **Spring Security**: Se implementó para gestionar la autenticación y autorización de usuarios.
+- **MySQL Connector**: Permite que la aplicación pueda conectarse y operar con la base de datos MySQL.
+- **Insomnia**: Se ha usado para probar las peticiones HTTP y validar el correcto funcionamiento del backend.
+- **XAMPP**: Se empleó como servidor local de base de datos durante la fase de desarrollo.
+- **GitHub**: Se utilizó para el control de versiones.
+
+## API REST y sus principios
+
+### b. ¿Qué es una API REST?
+Una **API REST** (Representational State Transfer) es un conjunto de reglas y convenciones para la comunicación entre sistemas mediante HTTP. 
+Está basada en la arquitectura REST y permite la interacción entre cliente y servidor de forma estructurada y escalable.
+
+### Principios de una API REST
+1. **Cliente-Servidor**: Separación de responsabilidades entre el frontend y backend.
+2. **Interfaz Uniforme**: Uso de métodos HTTP estándar (GET, POST, PUT, DELETE).
+3. **Sin Estado**: Se dice que una API REST es sin estado (stateless) porque cada solicitud del cliente al servidor 
+debe contener toda la información necesaria para ser procesada, sin depender de datos almacenados en sesiones del servidor..
+4. **Caché**: Optimización del rendimiento mediante almacenamiento de respuestas en caché.
+5. **Sistema en Capas**: La API puede tener múltiples capas como seguridad, balanceo de carga, etc.
+6. **Código Bajo Demanda (Opcional)**: Permite enviar código ejecutable al cliente.
+
+#### Identificación de los principios en la implementación
+- **Cliente-Servidor**: Separación del frontend y backend.
+- **Interfaz Uniforme**: Uso de endpoints con métodos HTTP bien definidos (`GET /usuarios`, `POST /usuarios`).
+- **Sin Estado**: Cada solicitud contiene tokens de autenticación si es necesario.
+- **Sistema en Capas**: Uso de controladores, servicios y repositorios en capas separadas.
+
+## Ventajas de la separación entre Cliente y Servidor
+
+### c. Beneficios de separar responsabilidades
+1. **Mantenimiento y escalabilidad**: Cada parte puede evolucionar sin afectar a la otra.
+2. **Reutilización**: Un mismo backend puede ser consumido por múltiples clientes (web, móvil, etc.).
+3. **Seguridad**: Mejor control sobre la autenticación y autorización.
+4. **Mejor rendimiento**: El servidor puede optimizar sus respuestas sin afectar la UI.
+5. **Flexibilidad**: Se pueden usar diferentes tecnologías para frontend y backend.
+
+Esta separación permite que el desarrollo sea más eficiente y organizado, facilitando la evolución del sistema sin grandes refactorizaciones.
+
