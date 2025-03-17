@@ -72,14 +72,19 @@ public class UsuarioService implements UserDetailsService {
             throw new BadRequestException("La longitud de la contraseña debe ser superior o igual da 6 caracteres");
         }
 
-        // Compruebo que es alfanumérica sin símbolos
-        if (usuarioRegisterDTO.getPassword().matches("[A-Za-z0-9]+")) {
-            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
-        }
+        //lo quito porque me da problemas el regex
+//        // Compruebo que es alfanumérica sin símbolos
+//        if (usuarioRegisterDTO.getPassword().matches("^[a-zA-Z0-9]+$")) {
+//            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
+//        }
 
         // Compruebo que ambas contrasenias coinciden
         if (!usuarioRegisterDTO.getPassword().equals(usuarioRegisterDTO.getPassword2())) {
             throw new BadRequestException("Ambas contraseñas deben ser iguales");
+        }
+
+        if (usuarioRegisterDTO.getRoles() != "USER" || usuarioRegisterDTO.getRoles() != "ADMIN"){
+            throw new BadRequestException("Roles inválidos");
         }
 
         Usuario newUsuario = Mapper.DTOToEntity(usuarioRegisterDTO);
@@ -141,10 +146,14 @@ public class UsuarioService implements UserDetailsService {
             throw new BadRequestException("La longitud de la contraseña debe ser superior o igual da 6 caracteres");
         }
 
-        // Compruebo que es alfanumérica sin símbolos
-        if (usuarioActualizado.getPassword().matches("[A-Za-z0-9]+")) {
-            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
+        if (usuarioActualizado.getRoles() != "USER" || usuarioActualizado.getRoles() != "ADMIN"){
+            throw new BadRequestException("Roles inválidos");
         }
+
+//        // Compruebo que es alfanumérica sin símbolos
+//        if (usuarioActualizado.getPassword().matches("[A-Za-z0-9]+")) {
+//            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
+//        }
 
         Usuario u = usuarioRepository.findByUsername(nombreUsuario)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));

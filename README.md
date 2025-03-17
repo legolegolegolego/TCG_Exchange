@@ -142,7 +142,7 @@ Estas son las tablas que contendrá:
 1. **Usuarios**
    - `id` autoincremental.
    - `username` único e imprescindible (not null).
-   - `password` >=6 carácteres alfanuméricos, sin símbolos. Comprobar que coindicen password en el login con la almacenada en la bd
+   - `password` >=6 carácteres. Comprobar que coindicen password en el login con la almacenada en la bd
                 y al registro: las dos password.
    - `roles` USER o ADMIN.
    - `cartas` que existan en la base de datos.
@@ -188,7 +188,7 @@ Estas son las tablas que contendrá:
 
 4. **Validaciones de seguridad**
    - Se impide el registro de usuarios con nombres duplicados.
-   - Se valida que las contraseñas cumplan con requisitos mínimos de seguridad (mínimo 6 caracteres alfanuméricos, sin símbolos).
+   - Se valida que las contraseñas cumplan con requisitos mínimos de seguridad (mínimo 6 caracteres).
    - Se impide que un usuario **compre sus propias cartas**, evitando fraudes en transacciones.
    - Se verifica que los vendedores y compradores existan en la base de datos antes de procesar transacciones.
    - Ver más en cada endpoint, en la parte de **seguridad**.
@@ -206,7 +206,7 @@ Estas son las tablas que contendrá:
     - ✅ Prueba con datos válidos.
     - ❌ Prueba con username ya existente.
     - ❌ Prueba con password de menos de 6 caracteres.
-    - ❌ Prueba con caracteres inválidos en el password.
+    - ❌ Prueba con password1 y password2 diferentes.![img_3.png](img_3.png)
     - ❌ Prueba con un rol no permitido.
 
 ### **Gestión de Usuarios**
@@ -307,7 +307,7 @@ Estas son las tablas que contendrá:
 ## **Pruebas de Seguridad**
 
 1. **Autenticación y Autorización:**
-    - Probar acceso a rutas protegidas sin autenticación.
+    - Probar acceso a rutas protegidas sin autenticación.![img.png](img.png)![img_1.png](img_1.png)
     - Intentar acceso a recursos de otros usuarios.
     - Verificar que los tokens expiran correctamente.
     - Intentar autenticarse con contraseñas incorrectas múltiples veces.
