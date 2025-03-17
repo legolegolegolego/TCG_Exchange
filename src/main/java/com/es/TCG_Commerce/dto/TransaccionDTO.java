@@ -3,14 +3,14 @@ package com.es.TCG_Commerce.dto;
 // apuntesDTO: si el id es autoincremental, no poner en el DTO
 public class TransaccionDTO {
     private double precio;
-    private UsuarioDTO vendedor;
-    private UsuarioDTO comprador;
-    private CartaDTO carta;
+    private Long vendedor;
+    private Long comprador;
+    private Long carta;
 
     public TransaccionDTO() {
     }
 
-    public TransaccionDTO(double precio, UsuarioDTO vendedor, UsuarioDTO comprador, CartaDTO carta) {
+    public TransaccionDTO(double precio, Long vendedor, Long comprador, Long carta) {
         this.precio = precio;
         this.vendedor = vendedor;
         this.comprador = comprador;
@@ -25,27 +25,27 @@ public class TransaccionDTO {
         this.precio = precio;
     }
 
-    public UsuarioDTO getVendedor() {
+    public Long getVendedor() {
         return vendedor;
     }
 
-    public void setVendedor(UsuarioDTO vendedor) {
+    public void setVendedor(Long vendedor) {
         this.vendedor = vendedor;
     }
 
-    public UsuarioDTO getComprador() {
+    public Long getComprador() {
         return comprador;
     }
 
-    public void setComprador(UsuarioDTO comprador) {
+    public void setComprador(Long comprador) {
         this.comprador = comprador;
     }
 
-    public CartaDTO getCarta() {
+    public Long getCarta() {
         return carta;
     }
 
-    public void setCarta(CartaDTO carta) {
+    public void setCarta(Long carta) {
         this.carta = carta;
     }
 }

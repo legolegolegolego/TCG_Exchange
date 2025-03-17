@@ -115,7 +115,7 @@ public class CartaService {
             throw new BadRequestException("No has introducido un ataque válida");
         }
         if (cdto.getUsername() != null){
-            if (!cartaRepository.findByNombre(Mapper.DTOToEntity(cdto).getNombre()).isPresent()){
+            if (!usuarioRepository.findByUsername(cdto.getUsername()).isPresent()){
                 throw new BadRequestException("El usuario de la carta no está en la base de datos");
             }
         }

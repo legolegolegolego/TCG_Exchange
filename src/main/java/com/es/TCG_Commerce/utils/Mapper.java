@@ -135,20 +135,21 @@ public class Mapper {
     public static TransaccionDTO entityToDTO(Transaccion t) {
         return new TransaccionDTO(
                 t.getPrecio(),
-                Mapper.entityToDTO(t.getVendedor()),
-                Mapper.entityToDTO(t.getComprador()),
-                Mapper.entityToDTO(t.getCarta())
+                t.getVendedor().getId(),
+                t.getComprador().getId(),
+                t.getCarta().getId()
         );
     }
 
-    public static Transaccion DTOToEntity(TransaccionDTO tDTO) {
-        return new Transaccion(
-                tDTO.getPrecio(),
-                Mapper.DTOToEntity(tDTO.getVendedor()),
-                Mapper.DTOToEntity(tDTO.getComprador()),
-                Mapper.DTOToEntity(tDTO.getCarta())
-        );
-    }
+//    public static Transaccion DTOToEntity(TransaccionDTO tDTO) {
+//        return new Transaccion(
+//                tDTO.getPrecio(),
+//                tDTO.getVendedor()
+//                Mapper.DTOToEntity(tDTO.getVendedor()),
+//                Mapper.DTOToEntity(tDTO.getComprador()),
+//                Mapper.DTOToEntity(tDTO.getCarta())
+//        );
+//    }
 
 
 }

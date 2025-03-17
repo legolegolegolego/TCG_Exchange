@@ -47,10 +47,10 @@ public class TransaccionService {
 
         // Comprobar si existen los usuarios y carta de la transaccion que se crea
 
-        Usuario comprador = usuarioRepository.findByUsername(tdto.getComprador().getUsername()).orElseThrow(()
+        Usuario comprador = usuarioRepository.findById(tdto.getComprador()).orElseThrow(()
                 -> new NotFoundException("El usuario comprador no existe en la BD"));
 
-        Usuario vendedor = usuarioRepository.findByUsername(tdto.getVendedor().getUsername()).orElseThrow(()
+        Usuario vendedor = usuarioRepository.findById(tdto.getVendedor()).orElseThrow(()
                 -> new NotFoundException("El usuario vendedor no existe en la BD"));
 
         // Asegurar que el comprador no sea el mismo usuario que el vendedor
@@ -58,10 +58,10 @@ public class TransaccionService {
             throw new BadRequestException("El usuario comprador no puede ser el usuario vendedor");
         }
 
-        Carta carta = cartaRepository.findById(tdto.getCarta().getId()).orElseThrow(()
+        Carta carta = cartaRepository.findById(tdto.getCarta()).orElseThrow(()
                 -> new NotFoundException("La carta no está en la BD"));
 
-        transaccionRepository.save(Mapper.DTOToEntity(tdto));
+        transaccionRepository.save(new Transaccion(tdto.getPrecio(), vendedor, comprador, carta));
 
         return tdto;
     }
@@ -73,10 +73,10 @@ public class TransaccionService {
 
         // Comprobar si existen los usuarios y carta de la transaccion que se crea
 
-        Usuario comprador = usuarioRepository.findByUsername(tdto.getComprador().getUsername()).orElseThrow(()
+        Usuario comprador = usuarioRepository.findById(tdto.getComprador()).orElseThrow(()
                 -> new NotFoundException("El usuario comprador no existe en la BD"));
 
-        Usuario vendedor = usuarioRepository.findByUsername(tdto.getVendedor().getUsername()).orElseThrow(()
+        Usuario vendedor = usuarioRepository.findById(tdto.getVendedor()).orElseThrow(()
                 -> new NotFoundException("El usuario vendedor no existe en la BD"));
 
         // Asegurar que el comprador no sea el mismo usuario que el vendedor
@@ -84,7 +84,7 @@ public class TransaccionService {
             throw new BadRequestException("El usuario comprador no puede ser el usuario vendedor");
         }
 
-        Carta carta = cartaRepository.findById(tdto.getCarta().getId()).orElseThrow(()
+        Carta carta = cartaRepository.findById(tdto.getCarta()).orElseThrow(()
                 -> new NotFoundException("La carta no está en la BD"));
 
 

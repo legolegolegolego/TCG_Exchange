@@ -39,15 +39,15 @@ public class TransaccionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TransaccionDTO> update(@PathVariable Long idTransaccion, @RequestBody TransaccionDTO tdto){
-        tservice.update(idTransaccion, tdto);
+    public ResponseEntity<TransaccionDTO> update(@PathVariable Long id, @RequestBody TransaccionDTO tdto){
+        tservice.update(id, tdto);
 
         return new ResponseEntity<TransaccionDTO>(tdto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TransaccionDTO> delete(@PathVariable Long idTransaccion){
+    public ResponseEntity<TransaccionDTO> delete(@PathVariable Long id){
 
-        return new ResponseEntity<TransaccionDTO>(tservice.delete(idTransaccion), HttpStatus.OK);
+        return new ResponseEntity<TransaccionDTO>(tservice.delete(id), HttpStatus.OK);
     }
 }

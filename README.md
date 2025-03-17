@@ -278,31 +278,31 @@ Estas son las tablas que contendrá:
 
 ### **Gestión de Transacciones**
 - **GET /transacciones/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
-    - ❌ Prueba con ID inexistente.
+    - ✅ Prueba con usuario ADMIN.![img_66.png](img_66.png)
+    - ❌ Prueba con usuario USER.![img_67.png](img_67.png)
+    - ❌ Prueba sin autenticación.![img_68.png](img_68.png)
+    - ❌ Prueba con ID inexistente.![img_69.png](img_69.png)
 
 - **POST /transacciones/** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
-    - ❌ Prueba con ID de comprador/vendedor inexistente.
-    - ❌ Prueba con ID de carta inexistente.
-    - ❌ Prueba donde el vendedor es el mismo que el comprador.
-    - ❌ Prueba con precio <= 0.
+    - ✅ Prueba con usuario ADMIN.![img_59.png](img_59.png)
+    - ❌ Prueba con usuario USER.![img_60.png](img_60.png)
+    - ❌ Prueba sin autenticación.![img_61.png](img_61.png)
+    - ❌ Prueba con ID de comprador/vendedor inexistente.![img_62.png](img_62.png)
+    - ❌ Prueba con ID de carta inexistente.![img_63.png](img_63.png)
+    - ❌ Prueba donde el vendedor es el mismo que el comprador.![img_64.png](img_64.png)
+    - ❌ Prueba con precio <= 0.![img_65.png](img_65.png)
 
 - **PUT /transacciones/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
-    - ❌ Prueba con ID inexistente.
+    - ✅ Prueba con usuario ADMIN.![img_70.png](img_70.png)
+    - ❌ Prueba con usuario USER.![img_73.png](img_73.png)
+    - ❌ Prueba sin autenticación.![img_71.png](img_71.png)
+    - ❌ Prueba con ID inexistente.![img_72.png](img_72.png)
 
 - **DELETE /transacciones/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.
-    - ❌ Prueba con usuario USER.
-    - ❌ Prueba sin autenticación.
-    - ❌ Prueba con ID inexistente.
+    - ✅ Prueba con usuario ADMIN.![img_77.png](img_77.png)
+    - ❌ Prueba con usuario USER.![img_74.png](img_74.png)
+    - ❌ Prueba sin autenticación.![img_75.png](img_75.png)
+    - ❌ Prueba con ID inexistente.![img_76.png](img_76.png)
 
 ---
 

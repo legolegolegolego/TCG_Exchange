@@ -49,6 +49,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/cartas/{id}").hasRole("ADMIN")
 
                                 .requestMatchers(HttpMethod.GET, "/transacciones/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/transacciones/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/transacciones/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/transacciones/**").hasRole("ADMIN")
 
                                 //ejemplos:
 //                                .requestMatchers(HttpMethod.GET,"/usuarios/byNombre/{nombre}").authenticated()
