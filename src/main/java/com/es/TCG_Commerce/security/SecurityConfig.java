@@ -27,9 +27,14 @@ public class SecurityConfig {
                                 // solo pueden acceder a estar rutas usuarios logueados con rol ADMIN:
                                 .requestMatchers(HttpMethod.GET, "/usuarios/").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/usuarios/{id}").hasRole("ADMIN")
+
                                 .requestMatchers(HttpMethod.GET, "/cartas/").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/cartas/{id}").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/transacciones/").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/cartas/").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/cartas/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/cartas/{id}").hasRole("ADMIN")
+
+                                .requestMatchers(HttpMethod.GET, "/transacciones/**").hasRole("ADMIN")
 
                                 //ejemplos:
 //                                .requestMatchers(HttpMethod.GET,"/usuarios/byNombre/{nombre}").authenticated()

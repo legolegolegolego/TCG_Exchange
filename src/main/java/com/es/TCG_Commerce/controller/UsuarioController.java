@@ -112,7 +112,6 @@ public class UsuarioController {
         } else {
             throw new ForbiddenException("No tienes los permisos para acceder al recurso");
         }
-
     }
 
 
@@ -122,28 +121,45 @@ public class UsuarioController {
     ){
 
         // Comprobar si el usuario autenticado es el mismo que se quiere actualizar
-        String usuarioAutenticado = authentication.getName();
-        boolean esElMismoUsuario = usuarioAutenticado.equals(nombreUsuario);
-
-        if (!esElMismoUsuario){
-            throw new ForbiddenException("No tienes permiso para modificar este usuario");
+//        String usuarioAutenticado = authentication.getName();
+//        boolean esElMismoUsuario = usuarioAutenticado.equals(nombreUsuario);
+//
+//        if (!esElMismoUsuario){
+//            throw new ForbiddenException("No tienes permiso para modificar este usuario");
+//        }
+        if(authentication.getAuthorities()
+                .stream()
+                .anyMatch(authority
+                        -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) ||
+                authentication.getName().equals(nombreUsuario)) {
+            UsuarioDTO usuarioDTO = usuarioService.updateUser(nombreUsuario, udto);
+            return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
+        } else {
+            throw new ForbiddenException("No tienes los permisos para acceder al recurso");
         }
 
-        UsuarioDTO usuarioActualizado = usuarioService.updateUser(nombreUsuario, udto);
-        return new ResponseEntity<UsuarioDTO>(usuarioActualizado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{nombre}")
     public ResponseEntity<UsuarioDTO> deleteUser(
             @PathVariable String nombreUsuario, Authentication authentication
     ){
-        if (!authentication.getName().equals(nombreUsuario)){
-            throw new ForbiddenException("No tienes permiso para eliminar este usuario");
-        }
-        // copio antes de borrar para retornarlo despues
-        UsuarioDTO udto = usuarioService.deleteUser(nombreUsuario);
+//        if (!authentication.getName().equals(nombreUsuario)){
+//            throw new ForbiddenException("No tienes permiso para eliminar este usuario");
+//        }
+        if(authentication.getAuthorities()
+                .stream()
+                .anyMatch(authority
+                        -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) ||
+                authentication.getName().equals(nombreUsuario)) {
+            // copio antes de borrar para retornarlo despues
+            UsuarioDTO udto = usuarioService.deleteUser(nombreUsuario);
 
-        return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
+            return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
+        } else {
+            throw new ForbiddenException("No tienes los permisos para acceder al recurso");
+        }
+
     }
 
 }
