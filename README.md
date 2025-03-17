@@ -224,121 +224,121 @@ Estas son las tablas que contendrá:
    - Ver más en cada endpoint, en la parte de **seguridad**.
 
 ## **Pruebas por Endpoints**
-![img_9.png](img_9.png)
+![img_9.png](./images/img_9.png)
 
 ### **Autenticación**
 - **POST /usuarios/login**
-    - ✅ Prueba con credenciales correctas.![img_11.png](img_11.png)
-    - ❌ Prueba con credenciales incorrectas.![img_10.png](img_10.png)
-    - ⚠️ Prueba con un usuario inexistente.![img_13.png](img_13.png)
+    - ✅ Prueba con credenciales correctas.![img_11.png](./images/img_11.png)
+    - ❌ Prueba con credenciales incorrectas.![img_10.png](./images/img_10.png)
+    - ⚠️ Prueba con un usuario inexistente.![img_13.png](./images/img_13.png)
 
 - **POST /usuarios/register**
-    - ✅ Prueba con datos válidos.![img_6.png](img_6.png)
-    - ❌ Prueba con username ya existente.![img_7.png](img_7.png)
-    - ❌ Prueba con password de menos de 6 caracteres.![img_5.png](img_5.png)
-    - ❌ Prueba con password1 y password2 diferentes.![img_3.png](img_3.png)
-    - ❌ Prueba con un rol no permitido.![img_4.png](img_4.png)
+    - ✅ Prueba con datos válidos.![img_6.png](./images/img_6.png)
+    - ❌ Prueba con username ya existente.![img_7.png](./images/img_7.png)
+    - ❌ Prueba con password de menos de 6 caracteres.![img_5.png](./images/img_5.png)
+    - ❌ Prueba con password1 y password2 diferentes.![img_3.png](./images/img_3.png)
+    - ❌ Prueba con un rol no permitido.![img_4.png](./images/img_4.png)
 
 ### **Gestión de Usuarios**
 - **GET /usuarios/** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_18.png](img_18.png)
-    - ❌ Prueba con usuario USER.![img_16.png](img_16.png)
-    - ❌ Prueba sin autenticación.![img_17.png](img_17.png)
+    - ✅ Prueba con usuario ADMIN.![img_18.png](./images/img_18.png)
+    - ❌ Prueba con usuario USER.![img_16.png](./images/img_16.png)
+    - ❌ Prueba sin autenticación.![img_17.png](./images/img_17.png)
 
 - **GET /usuarios/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_19.png](img_19.png)
-    - ❌ Prueba con usuario USER.![img_14.png](img_14.png)
-    - ❌ Prueba sin autenticación.![img_15.png](img_15.png)
-    - ⚠️ Prueba con un ID de usuario inexistente.![img_20.png](img_20.png)
+    - ✅ Prueba con usuario ADMIN.![img_19.png](./images/img_19.png)
+    - ❌ Prueba con usuario USER.![img_14.png](./images/img_14.png)
+    - ❌ Prueba sin autenticación.![img_15.png](./images/img_15.png)
+    - ⚠️ Prueba con un ID de usuario inexistente.![img_20.png](./images/img_20.png)
 
 - **GET /usuarios/byNombre/{nombre}**
-    - ✅ Prueba con usuario ADMIN.![img_21.png](img_21.png)
-    - ✅ Prueba con usuario dueño de la cuenta.![img_22.png](img_22.png)
-    - ❌ Prueba con usuario USER que intenta ver otra cuenta.![img_23.png](img_23.png)
-    - ❌ Prueba sin autenticación.![img_24.png](img_24.png)
+    - ✅ Prueba con usuario ADMIN.![img_21.png](./images/img_21.png)
+    - ✅ Prueba con usuario dueño de la cuenta.![img_22.png](./images/img_22.png)
+    - ❌ Prueba con usuario USER que intenta ver otra cuenta.![img_23.png](./images/img_23.png)
+    - ❌ Prueba sin autenticación.![img_24.png](./images/img_24.png)
 
 - **PUT /usuarios/{nombre}**
-    - ✅ Prueba con usuario ADMIN.![img_29.png](img_29.png)
-    - ✅ Prueba con usuario dueño de la cuenta.![img_28.png](img_28.png)
-    - ❌ Prueba con usuario USER intentando modificar otra cuenta.![img_27.png](img_27.png)
-    - ❌ Prueba sin autenticación.![img_25.png](img_25.png)
-    - ❌ Prueba con un nombre de usuario inexistente.![img_26.png](img_26.png)
+    - ✅ Prueba con usuario ADMIN.![img_29.png](./images/img_29.png)
+    - ✅ Prueba con usuario dueño de la cuenta.![img_28.png](./images/img_28.png)
+    - ❌ Prueba con usuario USER intentando modificar otra cuenta.![img_27.png](./images/img_27.png)
+    - ❌ Prueba sin autenticación.![img_25.png](./images/img_25.png)
+    - ❌ Prueba con un nombre de usuario inexistente.![img_26.png](./images/img_26.png)
 
 - **DELETE /usuarios/{nombre}**
-    - ✅ Prueba con usuario ADMIN.![img_33.png](img_33.png)
-    - ✅ Prueba con usuario dueño de la cuenta.![img_34.png](img_34.png)
-    - ❌ Prueba con usuario USER intentando eliminar otra cuenta.![img_31.png](img_31.png)
-    - ❌ Prueba sin autenticación.![img_30.png](img_30.png)
-    - ❌ Prueba con un nombre de usuario inexistente.![img_32.png](img_32.png)
+    - ✅ Prueba con usuario ADMIN.![img_33.png](./images/img_33.png)
+    - ✅ Prueba con usuario dueño de la cuenta.![img_34.png](./images/img_34.png)
+    - ❌ Prueba con usuario USER intentando eliminar otra cuenta.![img_31.png](./images/img_31.png)
+    - ❌ Prueba sin autenticación.![img_30.png](./images/img_30.png)
+    - ❌ Prueba con un nombre de usuario inexistente.![img_32.png](./images/img_32.png)
 
 ### **Gestión de Cartas**
 - **GET /cartas/** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_44.png](img_44.png)
-    - ❌ Prueba con usuario USER.![img_43.png](img_43.png)
-    - ❌ Prueba sin autenticación.![img_42.png](img_42.png)
+    - ✅ Prueba con usuario ADMIN.![img_44.png](./images/img_44.png)
+    - ❌ Prueba con usuario USER.![img_43.png](./images/img_43.png)
+    - ❌ Prueba sin autenticación.![img_42.png](./images/img_42.png)
 
 - **GET /cartas/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_45.png](img_45.png)
-    - ❌ Prueba con usuario USER.![img_46.png](img_46.png)
-    - ❌ Prueba sin autenticación.![img_47.png](img_47.png)
-    - ❌ Prueba con un ID de carta inexistente.![img_48.png](img_48.png)
+    - ✅ Prueba con usuario ADMIN.![img_45.png](./images/img_45.png)
+    - ❌ Prueba con usuario USER.![img_46.png](./images/img_46.png)
+    - ❌ Prueba sin autenticación.![img_47.png](./images/img_47.png)
+    - ❌ Prueba con un ID de carta inexistente.![img_48.png](./images/img_48.png)
 
 - **POST /cartas** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_35.png](img_35.png)
-    - ❌ Prueba con usuario USER.![img_36.png](img_36.png)
-    - ❌ Prueba sin autenticación.![img_37.png](img_37.png)
-    - ❌ Prueba con nombre duplicado.![img_38.png](img_38.png)
-    - ❌ Prueba con un tipo no permitido.![img_39.png](img_39.png)
-    - ❌ Prueba con vida o ataque fuera del rango permitido.![img_40.png](img_40.png)![img_41.png](img_41.png)
-    - ❌ Prueba creando con un usuario (not null).![img_49.png](img_49.png)
+    - ✅ Prueba con usuario ADMIN.![img_35.png](./images/img_35.png)
+    - ❌ Prueba con usuario USER.![img_36.png](./images/img_36.png)
+    - ❌ Prueba sin autenticación.![img_37.png](./images/img_37.png)
+    - ❌ Prueba con nombre duplicado.![img_38.png](./images/img_38.png)
+    - ❌ Prueba con un tipo no permitido.![img_39.png](./images/img_39.png)
+    - ❌ Prueba con vida o ataque fuera del rango permitido.![img_40.png](./images/img_40.png)![img_41.png](./images/img_41.png)
+    - ❌ Prueba creando con un usuario (not null).![img_49.png](./images/img_49.png)
 
 - **PUT /cartas/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_50.png](img_50.png)
-    - ❌ Prueba con usuario USER.![img_51.png](img_51.png)
-    - ❌ Prueba sin autenticación.![img_52.png](img_52.png)
-    - ❌ Prueba con ID inexistente.![img_53.png](img_53.png)
-    - ❌ Prueba con datos inválidos.![img_54.png](img_54.png)
+    - ✅ Prueba con usuario ADMIN.![img_50.png](./images/img_50.png)
+    - ❌ Prueba con usuario USER.![img_51.png](./images/img_51.png)
+    - ❌ Prueba sin autenticación.![img_52.png](./images/img_52.png)
+    - ❌ Prueba con ID inexistente.![img_53.png](./images/img_53.png)
+    - ❌ Prueba con datos inválidos.![img_54.png](./images/img_54.png)
 
 - **DELETE /cartas/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_55.png](img_55.png)
-    - ❌ Prueba con usuario USER.![img_57.png](img_57.png)
-    - ❌ Prueba sin autenticación.![img_56.png](img_56.png)
-    - ❌ Prueba con ID inexistente.![img_58.png](img_58.png)
+    - ✅ Prueba con usuario ADMIN.![img_55.png](./images/img_55.png)
+    - ❌ Prueba con usuario USER.![img_57.png](./images/img_57.png)
+    - ❌ Prueba sin autenticación.![img_56.png](./images/img_56.png)
+    - ❌ Prueba con ID inexistente.![img_58.png](./images/img_58.png)
 
 ### **Gestión de Transacciones**
 - **GET /transacciones/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_66.png](img_66.png)
-    - ❌ Prueba con usuario USER.![img_67.png](img_67.png)
-    - ❌ Prueba sin autenticación.![img_68.png](img_68.png)
-    - ❌ Prueba con ID inexistente.![img_69.png](img_69.png)
+    - ✅ Prueba con usuario ADMIN.![img_66.png](./images/img_66.png)
+    - ❌ Prueba con usuario USER.![img_67.png](./images/img_67.png)
+    - ❌ Prueba sin autenticación.![img_68.png](./images/img_68.png)
+    - ❌ Prueba con ID inexistente.![img_69.png](./images/img_69.png)
 
 - **POST /transacciones/** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_59.png](img_59.png)
-    - ❌ Prueba con usuario USER.![img_60.png](img_60.png)
-    - ❌ Prueba sin autenticación.![img_61.png](img_61.png)
-    - ❌ Prueba con ID de comprador/vendedor inexistente.![img_62.png](img_62.png)
-    - ❌ Prueba con ID de carta inexistente.![img_63.png](img_63.png)
-    - ❌ Prueba donde el vendedor es el mismo que el comprador.![img_64.png](img_64.png)
-    - ❌ Prueba con precio <= 0.![img_65.png](img_65.png)
+    - ✅ Prueba con usuario ADMIN.![img_59.png](./images/img_59.png)
+    - ❌ Prueba con usuario USER.![img_60.png](./images/img_60.png)
+    - ❌ Prueba sin autenticación.![img_61.png](./images/img_61.png)
+    - ❌ Prueba con ID de comprador/vendedor inexistente.![img_62.png](./images/img_62.png)
+    - ❌ Prueba con ID de carta inexistente.![img_63.png](./images/img_63.png)
+    - ❌ Prueba donde el vendedor es el mismo que el comprador.![img_64.png](./images/img_64.png)
+    - ❌ Prueba con precio <= 0.![img_65.png](./images/img_65.png)
 
 - **PUT /transacciones/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_70.png](img_70.png)
-    - ❌ Prueba con usuario USER.![img_73.png](img_73.png)
-    - ❌ Prueba sin autenticación.![img_71.png](img_71.png)
-    - ❌ Prueba con ID inexistente.![img_72.png](img_72.png)
+    - ✅ Prueba con usuario ADMIN.![img_70.png](./images/img_70.png)
+    - ❌ Prueba con usuario USER.![img_73.png](./images/img_73.png)
+    - ❌ Prueba sin autenticación.![img_71.png](./images/img_71.png)
+    - ❌ Prueba con ID inexistente.![img_72.png](./images/img_72.png)
 
 - **DELETE /transacciones/{id}** (Solo ADMIN)
-    - ✅ Prueba con usuario ADMIN.![img_77.png](img_77.png)
-    - ❌ Prueba con usuario USER.![img_74.png](img_74.png)
-    - ❌ Prueba sin autenticación.![img_75.png](img_75.png)
-    - ❌ Prueba con ID inexistente.![img_76.png](img_76.png)
+    - ✅ Prueba con usuario ADMIN.![img_77.png](./images/img_77.png)
+    - ❌ Prueba con usuario USER.![img_74.png](./images/img_74.png)
+    - ❌ Prueba sin autenticación.![img_75.png](./images/img_75.png)
+    - ❌ Prueba con ID inexistente.![img_76.png](./images/img_76.png)
 
 ---
 
 ## **Pruebas de Seguridad**
 
 1. **Autenticación y Autorización:**
-    - Probar acceso a rutas protegidas sin autenticación.![img.png](img.png)![img_1.png](img_1.png)
+    - Probar acceso a rutas protegidas sin autenticación.![img.png](./images/img.png)![img_1.png](./images/img_1.png)
     - Intentar acceso a recursos de otros usuarios. // ver pruebas de endpoints
     - Verificar que los tokens expiran correctamente. // comprobado (por tiempo)
     - Intentar autenticarse con contraseñas incorrectas múltiples veces. // no quiero banearme
@@ -354,8 +354,8 @@ Estas son las tablas que contendrá:
     - Verificar si la API está protegida contra CSRF. // no soy hacker
 
 5. **Exposición de Datos Sensibles:**
-    - Comprobar que las contraseñas están correctamente hasheadas.![img_8.png](img_8.png)
-    - Asegurar que los tokens JWT no contienen información sensible.![img_12.png](img_12.png)
+    - Comprobar que las contraseñas están correctamente hasheadas.![img_8.png](./images/img_8.png)
+    - Asegurar que los tokens JWT no contienen información sensible.![img_12.png](./images/img_12.png)
 
 6. **Rate Limiting y Protección contra Ataques de Fuerza Bruta:**
     - Verificar si hay protección contra múltiples intentos de autenticación fallidos. // no quiero banearme
