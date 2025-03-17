@@ -193,7 +193,7 @@ Estas son las tablas que contendrá:
    - Se verifica que los vendedores y compradores existan en la base de datos antes de procesar transacciones.
    - Ver más en cada endpoint, en la parte de **seguridad**.
 
-## **Pruebas de Endpoints**
+## **Pruebas por Endpoints**
 ![img_9.png](img_9.png)
 
 ### **Autenticación**
@@ -228,18 +228,18 @@ Estas son las tablas que contendrá:
     - ❌ Prueba sin autenticación.![img_24.png](img_24.png)
 
 - **PUT /usuarios/{nombre}**
-    - ✅ Prueba con usuario ADMIN.
-    - ✅ Prueba con usuario dueño de la cuenta.
-    - ❌ Prueba con usuario USER intentando modificar otra cuenta.
+    - ✅ Prueba con usuario ADMIN.![img_29.png](img_29.png)
+    - ✅ Prueba con usuario dueño de la cuenta.![img_28.png](img_28.png)
+    - ❌ Prueba con usuario USER intentando modificar otra cuenta.![img_27.png](img_27.png)
     - ❌ Prueba sin autenticación.![img_25.png](img_25.png)
-    - ❌ Prueba con un nombre de usuario inexistente.
+    - ❌ Prueba con un nombre de usuario inexistente.![img_26.png](img_26.png)
 
 - **DELETE /usuarios/{nombre}**
-    - ✅ Prueba con usuario ADMIN.
-    - ✅ Prueba con usuario dueño de la cuenta.
-    - ❌ Prueba con usuario USER intentando eliminar otra cuenta.
-    - ❌ Prueba sin autenticación.
-    - ❌ Prueba con un nombre de usuario inexistente.
+    - ✅ Prueba con usuario ADMIN.![img_33.png](img_33.png)
+    - ✅ Prueba con usuario dueño de la cuenta.![img_34.png](img_34.png)
+    - ❌ Prueba con usuario USER intentando eliminar otra cuenta.![img_31.png](img_31.png)
+    - ❌ Prueba sin autenticación.![img_30.png](img_30.png)
+    - ❌ Prueba con un nombre de usuario inexistente.![img_32.png](img_32.png)
 
 ### **Gestión de Cartas**
 - **GET /cartas/** (Solo ADMIN)
@@ -308,50 +308,30 @@ Estas son las tablas que contendrá:
 
 1. **Autenticación y Autorización:**
     - Probar acceso a rutas protegidas sin autenticación.![img.png](img.png)![img_1.png](img_1.png)
-    - Intentar acceso a recursos de otros usuarios.
-    - Verificar que los tokens expiran correctamente.
-    - Intentar autenticarse con contraseñas incorrectas múltiples veces.
+    - Intentar acceso a recursos de otros usuarios. // ver pruebas de endpoints
+    - Verificar que los tokens expiran correctamente. // no voy a esperar una hora
+    - Intentar autenticarse con contraseñas incorrectas múltiples veces. // no quiero banearme
 
 2. **Inyección SQL:**
-    - Probar inyección SQL en todos los campos de entrada.
-    - Intentar modificar consultas mediante inputs maliciosos.
+    - Probar inyección SQL en todos los campos de entrada. // no soy hacker
+    - Intentar modificar consultas mediante inputs maliciosos. // no soy hacker
 
 3. **Cross-Site Scripting (XSS):**
-    - Intentar inyectar código JavaScript en los campos de entrada.
+    - Intentar inyectar código JavaScript en los campos de entrada. // no soy hacker
 
 4. **Cross-Site Request Forgery (CSRF):**
-    - Verificar si la API está protegida contra CSRF.
+    - Verificar si la API está protegida contra CSRF. // no soy hacker
 
 5. **Exposición de Datos Sensibles:**
     - Comprobar que las contraseñas están correctamente hasheadas.![img_8.png](img_8.png)
     - Asegurar que los tokens JWT no contienen información sensible.![img_12.png](img_12.png)
 
 6. **Rate Limiting y Protección contra Ataques de Fuerza Bruta:**
-    - Verificar si hay protección contra múltiples intentos de autenticación fallidos.
-    - Testear si se pueden realizar múltiples peticiones en un corto periodo de tiempo sin ser bloqueado.
+    - Verificar si hay protección contra múltiples intentos de autenticación fallidos. // no quiero banearme
+    - Testear si se pueden realizar múltiples peticiones en un corto periodo de tiempo sin ser bloqueado. // no quiero banearme
 
 7. **Validación de Datos:**
-    - Asegurar que los datos enviados cumplen con las restricciones definidas en la lógica de negocio.
-    - Intentar enviar datos inválidos y observar la respuesta del servidor.
+    - Asegurar que los datos enviados cumplen con las restricciones definidas en la lógica de negocio. // ver pruebas de endpoints
+    - Intentar enviar datos inválidos y observar la respuesta del servidor. // ver pruebas de endpoints
 
 ---
-
-## **Pruebas de Lógica de Negocio**
-
-1. **Usuarios:**
-    - El username debe ser único.
-    - La contraseña debe cumplir con los requisitos mínimos.
-    - Solo roles USER o ADMIN permitidos.
-
-2. **Cartas:**
-    - El nombre debe ser único.
-    - Validar que el tipo de carta sea correcto.
-    - Asegurar que los valores de vida y ataque estén dentro del rango permitido.
-
-3. **Transacciones:**
-    - El precio debe ser mayor a 0.
-    - El comprador y el vendedor deben existir y no ser la misma persona.
-    - La carta debe existir en la base de datos.
-
----
-
