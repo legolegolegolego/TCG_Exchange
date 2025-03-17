@@ -18,13 +18,7 @@ import java.util.List;
 public class CartaController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private CartaService cartaService;
-
-    @Autowired
-    private TokenService tokenservice;
 
     @GetMapping("/")
     public ResponseEntity<List<CartaDTO>> getAll(){

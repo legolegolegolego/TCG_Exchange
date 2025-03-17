@@ -120,23 +120,21 @@ Estas son las tablas que contendrá:
 5. **Gestión de Transacciones**:
    - **RUTAS PROTEGIDAS** Todas las rutas requieren que el usuario esté autenticado para acceder a las mismas.
    - Usuarios con rol ADMIN pueden acceder a este recurso.
-   - Usuarios con el mismo id (vendedor o comprador) que el que se consulta, pueden acceder a este recurso.
-   - Usuarios con rol USER con id diferente *NO* pueden acceder al mismo.
-   - `GET /transacciones/`: Devuelve todas las transacciones.
-     - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
-     - **Entrada**: Uri.
-     - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta` de cada transacción.
    - `GET /transacciones/{id}`: Devuelve la información de una transacción.
+     - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
      - **Entrada**: Path variable con el ID de la transacción.
      - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
    - `POST /transacciones/`: Generar nueva transacción.
+     - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
      - **Entrada**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
      - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
    - `PUT /transacciones/{id}`: Permite actualizar la información de una transacción.
-     - **Entrada**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
+     - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
+     - **Entrada**: Path variable id.
      - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
-   - `DELETE /transacciones/`: Permite eliminar una transacción.
-     - **Entrada**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
+   - `DELETE /transacciones/{id}`: Permite eliminar una transacción.
+     - *SOLO ADMIN*: Sólo los usuarios con ROL ADMIN pueden acceder a este recurso.
+     - **Entrada**: Path variable id.
      - **Salida**: JSON con `id`, `precio`, `id_vendedor`, `id_comprador` y `id_carta`.
    
 
@@ -193,3 +191,4 @@ Estas son las tablas que contendrá:
    - Se valida que las contraseñas cumplan con requisitos mínimos de seguridad (mínimo 6 caracteres alfanuméricos, sin símbolos).
    - Se impide que un usuario **compre sus propias cartas**, evitando fraudes en transacciones.
    - Se verifica que los vendedores y compradores existan en la base de datos antes de procesar transacciones.
+   - Ver más en cada endpoint, en la parte de **seguridad**.
