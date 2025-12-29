@@ -25,8 +25,10 @@ public class Usuario implements UserDetails {
     private String password;
 
     // Se establece por defecto como USER en los distintos constructores (menos el específico para pasarle uno)
-    private String roles; // o ADMIN"
+    // que hago con lo de user y admin para mi aplicacion?? dejo seleccionar?
+    private String roles; // USER o ADMIN"
 
+    // !!cambiar a Many to Many, muchas cartas tienen muchos usuarios
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Carta> cartas;
 

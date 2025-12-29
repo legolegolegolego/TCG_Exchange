@@ -34,7 +34,7 @@ public class CartaController {
         return new ResponseEntity<CartaDTO>(cdto, HttpStatus.OK);
     }
 
-    @GetMapping("/byNombre/{nombre}")
+    @GetMapping("/{nombreCarta}")
     public ResponseEntity<CartaDTO> findByNombre(@PathVariable String nombre, Authentication authentication){
         if (!authentication.getName().equals(nombre)){
             throw new ForbiddenException("No tienes permiso para acceder a este recurso");
@@ -43,6 +43,13 @@ public class CartaController {
             return new ResponseEntity<CartaDTO>(cdto, HttpStatus.OK);
         }
     }
+
+    // para hacer un endpoint dentro de otro, lo meto en el metodo anterior? u otro nuevo
+    // y en el metodo del service igual?
+    // y que hay si quiero hacer lo mismo en cartas/id/comprar y cartas/nombre/comprar, repito codigo?
+    // @GetMapping("/{nombreCarta}/comprar")
+    // usuario al que se la compra
+    // @GetMapping("/{nombreCarta}/comprar/{nombreUsuario}")
 
     @PostMapping("/")
     public ResponseEntity<CartaDTO> insertCarta(@RequestBody CartaDTO cdto){

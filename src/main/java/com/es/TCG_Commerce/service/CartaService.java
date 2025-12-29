@@ -46,13 +46,13 @@ public class CartaService {
         return Mapper.entityToDTO(c);
     }
 
-    public CartaDTO findByNombre(String nombre){
-        if (nombre.isBlank()){
+    public CartaDTO findByNombre(String nombreCarta){
+        if (nombreCarta.isBlank()){
             throw new BadRequestException("El nombre no puede estar vacío");
         }
         Carta c = cartaRepository
-                .findByNombre(nombre)
-                .orElseThrow(() -> new NotFoundException("Carta con nombre " + nombre + " no pudo ser encontrada"));
+                .findByNombre(nombreCarta)
+                .orElseThrow(() -> new NotFoundException("Carta con nombre " + nombreCarta + " no pudo ser encontrada"));
 
         return Mapper.entityToDTO(c);
     }

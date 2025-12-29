@@ -73,7 +73,7 @@ Estas son las tablas que contendrá:
     - `id_carta`(Long): Identificador único de la carta.
 
 ## Diagrama Entidad-Relación
-![Imagen Diagrama Entidad-Relación](./images/ER-TCG.png)
+![Imagen Diagrama Entidad-Relación](./images/ER-TCG(proyecto).png)
 
 ## Endpoints
 1. **Autenticación**:
@@ -129,7 +129,7 @@ Estas son las tablas que contendrá:
       - **SOLO ADMIN**: Solo los usuarios ADMIN pueden acceder a este recurso.
       - **Entrada**: Path variable con el ID de la carta.
       - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
-   - `GET /cartas/byNombre/{nombre}`: Devuelve la información de una carta.
+   - `GET /cartas/{nombre}`: Devuelve la información de una carta.
       - **Entrada**: Path variable con el nombre de la carta.
       - **Salida**: JSON con `nombre`, `tipo`, `vida`, `ataque` y `id_user`.
    - `POST /cartas`: Permite insertar una nueva carta.
