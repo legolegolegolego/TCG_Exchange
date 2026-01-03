@@ -1,12 +1,10 @@
 package com.es.TCG_Commerce.controller;
 
-import com.es.TCG_Commerce.dto.TransaccionDTO;
 import com.es.TCG_Commerce.dto.UsuarioDTO;
 import com.es.TCG_Commerce.dto.UsuarioLoginDTO;
 import com.es.TCG_Commerce.dto.UsuarioRegisterDTO;
 import com.es.TCG_Commerce.error.exception.ForbiddenException;
 import com.es.TCG_Commerce.error.exception.InternalServerErrorException;
-import com.es.TCG_Commerce.error.exception.NotFoundException;
 import com.es.TCG_Commerce.error.exception.UnauthorizedException;
 import com.es.TCG_Commerce.service.TokenService;
 import com.es.TCG_Commerce.service.UsuarioService;
@@ -19,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController // indica a Spring Boot que es un controller, maneja solicitudes HTTP

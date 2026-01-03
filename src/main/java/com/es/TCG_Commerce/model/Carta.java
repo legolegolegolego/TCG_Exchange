@@ -15,6 +15,8 @@ public class Carta {
     @Column(unique = true, nullable = false)
     private String nombre;
 
+    // ex o no ex, boolean?
+
     @Column(nullable = false)
     private String tipo; // FUEGO, AGUA, PLANTA
 
@@ -22,7 +24,7 @@ public class Carta {
     private int vida;
 
     @Column(nullable = false)
-    private int ataque;
+    private int ataque; // convertir en array (ataque1, ataque2)
 
     // cambiar a many to many (n usuarios pueden tener n cartas y n cartas pueden tenerlas n usuarios)
     // por lo tanto: cambiar a lista de usuarios

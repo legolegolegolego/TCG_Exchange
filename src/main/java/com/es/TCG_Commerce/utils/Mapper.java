@@ -2,7 +2,7 @@ package com.es.TCG_Commerce.utils;
 
 import com.es.TCG_Commerce.dto.*;
 import com.es.TCG_Commerce.model.Carta;
-import com.es.TCG_Commerce.model.Transaccion;
+import com.es.TCG_Commerce.model.Intercambio;
 import com.es.TCG_Commerce.model.Usuario;
 import org.springframework.stereotype.Component;
 
@@ -132,24 +132,13 @@ public class Mapper {
         );
     }
 
-    public static TransaccionDTO entityToDTO(Transaccion t) {
-        return new TransaccionDTO(
-                t.getPrecio(),
-                t.getVendedor().getId(),
-                t.getComprador().getId(),
+    public static IntercambioDTO entityToDTO(Intercambio t) {
+        return new IntercambioDTO(
+                t.getUsuarioA().getId(),
+                t.getUsuarioB().getId(),
                 t.getCarta().getId()
         );
     }
-
-//    public static Transaccion DTOToEntity(TransaccionDTO tDTO) {
-//        return new Transaccion(
-//                tDTO.getPrecio(),
-//                tDTO.getVendedor()
-//                Mapper.DTOToEntity(tDTO.getVendedor()),
-//                Mapper.DTOToEntity(tDTO.getComprador()),
-//                Mapper.DTOToEntity(tDTO.getCarta())
-//        );
-//    }
 
 
 }
