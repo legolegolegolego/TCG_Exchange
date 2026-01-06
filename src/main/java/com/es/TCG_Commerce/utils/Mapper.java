@@ -134,9 +134,11 @@ public class Mapper {
 
     public static IntercambioDTO entityToDTO(Intercambio t) {
         return new IntercambioDTO(
-                t.getUsuarioA().getId(),
-                t.getUsuarioB().getId(),
-                t.getCarta().getId()
+                t.getUsuarioOrigen().getId(),
+                t.getUsuarioDestino().getId(),
+                t.getCartaOrigen().getId(),
+                t.getCartaDestino().getId(),
+                t.getEstado()
         );
     }
 

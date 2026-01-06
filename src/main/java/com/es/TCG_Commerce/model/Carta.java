@@ -20,17 +20,18 @@ public class Carta {
     @Column(nullable = false)
     private String tipo; // FUEGO, AGUA, PLANTA
 
-    @Column(nullable = false)
+    // en tipos primitivos int, double... no hace falta nullable, ya que no pueden ser null
+    @Column
     private int vida;
 
-    @Column(nullable = false)
+    @Column
     private int ataque; // convertir en array (ataque1, ataque2)
 
     // cambiar a many to many (n usuarios pueden tener n cartas y n cartas pueden tenerlas n usuarios)
     // por lo tanto: cambiar a lista de usuarios
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_user")
-    private Usuario usuario;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "id_user")
+//    private Usuario usuario;
 
     public Carta() {
     }

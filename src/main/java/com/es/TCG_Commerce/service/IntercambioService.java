@@ -46,10 +46,10 @@ public class IntercambioService {
 
         // Comprobar si existen los usuarios y carta de la transaccion que se crea
 
-        Usuario usuarioA = usuarioRepository.findById(tdto.getUsuarioB()).orElseThrow(()
+        Usuario usuarioA = usuarioRepository.findById(tdto.getUsuarioDestino()).orElseThrow(()
                 -> new NotFoundException("El usuario A no existe en la BD"));
 
-        Usuario usuarioB = usuarioRepository.findById(tdto.getUsuarioA()).orElseThrow(()
+        Usuario usuarioB = usuarioRepository.findById(tdto.getUsuarioOrigen()).orElseThrow(()
                 -> new NotFoundException("El usuario B no existe en la BD"));
 
         // Asegurar que el usuarioA no sea el mismo usuario que el usuarioB
@@ -60,7 +60,7 @@ public class IntercambioService {
         Carta carta = cartaRepository.findById(tdto.getCarta()).orElseThrow(()
                 -> new NotFoundException("La carta no está en la BD"));
 
-        intercambioRepository.save(new Intercambio(usuarioB, usuarioA, carta));
+        intercambioRepository.save(new Intercambio(usuarioB, usuarioA, cartaOrigen, cartaDestino));
 
         return tdto;
     }
@@ -72,10 +72,10 @@ public class IntercambioService {
 
         // Comprobar si existen los usuarios y carta de la transaccion que se crea
 
-        Usuario usuarioA = usuarioRepository.findById(tdto.getUsuarioB()).orElseThrow(()
+        Usuario usuarioA = usuarioRepository.findById(tdto.getUsuarioDestino()).orElseThrow(()
                 -> new NotFoundException("El usuario A no existe en la BD"));
 
-        Usuario usuarioB = usuarioRepository.findById(tdto.getUsuarioA()).orElseThrow(()
+        Usuario usuarioB = usuarioRepository.findById(tdto.getUsuarioOrigen()).orElseThrow(()
                 -> new NotFoundException("El usuario B no existe en la BD"));
 
         // Asegurar que el usuarioA no sea el mismo que el usuarioB
@@ -91,8 +91,8 @@ public class IntercambioService {
                 -> new NotFoundException("No se encuentra la transacción que quiere actualizar"));
 
         // se puede hacer asi o con el Mapper
-        t.setUsuarioB(usuarioA);
-        t.setUsuarioA(usuarioB);
+        t.setUsuarioDestino(usuarioA);
+        t.setUsuarioOrigen(usuarioB);
         t.setCarta(carta);
         intercambioRepository.save(t);
 

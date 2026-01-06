@@ -1,41 +1,65 @@
 package com.es.TCG_Commerce.dto;
 
+import com.es.TCG_Commerce.model.enums.EstadoIntercambio;
+
 // apuntesDTO: si el id es autoincremental, no poner en el DTO
 public class IntercambioDTO {
-    private Long usuarioA;
-    private Long usuarioB;
-    private Long carta;
+    private Long usuarioOrigen;
+    private Long usuarioDestino;
+    private Long cartaOrigen;
+    private Long cartaDestino;
+    private EstadoIntercambio estado;
 
     public IntercambioDTO() {
     }
 
-    public IntercambioDTO(Long usuarioA, Long usuarioB, Long carta) {
-        this.usuarioA = usuarioA;
-        this.usuarioB = usuarioB;
-        this.carta = carta;
+    public IntercambioDTO(Long usuarioOrigen, Long usuarioDestino, Long cartaOrigen, Long cartaDestino,
+                          EstadoIntercambio estado) {
+        this.usuarioOrigen = usuarioOrigen;
+        this.usuarioDestino = usuarioDestino;
+        this.cartaOrigen = cartaOrigen;
+        this.cartaDestino = cartaDestino;
+        this.estado = estado;
     }
 
-    public Long getUsuarioA() {
-        return usuarioA;
+    public Long getUsuarioOrigen() {
+        return usuarioOrigen;
     }
 
-    public void setUsuarioA(Long usuarioA) {
-        this.usuarioA = usuarioA;
+    public void setUsuarioOrigen(Long usuarioOrigen) {
+        this.usuarioOrigen = usuarioOrigen;
     }
 
-    public Long getUsuarioB() {
-        return usuarioB;
+    public Long getUsuarioDestino() {
+        return usuarioDestino;
     }
 
-    public void setUsuarioB(Long usuarioB) {
-        this.usuarioB = usuarioB;
+    public void setUsuarioDestino(Long usuarioDestino) {
+        this.usuarioDestino = usuarioDestino;
     }
 
-    public Long getCarta() {
-        return carta;
+
+    public Long getCartaOrigen() {
+        return cartaOrigen;
     }
 
-    public void setCarta(Long carta) {
-        this.carta = carta;
+    public void setCartaOrigen(Long cartaOrigen) {
+        this.cartaOrigen = cartaOrigen;
+    }
+
+    public Long getCartaDestino() {
+        return cartaDestino;
+    }
+
+    public void setCartaDestino(Long cartaDestino) {
+        this.cartaDestino = cartaDestino;
+    }
+
+    public EstadoIntercambio getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoIntercambio estado) {
+        this.estado = estado;
     }
 }

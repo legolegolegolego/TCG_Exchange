@@ -1,5 +1,6 @@
 package com.es.TCG_Commerce.model;
 
+import com.es.TCG_Commerce.model.enums.EstadoIntercambio;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,42 +11,49 @@ public class Intercambio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(nullable = false)
-//    private double precio;
+    @ManyToOne(optional = false) // optional afecta a jpa, nullable a bd (proteccion)
+    @JoinColumn(name = "id_usuario_origen") // cambio nullable = false por optional arriba (nullable implicito)
+    private Usuario usuarioOrigen;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_usuario_destino", nullable = false)
+    private Usuario usuarioDestino;
+
+    // carta ofrecida por usuario origen: (cambiar)
     @ManyToOne
-    @JoinColumn(name = "id_usuarioA", nullable = false)
-    private Usuario usuarioA;
+    @JoinColumn(name = "id_carta_origen", nullable = false)
+    private Carta cartaOrigen;
 
+    // carta ofrecida por usuario destinatario:
     @ManyToOne
-    @JoinColumn(name = "id_usuarioB", nullable = false)
-    private Usuario usuarioB;
+    @JoinColumn(name = "id_carta_destino", nullable = false)
+    private Carta cartaDestino;
 
-    // carta ofrecida por usuario A: (cambiar)
-    @ManyToOne
-    @JoinColumn(name = "id_carta", nullable = false)
-    private Carta carta;
-
-    // carta ofrecida por usuario B:
-
-
-
-
+    // estado (pendiente, aceptado, rechazado):
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoIntercambio estado;
 
     public Intercambio() {
     }
 
-    public Intercambio(Long id, Usuario usuarioA, Usuario usuarioB, Carta carta) {
+    public Intercambio(Long id, Usuario usuarioOrigen, Usuario usuarioDestino, Carta cartaOrigen, Carta cartaDestino,
+                       EstadoIntercambio estado) {
         this.id = id;
-        this.usuarioA = usuarioA;
-        this.usuarioB = usuarioB;
-        this.carta = carta;
+        this.usuarioOrigen = usuarioOrigen;
+        this.usuarioDestino = usuarioDestino;
+        this.cartaOrigen = cartaOrigen;
+        this.cartaDestino = cartaDestino;
+        this.estado = estado;
     }
 
-    public Intercambio(Usuario usuarioA, Usuario usuarioB, Carta carta) {
-        this.usuarioA = usuarioA;
-        this.usuarioB = usuarioB;
-        this.carta = carta;
+    public Intercambio(Usuario usuarioOrigen, Usuario usuarioDestino, Carta cartaOrigen, Carta cartaDestino,
+                       EstadoIntercambio estado) {
+        this.usuarioOrigen = usuarioOrigen;
+        this.usuarioDestino = usuarioDestino;
+        this.cartaOrigen = cartaOrigen;
+        this.cartaDestino = cartaDestino;
+        this.estado = estado;
     }
 
     public Long getId() {
@@ -56,27 +64,44 @@ public class Intercambio {
         this.id = id;
     }
 
-    public Usuario getUsuarioA() {
-        return usuarioA;
+    public Usuario getUsuarioOrigen() {
+        return usuarioOrigen;
     }
 
-    public void setUsuarioA(Usuario usuarioA) {
-        this.usuarioA = usuarioA;
+    public void setUsuarioOrigen(Usuario usuarioOrigen) {
+        this.usuarioOrigen = usuarioOrigen;
     }
 
-    public Usuario getUsuarioB() {
-        return usuarioB;
+    public Usuario getUsuarioDestino() {
+        return usuarioDestino;
     }
 
-    public void setUsuarioB(Usuario usuarioB) {
-        this.usuarioB = usuarioB;
+    public void setUsuarioDestino(Usuario usuarioDestino) {
+        this.usuarioDestino = usuarioDestino;
     }
 
-    public Carta getCarta() {
-        return carta;
+
+    public Carta getCartaOrigen() {
+        return cartaOrigen;
     }
 
-    public void setCarta(Carta carta) {
-        this.carta = carta;
+    public void setCartaOrigen(Carta cartaOrigen) {
+        this.cartaOrigen = cartaOrigen;
+    }
+
+    public Carta getCartaDestino() {
+        return cartaDestino;
+    }
+
+    public void setCartaDestino(Carta cartaDestino) {
+        this.cartaDestino = cartaDestino;
+    }
+
+    public EstadoIntercambio getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoIntercambio estado) {
+        this.estado = estado;
     }
 }
