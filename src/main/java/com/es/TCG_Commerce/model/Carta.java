@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+// ENTIDAD A BORRAR por sustitución y diversificación a: CartaModelo y CartaFisica
+
 @Entity
 @Table(name = "cartas")
 public class Carta {
