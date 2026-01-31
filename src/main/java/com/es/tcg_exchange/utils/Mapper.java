@@ -1,7 +1,6 @@
 package com.es.tcg_exchange.utils;
 
 import com.es.tcg_exchange.dto.*;
-import com.es.tcg_exchange.model.Carta;
 import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
 import org.springframework.stereotype.Component;

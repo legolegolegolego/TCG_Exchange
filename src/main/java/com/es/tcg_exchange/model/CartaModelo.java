@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "cartas_modelo")
 public class CartaModelo {
+    // cambiar a ID adjudicado (correspondiendo con # carta pokemon)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,6 +28,9 @@ public class CartaModelo {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Rareza rareza;
+
+    @Column(nullable = false)
+    private String imagenUrl;
 
     // ---- SOLO PARA POKÉMON ----
 

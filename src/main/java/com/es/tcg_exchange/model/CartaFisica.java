@@ -16,7 +16,15 @@ public class CartaFisica {
     @Column(nullable = false)
     private EstadoCarta estadoCarta;
 
-    // Dueño actual de la carta (oferta)
+    // inicializar automaticamente en true.
+    // tras intercambio aceptado: false.
+    private boolean disponible;
+
+    // opcional
+    @Column
+    private String imagenUrl; // foto real subida por el usuario
+
+    // Dueño de la carta
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;

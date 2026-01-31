@@ -89,22 +89,23 @@ public class UsuarioController {
         return new ResponseEntity<List<UsuarioDTO>>(usuarioDTOS, HttpStatus.OK);
     }
 
+    // en mi app es no me hace falta por id.
     // no hace falta el authentication aqui pq solo pueden acceder los admin
     // y ya se contempla eso en el securityconfig
-    @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
-        UsuarioDTO udto = usuarioService.findById(id);
+//    @GetMapping("/{id}")
+//    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
+//        UsuarioDTO udto = usuarioService.findById(id);
+//
+//        return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
+//    }
 
-        return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
-    }
-
-    @GetMapping("/byNombre/{nombre}")
-    public ResponseEntity<UsuarioDTO> findByNombre(@PathVariable String nombre, Authentication authentication) {
+    @GetMapping("/{username}")
+    public ResponseEntity<UsuarioDTO> findByUsername(@PathVariable String username, Authentication authentication) {
 
         if(authentication.getAuthorities()
                 .stream()
-                .anyMatch(authority -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) || authentication.getName().equals(nombre)) {
-            UsuarioDTO usuarioDTO = usuarioService.findByNombre(nombre);
+                .anyMatch(authority -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) || authentication.getName().equals(username)) {
+            UsuarioDTO usuarioDTO = usuarioService.findByNombre(username);
             return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
         } else {
             throw new ForbiddenException("No tienes los permisos para acceder al recurso");
@@ -112,14 +113,14 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/{nombre}")
+    @PutMapping("/{username}")
     public ResponseEntity<UsuarioDTO> updateUser(
-            @PathVariable String nombre, @RequestBody UsuarioDTO udto, Authentication authentication
+            @PathVariable String username, @RequestBody UsuarioDTO udto, Authentication authentication
     ){
 
         // Comprobar si el usuario autenticado es el mismo que se quiere actualizar
 //        String usuarioAutenticado = authentication.getName();
-//        boolean esElMismoUsuario = usuarioAutenticado.equals(nombre);
+//        boolean esElMismoUsuario = usuarioAutenticado.equals(username);
 //
 //        if (!esElMismoUsuario){
 //            throw new ForbiddenException("No tienes permiso para modificar este usuario");
@@ -128,8 +129,8 @@ public class UsuarioController {
                 .stream()
                 .anyMatch(authority
                         -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) ||
-                authentication.getName().equals(nombre)) {
-            UsuarioDTO usuarioDTO = usuarioService.updateUser(nombre, udto);
+                authentication.getName().equals(username)) {
+            UsuarioDTO usuarioDTO = usuarioService.updateUser(username, udto);
             return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
         } else {
             throw new ForbiddenException("No tienes los permisos para acceder al recurso");
@@ -137,20 +138,20 @@ public class UsuarioController {
 
     }
 
-    @DeleteMapping("/{nombre}")
+    @DeleteMapping("/{username}")
     public ResponseEntity<UsuarioDTO> deleteUser(
-            @PathVariable String nombre, Authentication authentication
+            @PathVariable String username, Authentication authentication
     ){
-//        if (!authentication.getName().equals(nombre)){
+//        if (!authentication.getName().equals(username)){
 //            throw new ForbiddenException("No tienes permiso para eliminar este usuario");
 //        }
         if(authentication.getAuthorities()
                 .stream()
                 .anyMatch(authority
                         -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) ||
-                authentication.getName().equals(nombre)) {
+                authentication.getName().equals(username)) {
             // copio antes de borrar para retornarlo despues
-            UsuarioDTO udto = usuarioService.deleteUser(nombre);
+            UsuarioDTO udto = usuarioService.deleteUser(username);
 
             return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
         } else {
