@@ -89,15 +89,14 @@ public class UsuarioController {
         return new ResponseEntity<List<UsuarioDTO>>(usuarioDTOS, HttpStatus.OK);
     }
 
-    // en mi app es no me hace falta por id.
     // no hace falta el authentication aqui pq solo pueden acceder los admin
     // y ya se contempla eso en el securityconfig
-//    @GetMapping("/{id}")
-//    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
-//        UsuarioDTO udto = usuarioService.findById(id);
-//
-//        return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
-//    }
+    @GetMapping("/id/{id}")
+    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
+        UsuarioDTO udto = usuarioService.findById(id);
+
+        return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
+    }
 
     @GetMapping("/{username}")
     public ResponseEntity<UsuarioDTO> findByUsername(@PathVariable String username, Authentication authentication) {

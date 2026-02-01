@@ -18,6 +18,7 @@ public class CartaFisica {
 
     // inicializar automaticamente en true.
     // tras intercambio aceptado: false.
+    @Column(nullable = false)
     private boolean disponible;
 
     // opcional

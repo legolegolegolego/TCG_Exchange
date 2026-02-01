@@ -10,13 +10,11 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "cartas_modelo")
 public class CartaModelo {
-    // cambiar a ID adjudicado (correspondiendo con # carta pokemon)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // Nombre único dentro del set
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nombre;
 
     @Enumerated(EnumType.STRING)

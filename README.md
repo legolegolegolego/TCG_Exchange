@@ -97,7 +97,10 @@ Propuesta de intercambio entre usuarios.
 
 ### CartaFisica
 - Solo el propietario puede crear, modificar o eliminar.
-- Un ADMIN solo puede eliminar cartas físicas.
+- Un ADMIN puede eliminar cartas de cualquier usuario.
+- Las cartas físicas que hayan participado o estén participando en intercambios no se eliminan de la BD.
+- Si una carta ha estado involucrada en un intercambio `RECHAZADO`, al solicitar el usuario su eliminación, pasa a 
+estado `disponible = false`, quedando cerrada para futuros intercambios.
 - Al aceptar un intercambio, la carta pasa a `disponible = false`.
 - No se transfiere la propiedad de la carta.
 
