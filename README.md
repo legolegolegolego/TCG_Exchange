@@ -41,38 +41,43 @@ TCG Exchange ofrece una solución moderna y digital a un proceso tradicionalment
 
 ### Usuarios
 Representa a los usuarios registrados en la plataforma.
-- `id (Long)`: identificador único.
+- `id (Long)`: identificador único autogenerado.
 - `username (String)`: nombre de usuario único.
 - `password (String)`: contraseña cifrada mediante hash.
 - `rol (Enum/String)`: USER o ADMIN.
+- `desactivado (boolean)`:
+  - `false` (por defecto): cuenta activa y operativa.
+  - `true`: cuenta desactivada; el usuario no puede autenticarse ni operar en el sistema, pero sus datos e intercambios se conservan.
 - `cartasFisicas (List<CartaFisica>)`: cartas físicas asociadas.
 
 ### CartaModelo
 Modelo conceptual de una carta del catálogo.
-- `id (Long)`
-- `nombre (String)`
+- `id (Long)`: identificador único no autogenerado, corresponde al número oficial del modelo de carta.
+- `nombre (String)`: nombre de la carta
 - `tipoCarta (Enum)`: POKEMON, ENTRENADOR.
-- `rareza (Enum)`
-- `imagenUrl (String)`
-- `tipoPokemon (Enum, opcional)`
-- `evolucion (Enum, opcional)`
+- `rareza (Enum)`: COMUN, INFRECUENTE, RARA, RARA_HOLO.
+- `imagenUrl (String)`: url de la imagen oficial de la carta.
+- `tipoPokemon (Enum, opcional)`: PLANTA, FUEGO, AGUA, ELECTRICO, PSIQUICO, LUCHA, INCOLORO.
+- `evolucion (Enum, opcional)`: BASICO, FASE_1, FASE_2.
 
 ### CartaFisica
 Carta real ofrecida para intercambio.
-- `id (Long)`
-- `estadoCarta (Enum)`
-- `disponible (boolean)`
-- `imagenUrl (String, opcional)`
-- `usuario (Usuario)`
-- `cartaModelo (CartaModelo)`
+- `id (Long)`: identificador único autogenerado.
+- `estadoCarta (Enum)`: EXCELENTE, ACEPTABLE.
+- `disponible (boolean)`:
+  - `true` (por defecto): la carta está publicada y puede participar en intercambios.
+  - `false`: la carta no está disponible para intercambiar.
+- `imagenUrl (String, opcional)`: url de la imagen real de la carta.
+- `usuario (Usuario)`: usuario autenticado que crea la carta física.
+- `cartaModelo (CartaModelo)`: modelo conceptual al que pertenece la carta física.
 
 ### Intercambio
 Propuesta de intercambio entre usuarios.
-- `id (Long)`
-- `usuarioOrigen (Usuario)`
-- `usuarioDestino (Usuario)`
-- `cartaOrigen (CartaFisica)`
-- `cartaDestino (CartaFisica)`
+- `id (Long)`: identificador único autogenerado.
+- `usuarioOrigen (Usuario)`: usuario que inicia el intercambio.
+- `usuarioDestino (Usuario)`: usuario que recibe la propuesta de intercambio.
+- `cartaOrigen (CartaFisica)`: carta ofrecida por usuarioOrigen.
+- `cartaDestino (CartaFisica)`: carta solicitada que pertenece a usuarioDestino.
 - `estado (Enum)`: PENDIENTE, ACEPTADO, RECHAZADO.
 
 ---
@@ -86,28 +91,47 @@ Propuesta de intercambio entre usuarios.
 
 ### Usuarios
 - El `username` es único y obligatorio.
-- La contraseña se almacena cifrada.
+- La contraseña es obligatoria y debe tener una longitud mínima de 6 caracteres.
 - Solo el propio usuario o un ADMIN pueden modificar el perfil.
 - No es posible registrarse como ADMIN.
+- El atributo `desactivado` gestiona el estado de la cuenta:
+  - `false` (por defecto): cuenta activa.
+  - `true`: cuenta desactivada.
+- Cuando un usuario solicita eliminar su cuenta:
+  - Si no ha participado en ningún intercambio (PENDIENTE, ACEPTADO o RECHAZADO), se elimina físicamente de la base de datos.
+  - Si ha participado en algún intercambio, la cuenta no se elimina físicamente y se marca como `desactivado = true`.
+- Un usuario desactivado no puede iniciar sesión ni acceder a endpoints protegidos, pero sus datos e intercambios se conservan para mantener la integridad histórica.
+- Un usuario solo puede modificar o eliminar (desactivar) su propio perfil.
+- Un ADMIN puede acceder y gestionar cualquier usuario.
 
 ### CartaModelo
-- Solo un ADMIN puede crear, modificar o eliminar.
-- El `id` no es autoincremental (corresponde al número oficial de carta).
-- Puede existir sin cartas físicas asociadas.
+- Solo un ADMIN puede crear, modificar o eliminar cartas modelo.
+- El `id` no es autogenerado y corresponde al número oficial de la carta.
+- Una carta modelo puede existir sin cartas físicas asociadas.
 
 ### CartaFisica
-- Solo el propietario puede crear, modificar o eliminar.
-- Un ADMIN puede eliminar cartas de cualquier usuario.
-- Las cartas físicas que hayan participado o estén participando en intercambios no se eliminan de la BD.
-- Si una carta ha estado involucrada en un intercambio `RECHAZADO`, al solicitar el usuario su eliminación, pasa a 
-estado `disponible = false`, quedando cerrada para futuros intercambios.
-- Al aceptar un intercambio, la carta pasa a `disponible = false`.
-- No se transfiere la propiedad de la carta.
+- Solo el usuario propietario puede crear, modificar o eliminar sus cartas físicas.
+- Un ADMIN puede eliminar cartas físicas de cualquier usuario.
+- Las cartas físicas que hayan participado o estén participando en intercambios no se eliminan de la base de datos.
+- Si una carta ha estado involucrada en un intercambio `RECHAZADO`, al solicitar el usuario su eliminación,
+la carta pasa a estado `disponible = false`, quedando cerrada para futuros intercambios y manteniéndose por motivos históricos.
+- Al aceptar un intercambio, la carta pasa automáticamente a `disponible = false`.
+- No se transfiere la propiedad de la carta al aceptar un intercambio.
+- Una carta aceptada no puede reutilizarse en otros intercambios.
+- Al actualizar una carta física, el usuario no puede modificar manualmente su disponibilidad.
+- Una carta física puede participar simultáneamente en varios intercambios en estado `PENDIENTE`.
+- Una carta física solo puede formar parte de un único intercambio `ACEPTADO`.
 
 ### Intercambio
-- El estado inicial es `PENDIENTE`.
-- Solo el usuario destino puede aceptar o rechazar.
-- Al aceptar, las cartas pasan a no disponibles.
+- El estado inicial de un intercambio es `PENDIENTE`.
+- Solo el usuario destino puede aceptar o rechazar un intercambio.
+- Al aceptar un intercambio:
+  - El estado pasa a `ACEPTADO`.
+  - Las cartas físicas involucradas pasan a no disponibles (`disponible = false`).
+- Al rechazar un intercambio:
+  - El estado pasa a `RECHAZADO`.
+  - Las cartas físicas continúan disponibles.
+- No se permite crear intercambios con cartas no disponibles.
 - Un usuario solo puede consultar intercambios en los que participa.
 - Un ADMIN puede consultar cualquier intercambio.
 
