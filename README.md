@@ -67,7 +67,7 @@ Carta real ofrecida para intercambio.
 - `disponible (boolean)`:
   - `true` (por defecto): la carta está publicada y puede participar en intercambios.
   - `false`: la carta no está disponible para intercambiar.
-- `imagenUrl (String, opcional)`: url de la imagen real de la carta.
+- `imagenUrl (String)`: url de la imagen real de la carta.
 - `usuario (Usuario)`: usuario autenticado que crea la carta física.
 - `cartaModelo (CartaModelo)`: modelo conceptual al que pertenece la carta física.
 

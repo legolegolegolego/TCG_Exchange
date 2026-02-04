@@ -21,8 +21,7 @@ public class CartaFisica {
     @Column(nullable = false)
     private boolean disponible;
 
-    // opcional
-    @Column
+    @Column(nullable = false)
     private String imagenUrl; // foto real subida por el usuario
 
     // Dueño de la carta
