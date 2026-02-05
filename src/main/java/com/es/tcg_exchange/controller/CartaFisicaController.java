@@ -17,7 +17,8 @@ public class CartaFisicaController {
 
     // Obtener las cartas físicas de un usuario por su username
     @GetMapping("/usuario/{username}")
-    public ResponseEntity<List<CartaFisicaDTO>> getCartasDeUsuario(@PathVariable String username){
+    public ResponseEntity<List<CartaFisicaDTO>> getCartasDeUsuario(
+            @PathVariable String username){
         List<CartaFisicaDTO> cfsDTO = cfService.getByUsername(username);
 
         return new ResponseEntity<List<CartaFisicaDTO>>(cfsDTO, HttpStatus.OK);
@@ -25,7 +26,8 @@ public class CartaFisicaController {
 
     // Obtener una carta física por id
     @GetMapping("/{id}")
-    public ResponseEntity<CartaFisicaDTO> getCartaFisica(@PathVariable Long id){
+    public ResponseEntity<CartaFisicaDTO> getCartaFisicaById(
+            @PathVariable Long id){
         CartaFisicaDTO cfDTO = cfService.findById(id);
 
         return new ResponseEntity<CartaFisicaDTO>(cfDTO, HttpStatus.OK);
@@ -33,7 +35,8 @@ public class CartaFisicaController {
 
     // Crear carta física
     @PostMapping
-    public ResponseEntity<CartaFisicaDTO> insertCartaFisica(@RequestBody CartaFisicaDTO cfDTO){
+    public ResponseEntity<CartaFisicaDTO> createCartaFisica(
+            @RequestBody CartaFisicaDTO cfDTO){
         cfService.insert(cfDTO);
 
         return new ResponseEntity<CartaFisicaDTO>(cfDTO, HttpStatus.CREATED);
@@ -41,7 +44,9 @@ public class CartaFisicaController {
 
     // Actualizar carta física
     @PutMapping("/{id}")
-    public ResponseEntity<CartaFisicaDTO> updateCartaFisica(@PathVariable Long id, @RequestBody CartaFisicaDTO cfDTO){
+    public ResponseEntity<CartaFisicaDTO> updateCartaFisica(
+            @PathVariable Long id,
+            @RequestBody CartaFisicaDTO cfDTO){
         cfService.update(id, cfDTO);
 
         return new ResponseEntity<CartaFisicaDTO>(cfDTO, HttpStatus.OK);
