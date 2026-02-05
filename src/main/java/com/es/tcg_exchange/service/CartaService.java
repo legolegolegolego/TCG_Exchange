@@ -6,7 +6,6 @@ import com.es.tcg_exchange.error.exception.DuplicateException;
 import com.es.tcg_exchange.error.exception.NotFoundException;
 import com.es.tcg_exchange.model.Carta;
 import com.es.tcg_exchange.model.Usuario;
-import com.es.tcg_exchange.repository.CartaRepository;
 import com.es.tcg_exchange.repository.UsuarioRepository;
 import com.es.tcg_exchange.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
