@@ -63,21 +63,13 @@ public class CartaService {
         if (cartaRepository.findByNombre(cdto.getNombre()).isPresent()){
             throw new DuplicateException("Ese nombre ya lo tiene otra carta");
         }
-        if (!(cdto.getTipo().equals("FUEGO")  || cdto.getTipo().equals("PLANTA")  || cdto.getTipo().equals("AGUA")  ||
-                cdto.getTipo().equals("RAYO")  || cdto.getTipo().equals("PSIQUICO")  || cdto.getTipo().equals("LUCHA")  ||
-                cdto.getTipo().equals("OSCURO")  || cdto.getTipo().equals("DRAGON")  || cdto.getTipo().equals("METALICO")  ||
-                cdto.getTipo().equals("INCOLORO") )){
-            throw new BadRequestException("No has introducido un tipo válido");
-        }
-        if (cdto.getVida() < 10 || cdto.getVida() > 300){
-            throw new BadRequestException("No has introducido una vida válida");
-        }
-        if (cdto.getAtaque() < 10 || cdto.getAtaque() > 300){
-            throw new BadRequestException("No has introducido un ataque válida");
-        }
-        if (cdto.getUsername() != null){
-            throw new BadRequestException("Una nueva carta no puede tener un usuario asignado, tiene que comprarla");
-        }
+//        if (!(cdto.getTipo().equals("FUEGO")  || cdto.getTipo().equals("PLANTA")  || cdto.getTipo().equals("AGUA")  ||
+//                cdto.getTipo().equals("RAYO")  || cdto.getTipo().equals("PSIQUICO")  || cdto.getTipo().equals("LUCHA")  ||
+//                cdto.getTipo().equals("OSCURO")  || cdto.getTipo().equals("DRAGON")  || cdto.getTipo().equals("METALICO")  ||
+//                cdto.getTipo().equals("INCOLORO") )){
+//            throw new BadRequestException("No has introducido un tipo válido");
+//        }
+
 
         cartaRepository.save(Mapper.DTOToEntity(cdto));
 

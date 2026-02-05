@@ -29,7 +29,7 @@ public class IntercambioController {
         return new ResponseEntity<IntercambioDTO>(tdto, HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<IntercambioDTO> insert(@RequestBody IntercambioDTO tdto){
         tservice.insert(tdto);
 
