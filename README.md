@@ -131,6 +131,8 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - Al rechazar un intercambio:
   - El estado pasa a `RECHAZADO`.
   - Las cartas físicas continúan disponibles.
+- Al eliminar un intercambio:
+  - Las cartas (y su disponibilidad) y usuarios involucrados no se ven alterados.
 - No se permite crear intercambios con cartas no disponibles.
 - Un usuario solo puede consultar intercambios en los que participa.
 - Un ADMIN puede consultar cualquier intercambio.
@@ -183,7 +185,9 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - `DELETE /cartas-modelo/{id}` – Solo ADMIN.
 
 ### Gestión de Cartas Físicas
-- `GET /cartas-fisicas/usuario/{username}` – Público o protegido según disponibilidad.
+- `GET /cartas-fisicas/usuario/{username}`
+  - Si `disponible = true`: Público.
+  - Si `disponible = false`: Propietario o ADMIN
 - `GET /cartas-fisicas/{id}` – Público.
 - `POST /cartas-fisicas` – Usuario autenticado.
 - `PUT /cartas-fisicas/{id}` – Propietario.
@@ -195,6 +199,7 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - `POST /intercambios` – Usuario autenticado.
 - `PUT /intercambios/{id}/aceptar` – Usuario destino.
 - `PUT /intercambios/{id}/rechazar` – Usuario destino.
+- `DELETE /intercambios/{id}` – Solo ADMIN.
 
 ---
 

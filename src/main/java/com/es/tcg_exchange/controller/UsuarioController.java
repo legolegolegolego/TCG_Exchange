@@ -104,7 +104,7 @@ public class UsuarioController {
         if(authentication.getAuthorities()
                 .stream()
                 .anyMatch(authority -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) || authentication.getName().equals(username)) {
-            UsuarioDTO usuarioDTO = usuarioService.findByNombre(username);
+            UsuarioDTO usuarioDTO = usuarioService.findByUsername(username);
             return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
         } else {
             throw new ForbiddenException("No tienes los permisos para acceder al recurso");

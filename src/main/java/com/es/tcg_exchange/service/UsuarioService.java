@@ -113,7 +113,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     //    pa buscar al user x nombre
-    public UsuarioDTO findByNombre(String nombre) {
+    public UsuarioDTO findByUsername(String nombre) {
 
         if (nombre.isEmpty() || nombre.isBlank()){
             throw new BadRequestException("El nombre no puede estar vacío");
