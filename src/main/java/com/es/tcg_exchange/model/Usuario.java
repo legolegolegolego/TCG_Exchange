@@ -1,6 +1,5 @@
 package com.es.tcg_exchange.model;
 
-import com.es.tcg_exchange.model.enums.Rol;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,50 +24,36 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    // Rol del usuario: "USER" o "ADMIN"
+    // Se inicia por defecto como USER (excepto en constructor específico de roles)
     @Column(nullable = false)
-    private Rol rol;
-//    private String rol; // USER o ADMIN"
+    private String roles = "USER"; // o ADMIN"
+
+    // por defecto un usuario no está desactivado, solo cuando se intente borrar y haya restricciones para su borrado en BD
+    @Column(nullable = false)
+    private boolean desactivado = false;
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<CartaFisica> cartaFisicas;
+    private List<CartaFisica> cartasFisicas;
 
     public Usuario() {
-//        this.rol = "USER";
-        this.rol = Rol.USER;
     }
 
     public Usuario(String username, String password) {
         this.username = username;
         this.password = password;
-        this.rol = Rol.USER;
     }
 
-    public Usuario(String username, String password, Rol rol) {
-        this.username = username;
-        this.password = password;
-        this.rol = rol;
-    }
-
-    public Usuario(Long id, String username, String password, Rol rol) {
+    public Usuario(Long id, String username, String password, String roles) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.rol = rol;
+        this.roles = roles;
     }
 
-    public Usuario(Long id, String username, String password, Rol rol, List<CartaFisica> cartaFisicas) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.rol = rol;
-        this.cartaFisicas = cartaFisicas;
-    }
-
-    public Usuario(String username, String password, Rol rol, List<CartaFisica> cartaFisicas) {
-        this.username = username;
-        this.password = password;
-        this.rol = rol;
-        this.cartaFisicas = cartaFisicas;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Stream.of(this.getRoles().split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -88,18 +73,6 @@ public class Usuario implements UserDetails {
         this.username = username;
     }
 
-//    version String:
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return Stream.of(this.getRol().split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-//    }
-
-//    version null:
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(rol.name()));
-    }
-
     @Override
     public String getPassword() {
         return password;
@@ -109,19 +82,27 @@ public class Usuario implements UserDetails {
         this.password = password;
     }
 
-    public Rol getRol() {
-        return rol;
+    public String getRoles() {
+        return roles;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
-    public List<CartaFisica> getCartaFisicas() {
-        return cartaFisicas;
+    public boolean isDesactivado() {
+        return desactivado;
     }
 
-    public void setCartaFisicas(List<CartaFisica> cartaFisicas) {
-        this.cartaFisicas = cartaFisicas;
+    public void setDesactivado(boolean desactivado) {
+        this.desactivado = desactivado;
+    }
+
+    public List<CartaFisica> getCartasFisicas() {
+        return cartasFisicas;
+    }
+
+    public void setCartasFisicas(List<CartaFisica> cartasFisicas) {
+        this.cartasFisicas = cartasFisicas;
     }
 }

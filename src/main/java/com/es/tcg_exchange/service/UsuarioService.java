@@ -47,7 +47,7 @@ public class UsuarioService implements UserDetailsService {
         Tenemos que convertir nuestro objeto de tipo Usuario a un objeto de tipo UserDetails
         ¡No os preocupéis, esto es siempre igual!
          */
-        List<GrantedAuthority> authorities = Arrays.stream(usuario.getRol().split(","))
+        List<GrantedAuthority> authorities = Arrays.stream(usuario.getRoles().split(","))
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.trim()))
                 .collect(Collectors.toList());
 
@@ -55,7 +55,7 @@ public class UsuarioService implements UserDetailsService {
                 .builder()
                 .username(usuario.getUsername())
                 .password(usuario.getPassword())
-                .roles(usuario.getRol())
+                .roles(usuario.getRoles())
                 .build();
 
         return userDetails;
@@ -143,7 +143,7 @@ public class UsuarioService implements UserDetailsService {
 
         // Logica de pass
         if (usuarioActualizado.getPassword().length() < 6){
-            throw new BadRequestException("La longitud de la contraseña debe ser superior o igual da 6 caracteres");
+            throw new BadRequestException("La longitud de la contraseña debe ser superior o igual a 6 caracteres");
         }
 
         if (!usuarioActualizado.getRoles().equals("USER") && !usuarioActualizado.getRoles().equals("ADMIN")){
@@ -160,8 +160,8 @@ public class UsuarioService implements UserDetailsService {
 
         u.setUsername(usuarioActualizado.getUsername());
         u.setPassword(passwordEncoder.encode(usuarioActualizado.getPassword()));
-        u.setRol(usuarioActualizado.getRoles());
-        u.setCartaFisicas(Mapper.DTOsToEntities(usuarioActualizado.getCartas()));
+        u.setRoles(usuarioActualizado.getRoles());
+        u.setCartasFisicas(Mapper.DTOsToEntities(usuarioActualizado.getCartasFisicas()));
 
         usuarioRepository.save(u);
         return usuarioActualizado;
@@ -173,10 +173,10 @@ public class UsuarioService implements UserDetailsService {
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
         // lo copio antes de borrarlo para retornarlo luego los datos
-        UsuarioDTO udto = Mapper.entityToDTO(u);
+        UsuarioDTO usuarioDTO = Mapper.entityToDTO(u);
 
         usuarioRepository.delete(u);
 
-        return udto;
+        return usuarioDTO;
     }
 }

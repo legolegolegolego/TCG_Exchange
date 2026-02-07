@@ -84,18 +84,18 @@ public class UsuarioController {
     // obtener todos los usuarios
     @GetMapping("/")
     public ResponseEntity<List<UsuarioDTO>> getAll(){
-        List<UsuarioDTO>usuarioDTOS = usuarioService.getAll();
+        List<UsuarioDTO> usuariosDTO = usuarioService.getAll();
 
-        return new ResponseEntity<List<UsuarioDTO>>(usuarioDTOS, HttpStatus.OK);
+        return new ResponseEntity<List<UsuarioDTO>>(usuariosDTO, HttpStatus.OK);
     }
 
     // no hace falta el authentication aqui pq solo pueden acceder los admin
     // y ya se contempla eso en el securityconfig
     @GetMapping("/id/{id}")
     public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
-        UsuarioDTO udto = usuarioService.findById(id);
+        UsuarioDTO usuarioDTO = usuarioService.findById(id);
 
-        return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
+        return new ResponseEntity<UsuarioDTO>(usuarioDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{username}")
@@ -150,9 +150,9 @@ public class UsuarioController {
                         -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) ||
                 authentication.getName().equals(username)) {
             // copio antes de borrar para retornarlo despues
-            UsuarioDTO udto = usuarioService.deleteUser(username);
+            UsuarioDTO usuarioDTO = usuarioService.deleteUser(username);
 
-            return new ResponseEntity<UsuarioDTO>(udto, HttpStatus.OK);
+            return new ResponseEntity<UsuarioDTO>(usuarioDTO, HttpStatus.OK);
         } else {
             throw new ForbiddenException("No tienes los permisos para acceder al recurso");
         }

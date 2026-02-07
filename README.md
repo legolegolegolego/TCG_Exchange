@@ -44,7 +44,7 @@ Representa a los usuarios registrados en la plataforma.
 - `id (Long)`: identificador único autogenerado.
 - `username (String)`: nombre de usuario único.
 - `password (String)`: contraseña cifrada mediante hash.
-- `rol (Enum/String)`: USER o ADMIN.
+- `roles (String)`: USER o ADMIN.
 - `desactivado (boolean)`:
   - `false` (por defecto): cuenta activa y operativa.
   - `true`: cuenta desactivada; el usuario no puede autenticarse ni operar en el sistema, pero sus datos e intercambios se conservan.

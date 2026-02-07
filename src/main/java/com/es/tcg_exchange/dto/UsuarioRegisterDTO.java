@@ -4,21 +4,16 @@ public class UsuarioRegisterDTO {
     private String username;
     private String password;
     private String password2;
-    private String roles;
+    private String roles = "USER";
 
 
     public UsuarioRegisterDTO() {
     }
 
-    public UsuarioRegisterDTO(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
     public UsuarioRegisterDTO(String username, String password, String roles) {
         this.username = username;
         this.password = password;
-        this.password2 = password2;
+        this.password2 = password;
         this.roles = roles;
     }
 

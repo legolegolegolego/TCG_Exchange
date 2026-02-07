@@ -3,6 +3,7 @@ package com.es.tcg_exchange.utils;
 import com.es.tcg_exchange.dto.*;
 import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
+import com.es.tcg_exchange.model.enums.Rol;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,8 +16,8 @@ public class Mapper {
         return new UsuarioDTO(
                 u.getUsername(),
                 u.getPassword(),
-                u.getRol(),
-                Mapper.cartasToDTOs(u.getCartaFisicas())
+                u.getRoles(),
+                Mapper.cartasToDTOs(u.getCartasFisicas())
         );
     }
 
@@ -44,7 +45,7 @@ public class Mapper {
         return new UsuarioRegisterDTO(
                 u.getUsername(),
                 u.getPassword(),
-                u.getRol()
+                u.getRol().name()
         );
     }
 
@@ -68,7 +69,8 @@ public class Mapper {
         return new Usuario(
                 urDTO.getUsername(),
                 urDTO.getPassword(),
-                urDTO.getRoles()
+                urDTO.getPassword2(),
+                Rol.valueOf(urDTO.getRoles())
         );
     }
 
