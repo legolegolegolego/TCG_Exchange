@@ -6,8 +6,8 @@ import java.util.List;
 public class UsuarioDTO {
     private String username;
     private String password;
-    private String roles = "USER";
-    private boolean desactivado = false;
+    private String roles;
+    private boolean desactivado;
     private List<CartaFisicaDTO> cartasFisicas;
 
 
@@ -27,6 +27,13 @@ public class UsuarioDTO {
         this.cartasFisicas = cartasFisicas;
     }
 
+    public UsuarioDTO(String username, String password, String roles, boolean desactivado, List<CartaFisicaDTO> cartasFisicas) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+        this.desactivado = desactivado;
+        this.cartasFisicas = cartasFisicas;
+    }
 
     public String getUsername() {
         return username;

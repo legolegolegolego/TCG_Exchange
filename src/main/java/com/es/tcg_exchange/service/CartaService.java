@@ -1,6 +1,5 @@
 package com.es.tcg_exchange.service;
 
-import com.es.tcg_exchange.dto.CartaDTO;
 import com.es.tcg_exchange.error.exception.BadRequestException;
 import com.es.tcg_exchange.error.exception.DuplicateException;
 import com.es.tcg_exchange.error.exception.NotFoundException;

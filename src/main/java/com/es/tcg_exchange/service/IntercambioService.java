@@ -45,10 +45,10 @@ public class IntercambioService {
 
         // Comprobar si existen los usuarios y carta de la transaccion que se crea
 
-        Usuario usuarioA = usuarioRepository.findById(tdto.getUsuarioDestino()).orElseThrow(()
+        Usuario usuarioA = usuarioRepository.findById(tdto.getIdUsuarioDestino()).orElseThrow(()
                 -> new NotFoundException("El usuario A no existe en la BD"));
 
-        Usuario usuarioB = usuarioRepository.findById(tdto.getUsuarioOrigen()).orElseThrow(()
+        Usuario usuarioB = usuarioRepository.findById(tdto.getIdUsuarioOrigen()).orElseThrow(()
                 -> new NotFoundException("El usuario B no existe en la BD"));
 
         // Asegurar que el usuarioA no sea el mismo usuario que el usuarioB
@@ -71,10 +71,10 @@ public class IntercambioService {
 
         // Comprobar si existen los usuarios y carta de la transaccion que se crea
 
-        Usuario usuarioA = usuarioRepository.findById(tdto.getUsuarioDestino()).orElseThrow(()
+        Usuario usuarioA = usuarioRepository.findById(tdto.getIdUsuarioDestino()).orElseThrow(()
                 -> new NotFoundException("El usuario A no existe en la BD"));
 
-        Usuario usuarioB = usuarioRepository.findById(tdto.getUsuarioOrigen()).orElseThrow(()
+        Usuario usuarioB = usuarioRepository.findById(tdto.getIdUsuarioOrigen()).orElseThrow(()
                 -> new NotFoundException("El usuario B no existe en la BD"));
 
         // Asegurar que el usuarioA no sea el mismo que el usuarioB

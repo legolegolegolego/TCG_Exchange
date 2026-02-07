@@ -4,7 +4,7 @@ public class UsuarioRegisterDTO {
     private String username;
     private String password;
     private String password2;
-    private String roles = "USER";
+    private String roles;
 
 
     public UsuarioRegisterDTO() {

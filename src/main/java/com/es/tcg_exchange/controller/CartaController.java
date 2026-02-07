@@ -1,6 +1,5 @@
 package com.es.tcg_exchange.controller;
 
-import com.es.tcg_exchange.dto.CartaDTO;
 import com.es.tcg_exchange.error.exception.ForbiddenException;
 import com.es.tcg_exchange.service.CartaService;
 import org.springframework.beans.factory.annotation.Autowired;
