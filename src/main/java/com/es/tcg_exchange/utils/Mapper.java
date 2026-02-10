@@ -1,147 +1,170 @@
 package com.es.tcg_exchange.utils;
 
 import com.es.tcg_exchange.dto.*;
+import com.es.tcg_exchange.model.CartaFisica;
+import com.es.tcg_exchange.model.CartaModelo;
 import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
-import com.es.tcg_exchange.model.enums.Rol;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+//@Component
 public class Mapper {
 
-    public static UsuarioDTO entityToDTO(Usuario u) {
+    // ---------------- USUARIO ----------------
+    // ---------------- entity/ies to DTO/s ----------------
+    public static UsuarioDTO usuarioToDTO(Usuario usuario) {
         return new UsuarioDTO(
-                u.getUsername(),
-                u.getPassword(),
-                u.getRoles(),
-                Mapper.cartasToDTOs(u.getCartasFisicas())
+                usuario.getUsername(),
+                usuario.getRoles(),
+                Mapper.cartasFisicasToDTO(usuario.getCartasFisicas())
         );
     }
 
-    // usuarioS
-    public static List<UsuarioDTO> entitiesToDTOs(List<Usuario> usuarios) {
-        List<UsuarioDTO> usuarioDTOs = new ArrayList<>();
+    public static List<UsuarioDTO> usuariosToDTO(List<Usuario> usuarios) {
+        List<UsuarioDTO> usuariosDTO = new ArrayList<>();
 
         // Iterar sobre cada Usuario y convertirlo a UsuarioDTO
-        usuarios.forEach(u -> {
-            UsuarioDTO dto = entityToDTO(u); // Utiliza el método de la propia clase para convertir
-            usuarioDTOs.add(dto); // Agregar el DTO a la lista
+        usuarios.forEach(usuario -> {
+            UsuarioDTO usuarioDTO = usuarioToDTO(usuario); // Utiliza el método de la propia clase para convertir
+            usuariosDTO.add(usuarioDTO); // Agregar el DTO a la lista
         });
 
-        return usuarioDTOs; // Retorna la lista de DTOs
+        return usuariosDTO; // Retorna la lista de DTOs
     }
 
-        public static UsuarioLoginDTO entityLoginToDTO(Usuario u) {
-        return new UsuarioLoginDTO(
+    public static UsuarioLoginDTO usuarioToLoginDTO(Usuario u) {
+    return new UsuarioLoginDTO(
+            u.getUsername(),
+            u.getPassword()
+    );
+    }
+
+    public static UsuarioRegisterDTO usuarioToRegisterDTO(Usuario u) {
+        return new UsuarioRegisterDTO(
                 u.getUsername(),
                 u.getPassword()
         );
     }
 
-    public static UsuarioRegisterDTO entityRegisterToDTO(Usuario u) {
-        return new UsuarioRegisterDTO(
-                u.getUsername(),
-                u.getPassword(),
-                u.getRol().name()
-        );
-    }
+    // ---------------- DTO/s to entity/ies ----------------
+//    public static Usuario usuarioDTOToModel(UsuarioDTO uDTO){
+//        return new Usuario(
+//                uDTO.getUsername(),
+//                uDTO.getPassword(), // si programo null al final este atributo no se manda
+//                uDTO.getRoles()
+//                Mapper.DTOsToEntities(uDTO.getCartasFisicas())
+//        );
+//    }
 
-    public static Usuario DTOToEntity(UsuarioDTO uDTO){
-        return new Usuario(
-                uDTO.getUsername(),
-                uDTO.getPassword(),
-                uDTO.getRoles(),
-                Mapper.DTOsToEntities(uDTO.getCartas())
-        );
-    }
-
-    public static Usuario DTOToEntity(UsuarioLoginDTO ulDTO){
+    public static Usuario usuarioLoginDTOToModel(UsuarioLoginDTO ulDTO){
         return new Usuario(
                 ulDTO.getUsername(),
                 ulDTO.getPassword()
         );
     }
 
-    public static Usuario DTOToEntity(UsuarioRegisterDTO urDTO){
+    public static Usuario usuarioRegisterDTOToModel(UsuarioRegisterDTO urDTO){
         return new Usuario(
                 urDTO.getUsername(),
-                urDTO.getPassword(),
-                urDTO.getPassword2(),
-                Rol.valueOf(urDTO.getRoles())
+                urDTO.getPassword()
         );
     }
 
-    public static CartaDTO entityToDTO(Carta c){
+    // ---------------- CARTA FISICA ----------------
+    // ---------------- entity/ies to DTO/s ----------------
+    public static CartaFisicaDTO cartaFisicaToDTO(CartaFisica cartaFisica){
 
-        // si no tiene usuario asignado no se inicializa con nombre
-        if (c.getUsuario() != null){
-            return new CartaDTO(
-                    c.getId(),
-                    c.getNombre(),
-                    c.getTipo(),
-                    c.getVida(),
-                    c.getAtaque(),
-                    c.getUsuario().getUsername()
-            );
-        } else {
-            return new CartaDTO(
-                    c.getId(),
-                    c.getNombre(),
-                    c.getTipo(),
-                    c.getVida(),
-                    c.getAtaque()
-            );
-        }
-
-    }
-
-    // cartaS
-    public static List<CartaDTO> cartasToDTOs(List<Carta> cartas) {
-        List<CartaDTO> cartasDTO = new ArrayList<>();
-
-        cartas.forEach(c -> {
-            CartaDTO dto = entityToDTO(c); // Utiliza el método de la propia clase para convertir
-            cartasDTO.add(dto); // Agregar el DTO a la lista
-        });
-
-        return cartasDTO; // Retorna la lista de DTOs
-    }
-
-    // cartaS
-    public static List<Carta> DTOsToEntities(List<CartaDTO> cartasDTO) {
-        List<Carta> cartas = new ArrayList<>();
-
-        cartasDTO.forEach(dto -> {
-            Carta c = DTOToEntity(dto); // Utiliza el método de la propia clase para convertir
-            cartas.add(c); // Agregar el DTO a la lista
-        });
-
-        return cartas; // Retorna la lista de DTOs
-    }
-
-    public static Carta DTOToEntity(CartaDTO cDTO){
-
-        return new Carta(
-                cDTO.getId(),
-                cDTO.getNombre(),
-                cDTO.getTipo(),
-                cDTO.getVida(),
-                cDTO.getAtaque()
+        return new CartaFisicaDTO(
+                cartaFisica.getId(),
+                cartaFisica.getEstadoCarta(),
+                cartaFisica.getImagenUrl(),
+                cartaFisica.getUsuario().getId(),
+                cartaFisica.getCartaModelo().getId()
         );
     }
 
-    public static IntercambioDTO entityToDTO(Intercambio t) {
+    public static List<CartaFisicaDTO> cartasFisicasToDTO(List<CartaFisica> cartasFisicas) {
+        List<CartaFisicaDTO> cartasFisicasDTO = new ArrayList<>();
+
+        cartasFisicas.forEach(cartaFisica -> {
+            CartaFisicaDTO dto = cartaFisicaToDTO(cartaFisica); // Utiliza el método de la propia clase para convertir
+            cartasFisicasDTO.add(dto); // Agregar el DTO a la lista
+        });
+
+        return cartasFisicasDTO; // Retorna la lista de DTOs
+    }
+
+    // ---------------- DTO/s to entity/ies ----------------
+    // tengo que tener claro lo que necesito antes de seguir por ejemplo con este dto
+    // lo que necesito pasarle, convertir, etc.
+    // lo veré a medida que hago funciones de service y prosigo en la app
+
+//    public static List<CartaFisica> DTOsToEntities(List<CartaFisicaDTO> cartasFisicasDTO) {
+//        List<CartaFisica> cartasFisicas = new ArrayList<>();
+//
+//        cartasFisicasDTO.forEach(cartaFisicaDTO -> {
+//            CartaFisica cartaFisica = DTOToEntity(cartaFisicaDTO); // Utiliza el método de la propia clase para convertir
+//            cartasFisicas.add(cartaFisica); // Agregar el DTO a la lista
+//        });
+//
+//        return cartasFisicas; // Retorna la lista de DTOs
+//    }
+
+//    public static CartaFisica DTOToEntity(CartaFisicaDTO cartaFisicaDTO){
+//
+//        return new CartaFisica(
+//                cartaFisicaDTO.getId(),
+//                cartaFisicaDTO.getEstadoCarta(),
+//                cartaFisicaDTO.getImagenUrl(),
+//                cartaFisicaDTO.getIdUsuario(),
+//                cartaFisicaDTO.getIdCartaModelo()
+//        );
+//    }
+
+    // ---------------- CARTA MODELO ----------------
+    // ---------------- entity/ies to DTO/s ----------------
+    public static CartaModeloDTO cartaModeloToDTO(CartaModelo cartaModelo) {
+        return new CartaModeloDTO(
+                cartaModelo.getId(),
+                cartaModelo.getNombre(),
+                cartaModelo.getTipoCarta(),
+                cartaModelo.getRareza(),
+                cartaModelo.getImagenUrl(),
+                cartaModelo.getTipoPokemon(),
+                cartaModelo.getEvolucion()
+        );
+    }
+
+    // ---------------- DTO/s to entity/ies ----------------
+    public static CartaModelo cartaModeloDTOToModel(CartaModeloDTO cartaModeloDTO) {
+        // aqui lo hago con set en vez de con constructor para mostrar un mecanismo diferente simplemente
+        CartaModelo cartaModelo = new CartaModelo();
+        cartaModelo.setId(cartaModeloDTO.getId());
+        cartaModelo.setNombre(cartaModeloDTO.getNombre());
+        cartaModelo.setTipoCarta(cartaModeloDTO.getTipoCarta());
+        cartaModelo.setRareza(cartaModeloDTO.getRareza());
+        cartaModelo.setImagenUrl(cartaModeloDTO.getImagenUrl());
+        cartaModelo.setTipoPokemon(cartaModeloDTO.getTipoPokemon());
+        cartaModelo.setEvolucion(cartaModeloDTO.getEvolucion());
+        return cartaModelo;
+    }
+
+    // ---------------- INTERCAMBIO ----------------
+    // ---------------- entity/ies to DTO/s ----------------
+    public static IntercambioDTO intercambioToDTO(Intercambio intercambio) {
         return new IntercambioDTO(
-                t.getUsuarioOrigen().getId(),
-                t.getUsuarioDestino().getId(),
-                t.getCartaOrigen().getId(),
-                t.getCartaDestino().getId(),
-                t.getEstado()
+                intercambio.getUsuarioOrigen().getId(),
+                intercambio.getUsuarioDestino().getId(),
+                intercambio.getCartaOrigen().getId(),
+                intercambio.getCartaDestino().getId(),
+                intercambio.getEstado()
         );
     }
 
+    // ---------------- DTO/s to entity/ies ----------------
+    // lo mismo que en cartaFisica: hace falta un dto to entity de intercambio?
 
 }

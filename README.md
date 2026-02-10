@@ -175,6 +175,7 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - `GET /usuarios/id/{id}` – Solo ADMIN.
 - `GET /usuarios/{username}` – ADMIN o propio usuario.
 - `PUT /usuarios/{username}` – ADMIN o propio usuario.
+- `PUT /usuarios/{username}/password` – ADMIN o propio usuario.
 - `DELETE /usuarios/{username}` – ADMIN o propio usuario.
 
 ### Gestión de Cartas Modelo

@@ -44,12 +44,20 @@ public class Usuario implements UserDetails {
         this.password = password;
     }
 
+    public Usuario(String username, String password, String roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
     public Usuario(Long id, String username, String password, String roles) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.roles = roles;
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

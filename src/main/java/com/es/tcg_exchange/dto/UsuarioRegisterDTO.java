@@ -4,24 +4,20 @@ public class UsuarioRegisterDTO {
     private String username;
     private String password;
     private String password2;
-    private String roles;
 
 
     public UsuarioRegisterDTO() {
     }
 
-    public UsuarioRegisterDTO(String username, String password, String roles) {
+    public UsuarioRegisterDTO(String username, String password) {
         this.username = username;
         this.password = password;
-        this.password2 = password;
-        this.roles = roles;
     }
 
-    public UsuarioRegisterDTO(String username, String password, String password2, String roles) {
+    public UsuarioRegisterDTO(String username, String password, String password2) {
         this.username = username;
         this.password = password;
         this.password2 = password2;
-        this.roles = roles;
     }
 
     public String getUsername() {
@@ -48,11 +44,4 @@ public class UsuarioRegisterDTO {
         this.password2 = password2;
     }
 
-    public String getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String roles) {
-        this.roles = roles;
-    }
 }

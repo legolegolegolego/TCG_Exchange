@@ -5,34 +5,18 @@ import java.util.List;
 
 public class UsuarioDTO {
     private String username;
-    private String password;
     private String roles;
     private boolean desactivado;
-    private List<CartaFisicaDTO> cartasFisicas;
+    private List<CartaFisicaDTO> cartasFisicasDTO;
 
 
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(String username, String password, String roles) {
+    public UsuarioDTO(String username, String roles, List<CartaFisicaDTO> cartasFisicasDTO) {
         this.username = username;
-        this.password = password;
         this.roles = roles;
-    }
-
-    public UsuarioDTO(String username, String password, String roles, List<CartaFisicaDTO> cartasFisicas) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-        this.cartasFisicas = cartasFisicas;
-    }
-
-    public UsuarioDTO(String username, String password, String roles, boolean desactivado, List<CartaFisicaDTO> cartasFisicas) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-        this.desactivado = desactivado;
-        this.cartasFisicas = cartasFisicas;
+        this.cartasFisicasDTO = cartasFisicasDTO;
     }
 
     public String getUsername() {
@@ -41,14 +25,6 @@ public class UsuarioDTO {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getRoles() {
@@ -60,10 +36,10 @@ public class UsuarioDTO {
     }
 
     public List<CartaFisicaDTO> getCartasFisicas() {
-        return cartasFisicas;
+        return cartasFisicasDTO;
     }
 
-    public void setCartasFisicas(List<CartaFisicaDTO> cartasFisicas) {
-        this.cartasFisicas = cartasFisicas;
+    public void setCartasFisicas(List<CartaFisicaDTO> cartasFisicasDTO) {
+        this.cartasFisicasDTO = cartasFisicasDTO;
     }
 }

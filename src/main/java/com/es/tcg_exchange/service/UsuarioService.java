@@ -31,8 +31,9 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private Mapper mapper;
+    // no hace falta inyectarlo si no es componente
+//    @Autowired
+//    private Mapper mapper;
 
 //    para el login
     @Override
@@ -78,16 +79,16 @@ public class UsuarioService implements UserDetailsService {
 //            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
 //        }
 
-        // Compruebo que ambas contrasenias coinciden
+        // Compruebo que ambas contraseñas coinciden
         if (!usuarioRegisterDTO.getPassword().equals(usuarioRegisterDTO.getPassword2())) {
             throw new BadRequestException("Ambas contraseñas deben ser iguales");
         }
 
-        if (!usuarioRegisterDTO.getRoles().equals("USER") && !usuarioRegisterDTO.getRoles().equals("ADMIN")){
-            throw new BadRequestException("Roles inválidos");
-        }
+//        if (!usuarioRegisterDTO.getRoles().equals("USER") && !usuarioRegisterDTO.getRoles().equals("ADMIN")){
+//            throw new BadRequestException("Roles inválidos");
+//        }
 
-        Usuario newUsuario = Mapper.DTOToEntity(usuarioRegisterDTO);
+        Usuario newUsuario = Mapper.usuarioRegisterDTOToModel(usuarioRegisterDTO);
         newUsuario.setPassword(passwordEncoder.encode(usuarioRegisterDTO.getPassword()));
 
         usuarioRepository.save(newUsuario);
@@ -95,10 +96,10 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRegisterDTO;
     }
 
-    //    obtener todos los usuarios de la bd
+    // obtener todos los usuarios de la bd
     public List<UsuarioDTO> getAll(){
         List<Usuario> usuarios = usuarioRepository.findAll();
-        return Mapper.entitiesToDTOs(usuarios);
+        return Mapper.usuariosToDTO(usuarios);
     }
 
     // buscar x id
@@ -106,24 +107,24 @@ public class UsuarioService implements UserDetailsService {
         if (id == null){
             throw new BadRequestException("El id no puede ser null");
         }
-        Usuario u = usuarioRepository
+        Usuario usuario = usuarioRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario con id " + id + " no encontrado"));
-        return Mapper.entityToDTO(u);
+        return Mapper.usuarioToDTO(usuario);
     }
 
-    //    pa buscar al user x nombre
+    // buscar x nombre
     public UsuarioDTO findByUsername(String nombre) {
 
         if (nombre.isEmpty() || nombre.isBlank()){
             throw new BadRequestException("El nombre no puede estar vacío");
         }
 
-        Usuario u = usuarioRepository
+        Usuario usuario = usuarioRepository
                 .findByUsername(nombre)
-                .orElseThrow(() -> new NotFoundException("Usuario con nombre "+nombre+" no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Usuario con nombre " + nombre + " no encontrado"));
 
-        return Mapper.entityToDTO(u);
+        return Mapper.usuarioToDTO(usuario);
 
     }
 
@@ -155,27 +156,27 @@ public class UsuarioService implements UserDetailsService {
 //            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
 //        }
 
-        Usuario u = usuarioRepository.findByUsername(nombre)
+        Usuario usuario = usuarioRepository.findByUsername(nombre)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
-        u.setUsername(usuarioActualizado.getUsername());
-        u.setPassword(passwordEncoder.encode(usuarioActualizado.getPassword()));
-        u.setRoles(usuarioActualizado.getRoles());
-        u.setCartasFisicas(Mapper.DTOsToEntities(usuarioActualizado.getCartasFisicas()));
+        usuario.setUsername(usuarioActualizado.getUsername());
+        usuario.setPassword(passwordEncoder.encode(usuarioActualizado.getPassword()));
+        usuario.setRoles(usuarioActualizado.getRoles());
+        usuario.setCartasFisicas(Mapper.DTOsToEntities(usuarioActualizado.getCartasFisicas()));
 
-        usuarioRepository.save(u);
+        usuarioRepository.save(usuario);
         return usuarioActualizado;
     }
 
     public UsuarioDTO deleteUser(String nombre){
 
-        Usuario u = usuarioRepository.findByUsername(nombre)
+        Usuario usuario = usuarioRepository.findByUsername(nombre)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
         // lo copio antes de borrarlo para retornarlo luego los datos
-        UsuarioDTO usuarioDTO = Mapper.entityToDTO(u);
+        UsuarioDTO usuarioDTO = Mapper.usuarioToDTO(usuario);
 
-        usuarioRepository.delete(u);
+        usuarioRepository.delete(usuario);
 
         return usuarioDTO;
     }
