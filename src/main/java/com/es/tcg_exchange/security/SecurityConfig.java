@@ -37,7 +37,9 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable()) // Deshabilitamos "Cross-Site Request Forgery" (CSRF) (No lo trataremos en este ciclo)
                 .authorizeHttpRequests(auth -> auth // Filtros para securizar diferentes endpoints de la aplicación
-                                .requestMatchers(HttpMethod.POST, "/usuarios/login", "/usuarios/register").permitAll() // Filtro que deja pasar todas las peticiones que vayan a los endpoints que definamos
+                                // Filtro que deja pasar todas las peticiones que vayan a los endpoints que definamos:
+                                .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
+
                                 // solo pueden acceder a estar rutas usuarios logueados con rol ADMIN:
                                 .requestMatchers(HttpMethod.GET, "/usuarios/").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/usuarios/{id}").hasRole("ADMIN")

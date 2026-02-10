@@ -5,7 +5,6 @@ import com.es.tcg_exchange.model.CartaFisica;
 import com.es.tcg_exchange.model.CartaModelo;
 import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,21 +14,21 @@ public class Mapper {
 
     // ---------------- USUARIO ----------------
     // ---------------- entity/ies to DTO/s ----------------
-    public static UsuarioDTO usuarioToDTO(Usuario usuario) {
-        return new UsuarioDTO(
+    public static UsuarioPrivateDTO usuarioToDTO(Usuario usuario) {
+        return new UsuarioPrivateDTO(
                 usuario.getUsername(),
                 usuario.getRoles(),
                 Mapper.cartasFisicasToDTO(usuario.getCartasFisicas())
         );
     }
 
-    public static List<UsuarioDTO> usuariosToDTO(List<Usuario> usuarios) {
-        List<UsuarioDTO> usuariosDTO = new ArrayList<>();
+    public static List<UsuarioPrivateDTO> usuariosToDTO(List<Usuario> usuarios) {
+        List<UsuarioPrivateDTO> usuariosDTO = new ArrayList<>();
 
         // Iterar sobre cada Usuario y convertirlo a UsuarioDTO
         usuarios.forEach(usuario -> {
-            UsuarioDTO usuarioDTO = usuarioToDTO(usuario); // Utiliza el método de la propia clase para convertir
-            usuariosDTO.add(usuarioDTO); // Agregar el DTO a la lista
+            UsuarioPrivateDTO usuarioPrivateDTO = usuarioToDTO(usuario); // Utiliza el método de la propia clase para convertir
+            usuariosDTO.add(usuarioPrivateDTO); // Agregar el DTO a la lista
         });
 
         return usuariosDTO; // Retorna la lista de DTOs

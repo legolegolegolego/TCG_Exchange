@@ -1,14 +1,16 @@
 package com.es.tcg_exchange.service;
 
-import com.es.tcg_exchange.dto.UsuarioDTO;
+import com.es.tcg_exchange.dto.UsuarioPrivateDTO;
 import com.es.tcg_exchange.dto.UsuarioRegisterDTO;
 import com.es.tcg_exchange.error.exception.BadRequestException;
 import com.es.tcg_exchange.error.exception.DuplicateException;
+import com.es.tcg_exchange.error.exception.ForbiddenException;
 import com.es.tcg_exchange.error.exception.NotFoundException;
 import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.repository.UsuarioRepository;
 import com.es.tcg_exchange.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -30,6 +32,7 @@ public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     // no hace falta inyectarlo si no es componente
 //    @Autowired
@@ -97,13 +100,13 @@ public class UsuarioService implements UserDetailsService {
     }
 
     // obtener todos los usuarios de la bd
-    public List<UsuarioDTO> getAll(){
+    public List<UsuarioPrivateDTO> getAll(){
         List<Usuario> usuarios = usuarioRepository.findAll();
         return Mapper.usuariosToDTO(usuarios);
     }
 
     // buscar x id
-    public UsuarioDTO findById(Long id){
+    public UsuarioPrivateDTO findById(Long id){
         if (id == null){
             throw new BadRequestException("El id no puede ser null");
         }
@@ -114,7 +117,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     // buscar x nombre
-    public UsuarioDTO findByUsername(String nombre) {
+    public UsuarioPrivateDTO findByUsername(String nombre) {
 
         if (nombre.isEmpty() || nombre.isBlank()){
             throw new BadRequestException("El nombre no puede estar vacío");
@@ -129,7 +132,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
 
-    public UsuarioDTO updateUser(String nombre, UsuarioDTO usuarioActualizado){
+    public UsuarioPrivateDTO updateUser(String nombre, UsuarioPrivateDTO usuarioActualizado){
         // a partir de ahora solo pongo isBlank, ya que según la info que he encontrado
         // es redundante poner los dos, basicamente blank hace lo que empty pero mejor, pq tmb contempla espacios
         if (usuarioActualizado.getUsername().isBlank() || usuarioActualizado.getPassword().isBlank() || usuarioActualizado.getRoles().isBlank()){
@@ -168,16 +171,16 @@ public class UsuarioService implements UserDetailsService {
         return usuarioActualizado;
     }
 
-    public UsuarioDTO deleteUser(String nombre){
+    public UsuarioPrivateDTO deleteUser(String nombre){
 
         Usuario usuario = usuarioRepository.findByUsername(nombre)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
         // lo copio antes de borrarlo para retornarlo luego los datos
-        UsuarioDTO usuarioDTO = Mapper.usuarioToDTO(usuario);
+        UsuarioPrivateDTO usuarioPrivateDTO = Mapper.usuarioToDTO(usuario);
 
         usuarioRepository.delete(usuario);
 
-        return usuarioDTO;
+        return usuarioPrivateDTO;
     }
 }

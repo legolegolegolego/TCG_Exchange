@@ -1,6 +1,6 @@
 package com.es.tcg_exchange.controller;
 
-import com.es.tcg_exchange.dto.UsuarioDTO;
+import com.es.tcg_exchange.dto.UsuarioPrivateDTO;
 import com.es.tcg_exchange.dto.UsuarioLoginDTO;
 import com.es.tcg_exchange.dto.UsuarioRegisterDTO;
 import com.es.tcg_exchange.error.exception.ForbiddenException;
@@ -8,6 +8,7 @@ import com.es.tcg_exchange.error.exception.InternalServerErrorException;
 import com.es.tcg_exchange.error.exception.UnauthorizedException;
 import com.es.tcg_exchange.service.TokenService;
 import com.es.tcg_exchange.service.UsuarioService;
+import com.es.tcg_exchange.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,79 +84,52 @@ public class UsuarioController {
 
     // obtener todos los usuarios
     @GetMapping("/")
-    public ResponseEntity<List<UsuarioDTO>> getAll(){
-        List<UsuarioDTO> usuariosDTO = usuarioService.getAll();
+    public ResponseEntity<List<UsuarioPrivateDTO>> getAll(){
+        List<UsuarioPrivateDTO> usuariosDTO = usuarioService.getAll();
 
-        return new ResponseEntity<List<UsuarioDTO>>(usuariosDTO, HttpStatus.OK);
+        return new ResponseEntity<List<UsuarioPrivateDTO>>(usuariosDTO, HttpStatus.OK);
     }
 
     // no hace falta el authentication aqui pq solo pueden acceder los admin
     // y ya se contempla eso en el securityconfig
     @GetMapping("/id/{id}")
-    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
-        UsuarioDTO usuarioDTO = usuarioService.findById(id);
+    public ResponseEntity<UsuarioPrivateDTO> findById(@PathVariable Long id){
+        UsuarioPrivateDTO usuarioPrivateDTO = usuarioService.findById(id);
 
-        return new ResponseEntity<UsuarioDTO>(usuarioDTO, HttpStatus.OK);
+        return new ResponseEntity<UsuarioPrivateDTO>(usuarioPrivateDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UsuarioDTO> findByUsername(@PathVariable String username, Authentication authentication) {
+    public ResponseEntity<UsuarioPrivateDTO> findByUsername(
+            @PathVariable String username, Authentication authentication) {
 
-        if(authentication.getAuthorities()
-                .stream()
-                .anyMatch(authority -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) || authentication.getName().equals(username)) {
-            UsuarioDTO usuarioDTO = usuarioService.findByUsername(username);
-            return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
-        } else {
-            throw new ForbiddenException("No tienes los permisos para acceder al recurso");
-        }
+        // si no tiene los permisos el método se encarga de lanzar excepcion:
+        SecurityUtils.checkAdminOrSelf(authentication, username);
+
+        UsuarioPrivateDTO usuarioPrivateDTO = usuarioService.findByUsername(username);
+        return new ResponseEntity<>(usuarioPrivateDTO, HttpStatus.OK);
     }
 
 
     @PutMapping("/{username}")
-    public ResponseEntity<UsuarioDTO> updateUser(
-            @PathVariable String username, @RequestBody UsuarioDTO udto, Authentication authentication
+    public ResponseEntity<UsuarioPrivateDTO> updateUsername(
+            @PathVariable String username, @RequestBody UsuarioPrivateDTO udto, Authentication authentication
     ){
 
-        // Comprobar si el usuario autenticado es el mismo que se quiere actualizar
-//        String usuarioAutenticado = authentication.getName();
-//        boolean esElMismoUsuario = usuarioAutenticado.equals(username);
-//
-//        if (!esElMismoUsuario){
-//            throw new ForbiddenException("No tienes permiso para modificar este usuario");
-//        }
-        if(authentication.getAuthorities()
-                .stream()
-                .anyMatch(authority
-                        -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) ||
-                authentication.getName().equals(username)) {
-            UsuarioDTO usuarioDTO = usuarioService.updateUser(username, udto);
-            return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
-        } else {
-            throw new ForbiddenException("No tienes los permisos para acceder al recurso");
-        }
+        SecurityUtils.checkAdminOrSelf(authentication, username);
+        Usu
 
     }
 
     @DeleteMapping("/{username}")
-    public ResponseEntity<UsuarioDTO> deleteUser(
+    public ResponseEntity<Void> deleteUser(
+//    public ResponseEntity<UsuarioPrivateDTO> deleteUser(
             @PathVariable String username, Authentication authentication
     ){
-//        if (!authentication.getName().equals(username)){
-//            throw new ForbiddenException("No tienes permiso para eliminar este usuario");
-//        }
-        if(authentication.getAuthorities()
-                .stream()
-                .anyMatch(authority
-                        -> authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))) ||
-                authentication.getName().equals(username)) {
-            // copio antes de borrar para retornarlo despues
-            UsuarioDTO usuarioDTO = usuarioService.deleteUser(username);
+        SecurityUtils.checkAdminOrSelf(authentication, username);
 
-            return new ResponseEntity<UsuarioDTO>(usuarioDTO, HttpStatus.OK);
-        } else {
-            throw new ForbiddenException("No tienes los permisos para acceder al recurso");
-        }
+        usuarioService.deleteUser(username);
+        return ResponseEntity.noContent().build();
 
     }
 

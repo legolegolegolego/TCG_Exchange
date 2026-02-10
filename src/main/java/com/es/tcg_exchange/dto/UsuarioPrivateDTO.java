@@ -3,17 +3,17 @@ package com.es.tcg_exchange.dto;
 
 import java.util.List;
 
-public class UsuarioDTO {
+public class UsuarioPrivateDTO {
     private String username;
     private String roles;
     private boolean desactivado;
     private List<CartaFisicaDTO> cartasFisicasDTO;
 
 
-    public UsuarioDTO() {
+    public UsuarioPrivateDTO() {
     }
 
-    public UsuarioDTO(String username, String roles, List<CartaFisicaDTO> cartasFisicasDTO) {
+    public UsuarioPrivateDTO(String username, String roles, List<CartaFisicaDTO> cartasFisicasDTO) {
         this.username = username;
         this.roles = roles;
         this.cartasFisicasDTO = cartasFisicasDTO;
