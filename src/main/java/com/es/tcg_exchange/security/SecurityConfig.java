@@ -38,22 +38,22 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Deshabilitamos "Cross-Site Request Forgery" (CSRF) (No lo trataremos en este ciclo)
                 .authorizeHttpRequests(auth -> auth // Filtros para securizar diferentes endpoints de la aplicación
                                 // Filtro que deja pasar todas las peticiones que vayan a los endpoints que definamos:
+                                // Públicas:
                                 .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/cartas-modelo", "/cartas-modelo/id/{id}").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/cartas-fisicas/{id}").permitAll()
+
 
                                 // solo pueden acceder a estar rutas usuarios logueados con rol ADMIN:
+                                // solo ADMIN:
                                 .requestMatchers(HttpMethod.GET, "/usuarios/").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/usuarios/{id}").hasRole("ADMIN")
 
-                                .requestMatchers(HttpMethod.GET, "/cartas/").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/cartas/{id}").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/cartas/").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/cartas/{id}").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/cartas/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/cartas-modelo/").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/cartas-modelo/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/cartas-modelo/{id}").hasRole("ADMIN")
 
-                                .requestMatchers(HttpMethod.GET, "/transacciones/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/transacciones/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/transacciones/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/transacciones/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/intercambios/{id}").hasRole("ADMIN")
 
                                 //ejemplos:
 //                                .requestMatchers(HttpMethod.GET,"/usuarios/byNombre/{nombre}").authenticated()
