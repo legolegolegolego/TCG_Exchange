@@ -3,20 +3,31 @@ package com.es.tcg_exchange.dto;
 
 import java.util.List;
 
-public class UsuarioPrivateDTO {
+public class UsuarioFullDTO {
+    private Long id;
     private String username;
     private String roles;
     private boolean desactivado;
     private List<CartaFisicaDTO> cartasFisicasDTO;
 
 
-    public UsuarioPrivateDTO() {
+    public UsuarioFullDTO() {
     }
 
-    public UsuarioPrivateDTO(String username, String roles, List<CartaFisicaDTO> cartasFisicasDTO) {
+    public UsuarioFullDTO(Long id, String username, String roles, boolean desactivado, List<CartaFisicaDTO> cartasFisicasDTO) {
+        this.id = id;
         this.username = username;
         this.roles = roles;
+        this.desactivado = desactivado;
         this.cartasFisicasDTO = cartasFisicasDTO;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -35,11 +46,19 @@ public class UsuarioPrivateDTO {
         this.roles = roles;
     }
 
-    public List<CartaFisicaDTO> getCartasFisicas() {
+    public boolean isDesactivado() {
+        return desactivado;
+    }
+
+    public void setDesactivado(boolean desactivado) {
+        this.desactivado = desactivado;
+    }
+
+    public List<CartaFisicaDTO> getCartasFisicasDTO() {
         return cartasFisicasDTO;
     }
 
-    public void setCartasFisicas(List<CartaFisicaDTO> cartasFisicasDTO) {
+    public void setCartasFisicasDTO(List<CartaFisicaDTO> cartasFisicasDTO) {
         this.cartasFisicasDTO = cartasFisicasDTO;
     }
 }

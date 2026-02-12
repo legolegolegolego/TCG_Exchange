@@ -1,16 +1,16 @@
 package com.es.tcg_exchange.service;
 
-import com.es.tcg_exchange.dto.UsuarioPrivateDTO;
+import com.es.tcg_exchange.dto.UsuarioDetailDTO;
+import com.es.tcg_exchange.dto.UsuarioFullDTO;
 import com.es.tcg_exchange.dto.UsuarioRegisterDTO;
 import com.es.tcg_exchange.error.exception.BadRequestException;
 import com.es.tcg_exchange.error.exception.DuplicateException;
-import com.es.tcg_exchange.error.exception.ForbiddenException;
 import com.es.tcg_exchange.error.exception.NotFoundException;
 import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.repository.UsuarioRepository;
 import com.es.tcg_exchange.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -60,15 +60,29 @@ public class UsuarioService implements UserDetailsService {
                 .username(usuario.getUsername())
                 .password(usuario.getPassword())
                 .roles(usuario.getRoles())
+                .disabled(usuario.isDesactivado()) // comprueba si el usuario esta desactivado
                 .build();
 
         return userDetails;
     }
 
-    public UsuarioRegisterDTO registerUser(UsuarioRegisterDTO usuarioRegisterDTO) {
+    /**
+     * Registra un usuario en la BD
+     * @param usuarioRegisterDTO
+     * @return UsuarioDetailDTO
+     */
+    public UsuarioDetailDTO registerUser(UsuarioRegisterDTO usuarioRegisterDTO) {
+
+        // Esto no hace falta ni es buena práctica (puede fallar si dos registros llegan al mismo tiempo),
+        // basta con tener unique en username model y capturar DataIntegrityViolationException
         // Compruebo que el usuario no existe en la base de datos
-        if (usuarioRepository.findByUsername(usuarioRegisterDTO.getUsername()).isPresent()) {
-            throw new DuplicateException("El nombre de usuario ya existe");
+//        if (usuarioRepository.findByUsername(usuarioRegisterDTO.getUsername()).isPresent()) {
+//            throw new DuplicateException("El nombre de usuario ya existe");
+//        }
+
+        if (usuarioRegisterDTO.getUsername() == null ||
+                usuarioRegisterDTO.getUsername().isBlank()) {
+            throw new BadRequestException("El username es obligatorio");
         }
 
         // Logica de pass
@@ -84,40 +98,47 @@ public class UsuarioService implements UserDetailsService {
 
         // Compruebo que ambas contraseñas coinciden
         if (!usuarioRegisterDTO.getPassword().equals(usuarioRegisterDTO.getPassword2())) {
-            throw new BadRequestException("Ambas contraseñas deben ser iguales");
+            throw new BadRequestException("Ambas contraseñas deben coincidir");
         }
 
+        // Ya me aseguro del rol inicializandolo por defecto en USER desde el model
+        // y el usuario no tiene opción de elegir
 //        if (!usuarioRegisterDTO.getRoles().equals("USER") && !usuarioRegisterDTO.getRoles().equals("ADMIN")){
 //            throw new BadRequestException("Roles inválidos");
 //        }
 
-        Usuario newUsuario = Mapper.usuarioRegisterDTOToModel(usuarioRegisterDTO);
-        newUsuario.setPassword(passwordEncoder.encode(usuarioRegisterDTO.getPassword()));
+        try {
+            Usuario newUsuario = Mapper.usuarioRegisterDTOToModel(usuarioRegisterDTO);
 
-        usuarioRepository.save(newUsuario);
+            newUsuario.setPassword(passwordEncoder.encode(usuarioRegisterDTO.getPassword()));
 
-        return usuarioRegisterDTO;
+            usuarioRepository.save(newUsuario);
+
+            return Mapper.usuarioToDetailDTO(newUsuario);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateException("El nombre de usuario ya existe");
+        }
     }
 
     // obtener todos los usuarios de la bd
-    public List<UsuarioPrivateDTO> getAll(){
+    public List<UsuarioDetailDTO> getAll(){
         List<Usuario> usuarios = usuarioRepository.findAll();
-        return Mapper.usuariosToDTO(usuarios);
+        return Mapper.usuariosToDetailDTO(usuarios);
     }
 
     // buscar x id
-    public UsuarioPrivateDTO findById(Long id){
+    public UsuarioFullDTO findById(Long id){
         if (id == null){
             throw new BadRequestException("El id no puede ser null");
         }
         Usuario usuario = usuarioRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario con id " + id + " no encontrado"));
-        return Mapper.usuarioToDTO(usuario);
+        return Mapper.usuarioToFullDTO(usuario);
     }
 
     // buscar x nombre
-    public UsuarioPrivateDTO findByUsername(String nombre) {
+    public UsuarioFullDTO findByUsername(String nombre) {
 
         if (nombre.isEmpty() || nombre.isBlank()){
             throw new BadRequestException("El nombre no puede estar vacío");
@@ -127,12 +148,12 @@ public class UsuarioService implements UserDetailsService {
                 .findByUsername(nombre)
                 .orElseThrow(() -> new NotFoundException("Usuario con nombre " + nombre + " no encontrado"));
 
-        return Mapper.usuarioToDTO(usuario);
+        return Mapper.usuarioToFullDTO(usuario);
 
     }
 
 
-    public UsuarioPrivateDTO updateUser(String nombre, UsuarioPrivateDTO usuarioActualizado){
+    public UsuarioFullDTO updateUser(String nombre, UsuarioFullDTO usuarioActualizado){
         // a partir de ahora solo pongo isBlank, ya que según la info que he encontrado
         // es redundante poner los dos, basicamente blank hace lo que empty pero mejor, pq tmb contempla espacios
         if (usuarioActualizado.getUsername().isBlank() || usuarioActualizado.getPassword().isBlank() || usuarioActualizado.getRoles().isBlank()){
@@ -171,16 +192,16 @@ public class UsuarioService implements UserDetailsService {
         return usuarioActualizado;
     }
 
-    public UsuarioPrivateDTO deleteUser(String nombre){
+    public UsuarioFullDTO deleteUser(String nombre){
 
         Usuario usuario = usuarioRepository.findByUsername(nombre)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
         // lo copio antes de borrarlo para retornarlo luego los datos
-        UsuarioPrivateDTO usuarioPrivateDTO = Mapper.usuarioToDTO(usuario);
+        UsuarioFullDTO usuarioFullDTO = Mapper.usuarioToFullDTO(usuario);
 
         usuarioRepository.delete(usuario);
 
-        return usuarioPrivateDTO;
+        return usuarioFullDTO;
     }
 }

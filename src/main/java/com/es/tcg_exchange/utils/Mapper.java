@@ -14,21 +14,47 @@ public class Mapper {
 
     // ---------------- USUARIO ----------------
     // ---------------- entity/ies to DTO/s ----------------
-    public static UsuarioPrivateDTO usuarioToDTO(Usuario usuario) {
-        return new UsuarioPrivateDTO(
+
+    public static UsuarioDetailDTO usuarioToDetailDTO(Usuario usuario) {
+        return new UsuarioDetailDTO(
+                usuario.getId(),
                 usuario.getUsername(),
                 usuario.getRoles(),
+                usuario.isDesactivado()
+        );
+    }
+
+    public static List<UsuarioDetailDTO> usuariosToDetailDTO(List<Usuario> usuarios) {
+        List<UsuarioDetailDTO> usuariosDTO = new ArrayList<>();
+
+        // Iterar sobre cada Usuario y convertirlo a UsuarioDTO
+        usuarios.forEach(usuario -> {
+            UsuarioDetailDTO usuarioDetailDTO = usuarioToDetailDTO(usuario); // Utiliza el método de la propia clase para convertir
+            usuariosDTO.add(usuarioDetailDTO); // Agregar el DTO a la lista
+        });
+
+        return usuariosDTO; // Retorna la lista de DTOs
+
+    }
+
+
+    public static UsuarioFullDTO usuarioToFullDTO(Usuario usuario) {
+        return new UsuarioFullDTO(
+                usuario.getId(),
+                usuario.getUsername(),
+                usuario.getRoles(),
+                usuario.isDesactivado(),
                 Mapper.cartasFisicasToDTO(usuario.getCartasFisicas())
         );
     }
 
-    public static List<UsuarioPrivateDTO> usuariosToDTO(List<Usuario> usuarios) {
-        List<UsuarioPrivateDTO> usuariosDTO = new ArrayList<>();
+    public static List<UsuarioFullDTO> usuariosToFullDTO(List<Usuario> usuarios) {
+        List<UsuarioFullDTO> usuariosDTO = new ArrayList<>();
 
         // Iterar sobre cada Usuario y convertirlo a UsuarioDTO
         usuarios.forEach(usuario -> {
-            UsuarioPrivateDTO usuarioPrivateDTO = usuarioToDTO(usuario); // Utiliza el método de la propia clase para convertir
-            usuariosDTO.add(usuarioPrivateDTO); // Agregar el DTO a la lista
+            UsuarioFullDTO usuarioFullDTO = usuarioToFullDTO(usuario); // Utiliza el método de la propia clase para convertir
+            usuariosDTO.add(usuarioFullDTO); // Agregar el DTO a la lista
         });
 
         return usuariosDTO; // Retorna la lista de DTOs
