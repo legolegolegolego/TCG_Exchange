@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.naming.AuthenticationException;
+import org.springframework.security.core.AuthenticationException;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -30,7 +30,7 @@ public class APIExceptionHandler {
         return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
     }
 
-    @ExceptionHandler({UnauthorizedException.class, AuthenticationException.class, HttpClientErrorException.Forbidden.class})
+    @ExceptionHandler({UnauthorizedException.class, AuthenticationException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     public ErrorMessageForClient handleUnauthorized(HttpServletRequest request, Exception e) {
@@ -44,14 +44,14 @@ public class APIExceptionHandler {
         return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
     }
 
-    @ExceptionHandler({ForbiddenException.class, ForbiddenException.class})
+    @ExceptionHandler({ForbiddenException.class, HttpClientErrorException.Forbidden.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorMessageForClient handleForbidden(HttpServletRequest request, Exception e) {
         return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
     }
 
-    @ExceptionHandler({DuplicateException.class, DuplicateException.class})
+    @ExceptionHandler({DuplicateException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     public ErrorMessageForClient handleDuplicate(HttpServletRequest request, Exception e) {

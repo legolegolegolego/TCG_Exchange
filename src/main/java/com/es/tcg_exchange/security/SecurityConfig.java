@@ -47,7 +47,8 @@ public class SecurityConfig {
                                 // solo pueden acceder a estar rutas usuarios logueados con rol ADMIN:
                                 // solo ADMIN:
                                 .requestMatchers(HttpMethod.GET, "/usuarios").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/usuarios/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/usuarios/id/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/usuarios/{username}").hasRole("ADMIN")
 
                                 .requestMatchers(HttpMethod.POST, "/cartas-modelo/").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/cartas-modelo/{id}").hasRole("ADMIN")
