@@ -48,7 +48,7 @@ public class SecurityConfig {
                                 // solo ADMIN:
                                 .requestMatchers(HttpMethod.GET, "/usuarios").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/usuarios/id/{id}").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/usuarios/{username}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/usuarios/username/{username}").hasRole("ADMIN")
 
                                 .requestMatchers(HttpMethod.POST, "/cartas-modelo/").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/cartas-modelo/{id}").hasRole("ADMIN")

@@ -1,7 +1,10 @@
 package com.es.tcg_exchange.controller;
 
+import com.es.tcg_exchange.dto.PasswordUpdateDTO;
+import com.es.tcg_exchange.dto.UsernameUpdateDTO;
 import com.es.tcg_exchange.dto.UsuarioDetailDTO;
 import com.es.tcg_exchange.dto.UsuarioFullDTO;
+import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.service.UsuarioService;
 import com.es.tcg_exchange.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +37,12 @@ public class UsuarioController {
     @GetMapping("/id/{id}")
     public ResponseEntity<UsuarioFullDTO> findById(
             @PathVariable Long id){
-        UsuarioFullDTO usuarioFullDTO = usuarioService.findById(id);
+        UsuarioFullDTO usuarioFullDTO = usuarioService.findByIdToDTO(id);
 
         return new ResponseEntity<UsuarioFullDTO>(usuarioFullDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/username/{username}")
     public ResponseEntity<UsuarioFullDTO> findByUsername(
             @PathVariable String username) {
 
@@ -48,27 +51,43 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/{username}")
-    public ResponseEntity<UsuarioFullDTO> updateUsername(
-            @PathVariable String username, @RequestBody UsuarioFullDTO udto, Authentication authentication
-    ){
+    @PutMapping("/{id}/username")
+    public ResponseEntity<UsernameUpdateDTO> updateUsername(
+            @PathVariable Long id,
+            @RequestBody UsernameUpdateDTO dto,
+            Authentication authentication) {
 
-        // si no tiene los permisos el método se encarga de lanzar excepcion:
-        SecurityUtils.checkAdminOrSelf(authentication, username);
-        Usu
+        UsernameUpdateDTO updated =
+                usuarioService.updateUsername(id, dto.getNuevoUsername(), authentication);
 
+        return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{username}")
+    @PutMapping("/{id}/password")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable Long id,
+            @RequestBody PasswordUpdateDTO dto,
+            Authentication authentication) {
+
+        usuarioService.updatePassword(id, dto, authentication);
+
+        return ResponseEntity.noContent().build(); // 204 No Content
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(
-//    public ResponseEntity<UsuarioPrivateDTO> deleteUser(
-            @PathVariable String username, Authentication authentication
-    ){
-        SecurityUtils.checkAdminOrSelf(authentication, username);
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        // Validar permisos: admin o el propio usuario
+        Usuario usuario = usuarioService.findByIdToModel(id);
+        SecurityUtils.checkAdminOrSelf(authentication, usuario.getUsername());
 
-        usuarioService.deleteUser(username);
+        // Ejecutar delete/desactivar según la lógica
+        usuarioService.deleteUser(id);
+
+        // Respuesta HTTP estándar para delete
         return ResponseEntity.noContent().build();
-
     }
 
 }

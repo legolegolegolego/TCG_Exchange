@@ -1,16 +1,18 @@
 package com.es.tcg_exchange.service;
 
-import com.es.tcg_exchange.dto.UsuarioDetailDTO;
-import com.es.tcg_exchange.dto.UsuarioFullDTO;
-import com.es.tcg_exchange.dto.UsuarioRegisterDTO;
+import com.es.tcg_exchange.dto.*;
 import com.es.tcg_exchange.error.exception.BadRequestException;
 import com.es.tcg_exchange.error.exception.DuplicateException;
 import com.es.tcg_exchange.error.exception.NotFoundException;
+import com.es.tcg_exchange.error.exception.UnauthorizedException;
 import com.es.tcg_exchange.model.Usuario;
+import com.es.tcg_exchange.repository.IntercambioRepository;
 import com.es.tcg_exchange.repository.UsuarioRepository;
 import com.es.tcg_exchange.utils.Mapper;
+import com.es.tcg_exchange.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -29,6 +31,9 @@ public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private IntercambioRepository intercambioRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -126,18 +131,27 @@ public class UsuarioService implements UserDetailsService {
         return Mapper.usuariosToDetailDTO(usuarios);
     }
 
-    // buscar x id
-    public UsuarioFullDTO findById(Long id){
-        if (id == null){
+    // metodo interno
+    private Usuario findByIdOrThrow(Long id) {
+        if (id == null) {
             throw new BadRequestException("El id no puede ser null");
         }
-        Usuario usuario = usuarioRepository
-                .findById(id)
+        return usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario con id " + id + " no encontrado"));
+    }
+
+    // encuentra usuario por id y retorna mapeado a fulldto
+    public UsuarioFullDTO findByIdToDTO(Long id) {
+        Usuario usuario = findByIdOrThrow(id);
         return Mapper.usuarioToFullDTO(usuario);
     }
 
-    // buscar x nombre
+    // encuentra usuario por id y retorna usuario modelo
+    public Usuario findByIdToModel(Long id) {
+        return findByIdOrThrow(id);
+    }
+
+    // busca por username y devuelve usuariofulldto
     public UsuarioFullDTO findByUsername(String nombre) {
 
         if (nombre.isEmpty() || nombre.isBlank()){
@@ -152,56 +166,111 @@ public class UsuarioService implements UserDetailsService {
 
     }
 
+    // actualizar username
+    public UsernameUpdateDTO updateUsername(
+            Long id,
+            String nuevoUsername,
+            Authentication authentication) {
 
-    public UsuarioFullDTO updateUser(String nombre, UsuarioFullDTO usuarioActualizado){
-        // a partir de ahora solo pongo isBlank, ya que según la info que he encontrado
-        // es redundante poner los dos, basicamente blank hace lo que empty pero mejor, pq tmb contempla espacios
-        if (usuarioActualizado.getUsername().isBlank() || usuarioActualizado.getPassword().isBlank() || usuarioActualizado.getRoles().isBlank()){
-            throw new BadRequestException("Los campos a actualizar no deben estar vacíos");
+        if (id == null) {
+            throw new BadRequestException("El id no puede ser null");
         }
 
-        // Misma logica que registro:
-        // Compruebo que el usuario no existe en la base de datos
-        if (usuarioRepository.findByUsername(usuarioActualizado.getUsername()).isPresent()) {
+        if (nuevoUsername == null || nuevoUsername.isBlank()) {
+            throw new BadRequestException("El nuevo username no puede estar vacío");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() ->
+                        new NotFoundException("Usuario con id " + id + " no encontrado")
+                );
+
+        SecurityUtils.checkAdminOrSelf(authentication, usuario.getUsername());
+
+        if (usuario.getUsername().equals(nuevoUsername)) {
+            throw new BadRequestException("El nuevo username no puede ser igual al actual");
+        }
+
+
+        usuario.setUsername(nuevoUsername);
+
+        try {
+            Usuario saved = usuarioRepository.save(usuario);
+            return new UsernameUpdateDTO(saved.getUsername());
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateException("El nombre de usuario ya existe");
         }
-
-        // Logica de pass
-        if (usuarioActualizado.getPassword().length() < 6){
-            throw new BadRequestException("La longitud de la contraseña debe ser superior o igual a 6 caracteres");
-        }
-
-        if (!usuarioActualizado.getRoles().equals("USER") && !usuarioActualizado.getRoles().equals("ADMIN")){
-            throw new BadRequestException("Roles inválidos");
-        }
-
-//        // Compruebo que es alfanumérica sin símbolos
-//        if (usuarioActualizado.getPassword().matches("[A-Za-z0-9]+")) {
-//            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
-//        }
-
-        Usuario usuario = usuarioRepository.findByUsername(nombre)
-                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
-
-        usuario.setUsername(usuarioActualizado.getUsername());
-        usuario.setPassword(passwordEncoder.encode(usuarioActualizado.getPassword()));
-        usuario.setRoles(usuarioActualizado.getRoles());
-        usuario.setCartasFisicas(Mapper.DTOsToEntities(usuarioActualizado.getCartasFisicas()));
-
-        usuarioRepository.save(usuario);
-        return usuarioActualizado;
     }
 
-    public UsuarioFullDTO deleteUser(String nombre){
+    // actualizar password
+    public void updatePassword(
+            Long id,
+            PasswordUpdateDTO dto,
+            Authentication authentication) {
 
-        Usuario usuario = usuarioRepository.findByUsername(nombre)
-                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+        if (id == null) {
+            throw new BadRequestException("El id no puede ser null");
+        }
 
-        // lo copio antes de borrarlo para retornarlo luego los datos
-        UsuarioFullDTO usuarioFullDTO = Mapper.usuarioToFullDTO(usuario);
+        if (dto.getPasswordNueva() == null || dto.getPasswordNueva().length() < 6) {
+            throw new BadRequestException(
+                    "La nueva contraseña debe tener al menos 6 caracteres"
+            );
+        }
 
-        usuarioRepository.delete(usuario);
+        if (!dto.getPasswordNueva().equals(dto.getPasswordNueva2())) {
+            throw new BadRequestException(
+                    "Las nuevas contraseñas deben coincidir"
+            );
+        }
 
-        return usuarioFullDTO;
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() ->
+                        new NotFoundException("Usuario con id " + id + " no encontrado")
+                );
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        // Si NO es admin, debe validar password actual
+        if (!isAdmin) {
+            if (!passwordEncoder.matches(
+                    dto.getPasswordActual(),
+                    usuario.getPassword())) {
+
+                throw new UnauthorizedException("La contraseña actual es incorrecta");
+            }
+        }
+
+        // Permisos
+        SecurityUtils.checkAdminOrSelf(authentication, usuario.getUsername());
+
+        // Importante hacer esto después de comprobar permisos para no exponer contraseña actual
+        if (passwordEncoder.matches(dto.getPasswordNueva(), usuario.getPassword())) {
+            throw new BadRequestException("La nueva contraseña no puede ser igual a la actual");
+        }
+
+        usuario.setPassword(passwordEncoder.encode(dto.getPasswordNueva()));
+
+        usuarioRepository.save(usuario);
+    }
+
+    // borrar usuario
+    public void deleteUser(Long id){
+
+        // Buscamos la entidad directamente, validando null y not found
+        Usuario usuario = findByIdToModel(id);
+
+        // Comprobar si ha participado en algún intercambio
+        boolean haParticipado = intercambioRepository.existsByUsuarioOrigenOrUsuarioDestino(usuario, usuario);
+        if (haParticipado) {
+            // Desactivar usuario en lugar de borrarlo
+            usuario.setDesactivado(true);
+            usuarioRepository.save(usuario);
+        } else {
+            // Borrado físico
+            usuarioRepository.delete(usuario);
+        }
+
     }
 }

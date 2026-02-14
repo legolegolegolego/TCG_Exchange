@@ -18,6 +18,7 @@ public class SecurityUtils {
             throw new ForbiddenException("No tienes los permisos para acceder al recurso");
         }
     }
+
     // esto eliminar este procedimiento en cada metodo de controller o service:
     //        if (!authentication.getName().equals(username)){
 //            throw new ForbiddenException("No tienes permiso para eliminar este usuario");

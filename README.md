@@ -92,6 +92,7 @@ Propuesta de intercambio entre usuarios.
 ### Usuarios
 - El `username` es único y obligatorio.
 - La contraseña es obligatoria y debe tener una longitud mínima de 6 caracteres.
+- Al actualizar la contraseña, la nueva no puede ser la misma que la actual.
 - Solo el propio usuario o un ADMIN pueden modificar el perfil.
 - No es posible registrarse como ADMIN.
 - El atributo `desactivado` gestiona el estado de la cuenta:
@@ -173,10 +174,10 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 ### Gestión de Usuarios
 - `GET /usuarios` – Solo ADMIN.
 - `GET /usuarios/id/{id}` – Solo ADMIN.
-- `GET /usuarios/{username}` – Solo ADMIN.
-- `PUT /usuarios/{username}` – ADMIN o propio usuario.
-- `PUT /usuarios/{username}/password` – ADMIN o propio usuario.
-- `DELETE /usuarios/{username}` – ADMIN o propio usuario.
+- `GET /usuarios/username/{username}` – Solo ADMIN.
+- `PUT /usuarios/{id}/username` – ADMIN o propio usuario.
+- `PUT /usuarios/{id}/password` – ADMIN o propio usuario.
+- `DELETE /usuarios/{id}` – ADMIN o propio usuario.
 
 ### Gestión de Cartas Modelo
 - `GET /cartas-modelo` – Público.
