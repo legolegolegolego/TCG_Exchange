@@ -11,7 +11,6 @@ public class CartaModeloDTO {
     private TipoCarta tipoCarta;
     private Rareza rareza;
     private String imagenUrl;
-
     // segun tipocarta:
     private TipoPokemon tipoPokemon;
     private EtapaEvolucion evolucion;

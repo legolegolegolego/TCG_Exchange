@@ -13,7 +13,6 @@ public class CartaModelo {
     @Id
     private Long id;
 
-    // Nombre único dentro del set
     @Column(nullable = false)
     private String nombre;
 
