@@ -1,5 +1,6 @@
 package com.es.tcg_exchange.controller;
 
+import com.es.tcg_exchange.dto.UsuarioDTO;
 import com.es.tcg_exchange.model.enums.EtapaEvolucion;
 import com.es.tcg_exchange.model.enums.Rareza;
 import com.es.tcg_exchange.model.enums.TipoCarta;
@@ -12,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cartas-modelo")
@@ -60,6 +64,15 @@ public class CartaModeloController {
         CartaModeloDTO cmDTO = cmService.findById(id);
 
         return new ResponseEntity<CartaModeloDTO>(cmDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/usuarios")
+    public ResponseEntity<List<UsuarioDTO>> getUsuariosConCartaModelo(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                cmService.findUsuariosConCartaModelo(id)
+        );
     }
 
     // Crear una nueva carta modelo

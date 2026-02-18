@@ -7,7 +7,7 @@ public class CartaFisicaDTO {
     private EstadoCarta estadoCarta;
     private boolean disponible;
     private String imagenUrl;
-    private Long idUsuario; // ver con el tiempo si mejor username
+    private Long idUsuario;
     private Long idCartaModelo;
 
     public CartaFisicaDTO() {

@@ -1,14 +1,17 @@
 package com.es.tcg_exchange.service;
 
 import com.es.tcg_exchange.dto.CartaModeloDTO;
+import com.es.tcg_exchange.dto.UsuarioDTO;
 import com.es.tcg_exchange.error.exception.BadRequestException;
 import com.es.tcg_exchange.error.exception.DuplicateException;
 import com.es.tcg_exchange.error.exception.NotFoundException;
 import com.es.tcg_exchange.model.CartaModelo;
+import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.model.enums.EtapaEvolucion;
 import com.es.tcg_exchange.model.enums.Rareza;
 import com.es.tcg_exchange.model.enums.TipoCarta;
 import com.es.tcg_exchange.model.enums.TipoPokemon;
+import com.es.tcg_exchange.repository.CartaFisicaRepository;
 import com.es.tcg_exchange.repository.CartaModeloRepository;
 import com.es.tcg_exchange.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +21,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CartaModeloService {
 
     @Autowired
     private CartaModeloRepository cmRepository;
+
+    @Autowired
+    private CartaFisicaRepository cfRepository;
 
     /**
      * Buscar cartas modelo por filtros (opcionales)
@@ -146,6 +154,26 @@ public class CartaModeloService {
                         new NotFoundException("Carta modelo con id " + id + " no encontrada"));
 
         return Mapper.cartaModeloToDTO(cartaModelo);
+    }
+
+    public List<UsuarioDTO> findUsuariosConCartaModelo(Long cartaModeloId) {
+
+        if (cartaModeloId == null) {
+            throw new BadRequestException("El id de la carta modelo no puede ser null");
+        }
+
+        // Verificar que existe la carta modelo
+        if (!cmRepository.existsById(cartaModeloId)) {
+            throw new NotFoundException("Carta modelo con id " + cartaModeloId + " no encontrada");
+        }
+
+        // Obtener usuarios
+        List<Usuario> usuarios = cfRepository.findUsuariosConCartaModelo(cartaModeloId);
+
+        // Mapear a DTO (solo id y username)
+        return usuarios.stream()
+                .map(u -> new UsuarioDTO(u.getId(), u.getUsername()))
+                .toList();
     }
 
     public CartaModeloDTO create(CartaModeloDTO dto) {

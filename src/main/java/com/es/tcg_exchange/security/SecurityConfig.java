@@ -40,7 +40,10 @@ public class SecurityConfig {
                                 // Filtro que deja pasar todas las peticiones que vayan a los endpoints que definamos:
                                 // Públicas:
                                 .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/cartas-modelo", "/cartas-modelo/id/{id}").permitAll()
+                                .requestMatchers(HttpMethod.GET,
+                                        "/cartas-modelo",
+                                        "/cartas-modelo/id/{id}",
+                                        "/cartas-modelo/{id}/usuarios").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/cartas-fisicas/{id}").permitAll()
 
 
