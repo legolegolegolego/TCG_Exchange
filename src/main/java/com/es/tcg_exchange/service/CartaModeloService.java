@@ -15,11 +15,13 @@ import com.es.tcg_exchange.model.enums.TipoPokemon;
 import com.es.tcg_exchange.repository.CartaFisicaRepository;
 import com.es.tcg_exchange.repository.CartaModeloRepository;
 import com.es.tcg_exchange.utils.Mapper;
+import com.es.tcg_exchange.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -134,7 +136,7 @@ public class CartaModeloService {
      * @param id
      * @return dto de cartaModelo
      */
-    public CartaModeloDTO findById(Long id) {
+    public CartaModeloDTO findById(Long id, Authentication authentication) {
 
         /*
             Si el id viene por path (/{id}), Spring nunca enviará null.
@@ -150,9 +152,17 @@ public class CartaModeloService {
 //            throw new BadRequestException("El id no puede ser null");
 //        }
 
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
         CartaModelo cartaModelo = cmRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException("Carta modelo con id " + id + " no encontrada"));
+
+        // Devuelvo 404 en lugar de 403 para no revelar que existe a un usuario no ADMIN
+        if (!cartaModelo.isActivo() && !isAdmin) {
+            throw new NotFoundException("Carta no encontrada");
+        }
 
         return Mapper.cartaModeloToDTO(cartaModelo);
     }

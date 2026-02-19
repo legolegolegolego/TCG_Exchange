@@ -52,13 +52,17 @@ Representa a los usuarios registrados en la plataforma.
 
 ### CartaModelo
 Modelo conceptual de una carta del catálogo.
-- `id (Long)`: identificador único no autogenerado, corresponde al número oficial del modelo de carta.
+- `id (Long)`: identificador único autogenerado, corresponde al número oficial del modelo de carta.
+- `numero (Long)`: número oficial de la carta dentro del catálogo (único).
 - `nombre (String)`: nombre de la carta
 - `tipoCarta (Enum)`: POKEMON, ENTRENADOR.
 - `rareza (Enum)`: COMUN, INFRECUENTE, RARA, RARA_HOLO.
 - `imagenUrl (String)`: url de la imagen oficial de la carta.
 - `tipoPokemon (Enum, opcional)`: PLANTA, FUEGO, AGUA, ELECTRICO, PSIQUICO, LUCHA, INCOLORO.
 - `evolucion (Enum, opcional)`: BASICO, FASE_1, FASE_2.
+- `activo (boolean)`:
+  - `true` (por defecto): carta visible y utilizable en el sistema.
+  - `false`: carta desactivada; no puede asociarse a nuevas cartas físicas.
 
 ### CartaFisica
 Carta real ofrecida para intercambio.
@@ -107,8 +111,13 @@ Propuesta de intercambio entre usuarios.
 
 ### CartaModelo
 - Solo un ADMIN puede crear, modificar o eliminar cartas modelo.
-- El `id` no es autogenerado y corresponde al número oficial de la carta.
 - Una carta modelo puede existir sin cartas físicas asociadas.
+- El atributo `numero` es único y representa el número oficial de la carta.
+- Una carta modelo solo puede eliminarse físicamente si no tiene cartas físicas asociadas. Si tiene cartas físicas asociadas:
+  - Se marca como `activo = false`.
+  - Los intercambios en estado `PENDIENTE` relacionados con cartas físicas asociadas con la carta modelo pasan a `RECHAZADO`.
+  - Todas las cartas físicas asociadas pasan a `disponible = false`.
+- No se pueden crear ni actualizar cartas físicas asociándolas a una carta modelo con `activo = false`.
 
 ### CartaFisica
 - Solo el usuario propietario puede crear, modificar o eliminar sus cartas físicas.
@@ -134,6 +143,7 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
   - Las cartas físicas continúan disponibles.
 - Al eliminar un intercambio:
   - Las cartas (y su disponibilidad) y usuarios involucrados no se ven alterados.
+- Solo se pueden eliminar intercambios en estado `PENDIENTE` o `RECHAZADO`.
 - No se permite crear intercambios con cartas no disponibles.
 - Un usuario solo puede consultar intercambios en los que participa.
 - Un ADMIN puede consultar cualquier intercambio.
@@ -147,11 +157,13 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - El servidor devuelve un token JWT.
 - El token debe enviarse en la cabecera `Authorization: Bearer <token>`.
 - Los tokens tienen expiración.
+- El rol del usuario autenticado se obtiene exclusivamente del token validado por el servidor y no puede ser modificado desde el cliente.
 
 ### Acceso a endpoints
 - Control basado en roles (USER, ADMIN) y propiedad del recurso.
 - Un ADMIN puede consultar cualquier recurso.
 - Un ADMIN no puede modificar recursos reservados al propietario.
+- En los endpoints públicos, los recursos inactivos o restringidos no son accesibles aunque el cliente conozca su identificador interno.
 
 ### Cifrado de contraseñas
 - Contraseñas almacenadas mediante hashing seguro.
@@ -162,6 +174,10 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - Contraseña mínima de 6 caracteres.
 - No se permiten intercambios consigo mismo.
 - Validación de existencia y disponibilidad de cartas y usuarios.
+- No se permite asociar una carta física a una carta modelo inactiva.
+- No se permite eliminar intercambios en estado `ACEPTADO`.
+- Las respuestas de la API no exponen información sensible como contraseñas, hashes o datos internos del sistema.
+- Antes de realizar operaciones críticas, el sistema vuelve a verificar el estado actual de los recursos implicados para evitar inconsistencias.
 
 ---
 
@@ -180,8 +196,12 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - `DELETE /usuarios/{id}` – ADMIN o propio usuario.
 
 ### Gestión de Cartas Modelo
-- `GET /cartas-modelo` – Público.
-- `GET /cartas-modelo/{id}` – Público.
+- `GET /cartas-modelo`
+  - Público: solo cartas activas.
+  - ADMIN: puede ver cartas activas e inactivas.
+- `GET /cartas-modelo/{id}`
+  - Público: solo si la carta está activa.
+  - ADMIN: puede consultar cartas activas e inactivas.
 - `POST /cartas-modelo` – Solo ADMIN.
 - `PUT /cartas-modelo/{id}` – Solo ADMIN.
 - `DELETE /cartas-modelo/{id}` – Solo ADMIN.
@@ -190,7 +210,9 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - `GET /cartas-fisicas/usuario/{username}`
   - Si `disponible = true`: Público.
   - Si `disponible = false`: Propietario o ADMIN
-- `GET /cartas-fisicas/{id}` – Público.
+- `GET /cartas-fisicas/{id}`
+  - Si `disponible = true`: Público.
+  - Si `disponible = false`: Propietario o ADMIN
 - `POST /cartas-fisicas` – Usuario autenticado.
 - `PUT /cartas-fisicas/{id}` – Propietario.
 - `DELETE /cartas-fisicas/{id}` – Propietario o ADMIN.

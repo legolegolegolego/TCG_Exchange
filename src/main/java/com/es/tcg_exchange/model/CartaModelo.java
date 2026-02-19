@@ -10,8 +10,14 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "cartas_modelo")
 public class CartaModelo {
+    // id interno autogenerado
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // número oficial de la carta
+    @Column(nullable = false, unique = true)
+    private Long numero;
 
     @Column(nullable = false)
     private String nombre;
