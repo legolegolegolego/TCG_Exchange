@@ -260,3 +260,15 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - **Insomnia**: pruebas de la API REST.
 - **XAMPP**: entorno local de base de datos.
 - **GitHub**: control de versiones.
+
+---
+
+Proyecto académico desarrollado con fines educativos
+
+Esta aplicación no tiene fines comerciales ni está destinada a uso público.
+
+Las imágenes, nombres y referencias a Pokémon TCG se utilizan únicamente con fines de aprendizaje y demostración, sin intención de infringir derechos de autor.
+
+Pokémon y Pokémon TCG son marcas registradas de Nintendo, Game Freak y Creatures Inc.
+
+© 2026 TCG Exchange. 
