@@ -39,6 +39,9 @@ public class CartaModelo {
     @Enumerated(EnumType.STRING)
     private EtapaEvolucion evolucion;
 
+    @Column(nullable = false)
+    private boolean activo = true;
+
     public CartaModelo() {
     }
 
@@ -115,5 +118,13 @@ public class CartaModelo {
 
     public void setEvolucion(EtapaEvolucion evolucion) {
         this.evolucion = evolucion;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

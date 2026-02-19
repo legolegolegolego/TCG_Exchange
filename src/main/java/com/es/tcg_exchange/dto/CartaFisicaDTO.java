@@ -5,7 +5,7 @@ import com.es.tcg_exchange.model.enums.EstadoCarta;
 public class CartaFisicaDTO {
     private Long id;
     private EstadoCarta estadoCarta;
-    private boolean disponible;
+    private Boolean disponible;
     private String imagenUrl;
     private Long idUsuario;
     private Long idCartaModelo;
@@ -21,7 +21,8 @@ public class CartaFisicaDTO {
         this.idCartaModelo = idCartaModelo;
     }
 
-    public CartaFisicaDTO(Long id, EstadoCarta estadoCarta, boolean disponible, String imagenUrl, Long idUsuario, Long idCartaModelo) {
+    public CartaFisicaDTO(Long id, EstadoCarta estadoCarta, Boolean disponible, String imagenUrl, Long idUsuario,
+                          Long idCartaModelo) {
         this.id = id;
         this.estadoCarta = estadoCarta;
         this.disponible = disponible;
@@ -46,11 +47,11 @@ public class CartaFisicaDTO {
         this.estadoCarta = estadoCarta;
     }
 
-    public boolean isDisponible() {
+    public Boolean getDisponible() {
         return disponible;
     }
 
-    public void setDisponible(boolean disponible) {
+    public void setDisponible(Boolean disponible) {
         this.disponible = disponible;
     }
 

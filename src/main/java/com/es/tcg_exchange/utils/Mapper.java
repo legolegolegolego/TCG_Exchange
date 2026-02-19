@@ -159,7 +159,8 @@ public class Mapper {
                 cartaModelo.getRareza(),
                 cartaModelo.getImagenUrl(),
                 cartaModelo.getTipoPokemon(),
-                cartaModelo.getEvolucion()
+                cartaModelo.getEvolucion(),
+                cartaModelo.isActivo()
         );
     }
 
@@ -174,6 +175,7 @@ public class Mapper {
         cartaModelo.setImagenUrl(cartaModeloDTO.getImagenUrl());
         cartaModelo.setTipoPokemon(cartaModeloDTO.getTipoPokemon());
         cartaModelo.setEvolucion(cartaModeloDTO.getEvolucion());
+        cartaModelo.setActivo(cartaModeloDTO.getActivo());
         return cartaModelo;
     }
 

@@ -14,4 +14,10 @@ public interface CartaFisicaRepository extends JpaRepository <CartaFisica, Long>
 
     @Query("SELECT DISTINCT c.usuario FROM CartaFisica c WHERE c.cartaModelo.id = :cartaModeloId")
     List<Usuario> findUsuariosConCartaModelo(@Param("cartaModeloId") Long cartaModeloId);
+
+    List<CartaFisica> findByCartaModeloId(Long cartaModeloId);
+
+    @Query("SELECT c FROM CartaFisica c JOIN c.intercambios i WHERE c.cartaModelo.id = :cartaModeloId AND i.estado = 'PENDIENTE'")
+    List<CartaFisica> findConIntercambiosPendientes(@Param("cartaModeloId") Long cartaModeloId);
+
 }

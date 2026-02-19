@@ -5,6 +5,7 @@ import com.es.tcg_exchange.dto.UsuarioDTO;
 import com.es.tcg_exchange.error.exception.BadRequestException;
 import com.es.tcg_exchange.error.exception.DuplicateException;
 import com.es.tcg_exchange.error.exception.NotFoundException;
+import com.es.tcg_exchange.model.CartaFisica;
 import com.es.tcg_exchange.model.CartaModelo;
 import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.model.enums.EtapaEvolucion;
@@ -287,6 +288,12 @@ public class CartaModeloService {
             dto.setEvolucion(null);
         }
 
+        // si se manda parametro: se actualiza
+        // si no (llega null): no se hace nada: se queda como está ese campo anteriormente
+        if (dto.getActivo() != null) {
+            existing.setActivo(dto.getActivo()); // seguro, no da NullPointerException
+        }
+
         // ===== ACTUALIZACIÓN =====
 
         existing.setNombre(dto.getNombre());
@@ -307,11 +314,48 @@ public class CartaModeloService {
             throw new BadRequestException("El id es obligatorio");
         }
 
+        // 1️⃣ Buscar carta modelo
         CartaModelo existing = cmRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException("Carta modelo con id " + id + " no encontrada"));
 
-        cmRepository.delete(existing);
+        // 2️⃣ Obtener todas las cartas físicas asociadas
+        List<CartaFisica> cartasFisicas = cfRepository.findByCartaModeloId(id);
+
+        if (cartasFisicas.isEmpty()) {
+            // ✅ No hay cartas físicas: borrado físico real
+            cmRepository.delete(existing);
+            return;
+        }
+
+        // 3️⃣ Hay cartas físicas → borrado lógico
+        existing.setActivo(false);
+        cmRepository.save(existing);
+
+        // 4️⃣ Separar cartas físicas con intercambios pendientes de las que no
+        List<CartaFisica> conPendientes = cfRepository.findConIntercambiosPendientes(id);
+
+        for (CartaFisica cf : conPendientes) {
+            // Marcar como no disponible
+            cf.setDisponible(false);
+
+            // Rechazar intercambios pendientes
+            cf.getIntercambios().stream()
+                    .filter(i -> i.getEstado() == Estado.PENDIENTE)
+                    .forEach(i -> i.setEstado(Estado.RECHAZADO));
+        }
+
+        // 5️⃣ Cartas físicas sin intercambios pendientes → marcar disponible = false opcional
+        // Si quieres que las cartas físicas sin intercambios sigan disponibles para reactivación,
+        // no hagas nada. Si quieres bloquearlas también, descomenta:
+    /*
+    List<CartaFisica> sinPendientes = new ArrayList<>(cartasFisicas);
+    sinPendientes.removeAll(conPendientes);
+    sinPendientes.forEach(cf -> cf.setDisponible(false));
+    */
+
+        // 6️⃣ Guardar todos los cambios de cartas físicas
+        cfRepository.saveAll(cartasFisicas);
     }
 
 }

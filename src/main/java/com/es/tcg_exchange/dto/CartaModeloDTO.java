@@ -14,6 +14,7 @@ public class CartaModeloDTO {
     // segun tipocarta:
     private TipoPokemon tipoPokemon;
     private EtapaEvolucion evolucion;
+    private Boolean activo; // en dto uso Boolean objeto para validaciones null
 
     public CartaModeloDTO() {
     }
@@ -35,6 +36,18 @@ public class CartaModeloDTO {
         this.imagenUrl = imagenUrl;
         this.tipoPokemon = tipoPokemon;
         this.evolucion = evolucion;
+    }
+
+    public CartaModeloDTO(Long id, String nombre, TipoCarta tipoCarta, Rareza rareza, String imagenUrl,
+                          TipoPokemon tipoPokemon, EtapaEvolucion evolucion, Boolean activo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.tipoCarta = tipoCarta;
+        this.rareza = rareza;
+        this.imagenUrl = imagenUrl;
+        this.tipoPokemon = tipoPokemon;
+        this.evolucion = evolucion;
+        this.activo = activo;
     }
 
     public Long getId() {
@@ -91,5 +104,13 @@ public class CartaModeloDTO {
 
     public void setEvolucion(EtapaEvolucion evolucion) {
         this.evolucion = evolucion;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 }

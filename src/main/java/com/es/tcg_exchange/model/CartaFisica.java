@@ -92,4 +92,6 @@ public class CartaFisica {
     public void setCartaModelo(CartaModelo cartaModelo) {
         this.cartaModelo = cartaModelo;
     }
+
+
 }
