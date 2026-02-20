@@ -67,8 +67,8 @@ public class CartaModeloService {
 
         return cartas.stream()
 
-                .filter(c -> numeroMin == null || c.getId() >= numeroMin)
-                .filter(c -> numeroMax == null || c.getId() <= numeroMax)
+                .filter(c -> numeroMin == null || c.getNumero() >= numeroMin)
+                .filter(c -> numeroMax == null || c.getNumero() <= numeroMax)
                 .filter(c -> tipoCarta == null || c.getTipoCarta() == tipoCarta)
                 .filter(c -> rareza == null || c.getRareza() == rareza)
                 .filter(c -> tipoPokemon == null ||
@@ -139,6 +139,7 @@ public class CartaModeloService {
                 authentication.getAuthorities().stream()
                         .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
+        // si no es ADMIN solo coge las cartas activas
         if (!isAdmin) {
             spec = spec.and((root, query, cb) ->
                     cb.isTrue(root.get("activo")));
@@ -358,12 +359,12 @@ public class CartaModeloService {
             throw new BadRequestException("El id es obligatorio");
         }
 
-        // 1️⃣ Buscar carta modelo
+        // Buscar carta modelo
         CartaModelo existing = cmRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException("Carta modelo con id " + id + " no encontrada"));
 
-        // 2️⃣ Obtener todas las cartas físicas asociadas
+        // Obtener todas las cartas físicas asociadas
         List<CartaFisica> cartasFisicas = cfRepository.findByCartaModeloId(id);
 
         if (cartasFisicas.isEmpty()) {
@@ -372,11 +373,11 @@ public class CartaModeloService {
             return;
         }
 
-        // 3️⃣ Hay cartas físicas → borrado lógico
+        // Hay cartas físicas → borrado lógico
         existing.setActivo(false);
         cmRepository.save(existing);
 
-        // 4️⃣ Separar cartas físicas con intercambios pendientes de las que no
+        // Separar cartas físicas con intercambios pendientes de las que no
         List<CartaFisica> conPendientes = cfRepository.findConIntercambiosPendientes(id);
 
         for (CartaFisica cf : cartasFisicas) {
@@ -399,7 +400,7 @@ public class CartaModeloService {
             }
         }
 
-        // 6️⃣ Guardar todos los cambios de cartas físicas
+        // Guardar todos los cambios de cartas físicas
         cfRepository.saveAll(cartasFisicas);
     }
 

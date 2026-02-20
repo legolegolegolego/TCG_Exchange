@@ -63,7 +63,7 @@ public class SecurityConfig {
 //                                .requestMatchers(HttpMethod.GET,"/usuarios/byNombre/{nombre}").authenticated()
 //                                .requestMatchers("/productos/**").authenticated()
 
-                                .anyRequest().authenticated() // Para el resto de peticiones, el usuario debe estar autenticado
+                                // .anyRequest().authenticated() // Para el resto de peticiones, el usuario debe estar autenticado
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())) // Establecemos el que el control de autenticación se realice por JWT
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

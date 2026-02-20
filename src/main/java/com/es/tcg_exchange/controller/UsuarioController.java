@@ -51,6 +51,7 @@ public class UsuarioController {
     }
 
 
+    // para cambiar username por uno nuevo
     @PutMapping("/{id}/username")
     public ResponseEntity<UsernameUpdateDTO> updateUsername(
             @PathVariable Long id,
@@ -63,6 +64,7 @@ public class UsuarioController {
         return ResponseEntity.ok(updated);
     }
 
+    // para cambiar contraseña por una nueva
     @PutMapping("/{id}/password")
     public ResponseEntity<Void> updatePassword(
             @PathVariable Long id,
@@ -79,12 +81,9 @@ public class UsuarioController {
             @PathVariable Long id,
             Authentication authentication
     ) {
-        // Validar permisos: admin o el propio usuario
-        Usuario usuario = usuarioService.findByIdToModel(id);
-        SecurityUtils.checkAdminOrSelf(authentication, usuario.getUsername());
 
         // Ejecutar delete/desactivar según la lógica
-        usuarioService.deleteUser(id);
+        usuarioService.deleteUser(id, authentication);
 
         // Respuesta HTTP estándar para delete
         return ResponseEntity.noContent().build();

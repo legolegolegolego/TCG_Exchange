@@ -191,7 +191,6 @@ public class UsuarioService implements UserDetailsService {
             throw new BadRequestException("El nuevo username no puede ser igual al actual");
         }
 
-
         usuario.setUsername(nuevoUsername);
 
         try {
@@ -256,10 +255,13 @@ public class UsuarioService implements UserDetailsService {
     }
 
     // borrar usuario
-    public void deleteUser(Long id){
+    public void deleteUser(Long id, Authentication authentication){
 
         // Buscamos la entidad directamente, validando null y not found
         Usuario usuario = findByIdToModel(id);
+
+        // Validar permisos: admin o el propio usuario
+        SecurityUtils.checkAdminOrSelf(authentication, usuario.getUsername());
 
         // Comprobar si ha participado en algún intercambio
         boolean haParticipado = intercambioRepository.existsByUsuarioOrigenOrUsuarioDestino(usuario, usuario);
