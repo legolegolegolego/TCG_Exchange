@@ -51,17 +51,19 @@ public class CartaModelo {
     public CartaModelo() {
     }
 
-    public CartaModelo(Long id, String nombre, TipoCarta tipoCarta, Rareza rareza, String imagenUrl) {
+    public CartaModelo(Long id, Long numero, String nombre, TipoCarta tipoCarta, Rareza rareza, String imagenUrl) {
         this.id = id;
+        this.numero = numero;
         this.nombre = nombre;
         this.tipoCarta = tipoCarta;
         this.rareza = rareza;
         this.imagenUrl = imagenUrl;
     }
 
-    public CartaModelo(Long id, String nombre, TipoCarta tipoCarta, Rareza rareza, String imagenUrl,
+    public CartaModelo(Long id, Long numero, String nombre, TipoCarta tipoCarta, Rareza rareza, String imagenUrl,
                        TipoPokemon tipoPokemon, EtapaEvolucion evolucion) {
         this.id = id;
+        this.numero = numero;
         this.nombre = nombre;
         this.tipoCarta = tipoCarta;
         this.rareza = rareza;
@@ -76,6 +78,14 @@ public class CartaModelo {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getNumero() {
+        return numero;
+    }
+
+    public void setNumero(Long numero) {
+        this.numero = numero;
     }
 
     public String getNombre() {

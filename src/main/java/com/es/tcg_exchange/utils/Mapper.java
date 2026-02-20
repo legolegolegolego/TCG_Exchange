@@ -154,6 +154,7 @@ public class Mapper {
     public static CartaModeloDTO cartaModeloToDTO(CartaModelo cartaModelo) {
         return new CartaModeloDTO(
                 cartaModelo.getId(),
+                cartaModelo.getNumero(),
                 cartaModelo.getNombre(),
                 cartaModelo.getTipoCarta(),
                 cartaModelo.getRareza(),
@@ -168,7 +169,7 @@ public class Mapper {
     public static CartaModelo cartaModeloDTOToModel(CartaModeloDTO cartaModeloDTO) {
         // aqui lo hago con set en vez de con constructor para mostrar un mecanismo diferente simplemente
         CartaModelo cartaModelo = new CartaModelo();
-        cartaModelo.setId(cartaModeloDTO.getId());
+        cartaModelo.setNumero(cartaModeloDTO.getNumero());
         cartaModelo.setNombre(cartaModeloDTO.getNombre());
         cartaModelo.setTipoCarta(cartaModeloDTO.getTipoCarta());
         cartaModelo.setRareza(cartaModeloDTO.getRareza());

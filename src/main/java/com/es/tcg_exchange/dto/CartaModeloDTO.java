@@ -7,6 +7,7 @@ import com.es.tcg_exchange.model.enums.TipoPokemon;
 
 public class CartaModeloDTO {
     private Long id;
+    private Long numero;
     private String nombre;
     private TipoCarta tipoCarta;
     private Rareza rareza;
@@ -19,28 +20,10 @@ public class CartaModeloDTO {
     public CartaModeloDTO() {
     }
 
-    public CartaModeloDTO(Long id, String nombre, TipoCarta tipoCarta, Rareza rareza, String imagenUrl) {
-        this.id = id;
-        this.nombre = nombre;
-        this.tipoCarta = tipoCarta;
-        this.rareza = rareza;
-        this.imagenUrl = imagenUrl;
-    }
-
-    public CartaModeloDTO(Long id, String nombre, TipoCarta tipoCarta, Rareza rareza, String imagenUrl,
-                          TipoPokemon tipoPokemon, EtapaEvolucion evolucion) {
-        this.id = id;
-        this.nombre = nombre;
-        this.tipoCarta = tipoCarta;
-        this.rareza = rareza;
-        this.imagenUrl = imagenUrl;
-        this.tipoPokemon = tipoPokemon;
-        this.evolucion = evolucion;
-    }
-
-    public CartaModeloDTO(Long id, String nombre, TipoCarta tipoCarta, Rareza rareza, String imagenUrl,
+    public CartaModeloDTO(Long id, Long numero, String nombre, TipoCarta tipoCarta, Rareza rareza, String imagenUrl,
                           TipoPokemon tipoPokemon, EtapaEvolucion evolucion, Boolean activo) {
         this.id = id;
+        this.numero = numero;
         this.nombre = nombre;
         this.tipoCarta = tipoCarta;
         this.rareza = rareza;
@@ -56,6 +39,14 @@ public class CartaModeloDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getNumero() {
+        return numero;
+    }
+
+    public void setNumero(Long numero) {
+        this.numero = numero;
     }
 
     public String getNombre() {

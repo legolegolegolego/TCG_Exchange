@@ -7,13 +7,12 @@ import com.es.tcg_exchange.error.exception.DuplicateException;
 import com.es.tcg_exchange.error.exception.NotFoundException;
 import com.es.tcg_exchange.model.CartaFisica;
 import com.es.tcg_exchange.model.CartaModelo;
+import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
-import com.es.tcg_exchange.model.enums.EtapaEvolucion;
-import com.es.tcg_exchange.model.enums.Rareza;
-import com.es.tcg_exchange.model.enums.TipoCarta;
-import com.es.tcg_exchange.model.enums.TipoPokemon;
+import com.es.tcg_exchange.model.enums.*;
 import com.es.tcg_exchange.repository.CartaFisicaRepository;
 import com.es.tcg_exchange.repository.CartaModeloRepository;
+import com.es.tcg_exchange.repository.IntercambioRepository;
 import com.es.tcg_exchange.utils.Mapper;
 import com.es.tcg_exchange.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,10 +35,13 @@ public class CartaModeloService {
     @Autowired
     private CartaFisicaRepository cfRepository;
 
+    @Autowired
+    private IntercambioRepository intercambioRepository;
+
     /**
      * Buscar cartas modelo por filtros (opcionales)
-     * @param idMin
-     * @param idMax
+     * @param numeroMin
+     * @param numeroMax
      * @param nombre
      * @param tipoCarta
      * @param rareza
@@ -47,14 +50,15 @@ public class CartaModeloService {
      * @return dto de cartaModelo
      */
     public Page<CartaModeloDTO> findAll(
-            Long idMin,
-            Long idMax,
+            Long numeroMin,
+            Long numeroMax,
             String nombre,
             TipoCarta tipoCarta,
             Rareza rareza,
             TipoPokemon tipoPokemon,
             EtapaEvolucion evolucion,
-            Pageable pageable
+            Pageable pageable,
+            Authentication authentication
     ) {
 
         /* versión 1
@@ -63,8 +67,8 @@ public class CartaModeloService {
 
         return cartas.stream()
 
-                .filter(c -> idMin == null || c.getId() >= idMin)
-                .filter(c -> idMax == null || c.getId() <= idMax)
+                .filter(c -> numeroMin == null || c.getId() >= numeroMin)
+                .filter(c -> numeroMax == null || c.getId() <= numeroMax)
                 .filter(c -> tipoCarta == null || c.getTipoCarta() == tipoCarta)
                 .filter(c -> rareza == null || c.getRareza() == rareza)
                 .filter(c -> tipoPokemon == null ||
@@ -79,6 +83,10 @@ public class CartaModeloService {
 
         // versión 2 (profesional)
 
+        if (numeroMin != null && numeroMax != null && numeroMin > numeroMax) {
+            throw new BadRequestException("numeroMin no puede ser mayor que numeroMax");
+        }
+
         if (pageable.getPageSize() > 50) {
             pageable = PageRequest.of(
                     pageable.getPageNumber(),
@@ -89,14 +97,14 @@ public class CartaModeloService {
 
         Specification<CartaModelo> spec = Specification.where(null);
 
-        if (idMin != null) {
+        if (numeroMin != null) {
             spec = spec.and((root, query, cb) ->
-                    cb.greaterThanOrEqualTo(root.get("id"), idMin));
+                    cb.greaterThanOrEqualTo(root.get("numero"), numeroMin));
         }
 
-        if (idMax != null) {
+        if (numeroMax != null) {
             spec = spec.and((root, query, cb) ->
-                    cb.lessThanOrEqualTo(root.get("id"), idMax));
+                    cb.lessThanOrEqualTo(root.get("numero"), numeroMax));
         }
 
         if (nombre != null && !nombre.isBlank()) {
@@ -127,6 +135,15 @@ public class CartaModeloService {
                     cb.equal(root.get("evolucion"), evolucion));
         }
 
+        boolean isAdmin = authentication != null &&
+                authentication.getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            spec = spec.and((root, query, cb) ->
+                    cb.isTrue(root.get("activo")));
+        }
+
         return cmRepository.findAll(spec, pageable)
                 .map(Mapper::cartaModeloToDTO);
     }
@@ -152,8 +169,9 @@ public class CartaModeloService {
 //            throw new BadRequestException("El id no puede ser null");
 //        }
 
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isAdmin = authentication != null &&
+                authentication.getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         CartaModelo cartaModelo = cmRepository.findById(id)
                 .orElseThrow(() ->
@@ -193,12 +211,12 @@ public class CartaModeloService {
             throw new BadRequestException("El cuerpo de la petición no puede ser null");
         }
 
-        // Validar ID
-        if (dto.getId() == null) {
-            throw new BadRequestException("El id de la carta modelo es obligatorio");
+        // Validar numero carta
+        if (dto.getNumero() == null) {
+            throw new BadRequestException("El número oficial es obligatorio");
         }
-        if (cmRepository.existsById(dto.getId())) {
-            throw new DuplicateException("Ya existe una carta modelo con id " + dto.getId());
+        if (cmRepository.existsByNumero(dto.getNumero())) {
+            throw new DuplicateException("Ya existe una carta modelo con número " + dto.getNumero());
         }
 
         // Validar nombre
@@ -257,7 +275,7 @@ public class CartaModeloService {
             throw new BadRequestException("El cuerpo de la petición no puede ser null");
         }
 
-        // Coherencia id path vs body
+        // Coherencia id path vs body, no es necesario pero por si acaso
         if (dto.getId() != null && !dto.getId().equals(id)) {
             throw new BadRequestException("El id del body debe coincidir con el id del path");
         }
@@ -272,6 +290,20 @@ public class CartaModeloService {
 
         if (dto.getNombre() == null || dto.getNombre().isBlank()) {
             throw new BadRequestException("El nombre es obligatorio");
+        }
+
+        if (dto.getNumero() == null) {
+            throw new BadRequestException("El número oficial es obligatorio");
+        }
+        // Si el número cambia
+        if (!dto.getNumero().equals(existing.getNumero())) {
+
+            // Verificar que no lo tenga otra carta
+            if (cmRepository.existsByNumeroAndIdNot(dto.getNumero(), id)) {
+                throw new DuplicateException(
+                        "Ya existe otra carta modelo con número " + dto.getNumero()
+                );
+            }
         }
 
         if (dto.getTipoCarta() == null) {
@@ -307,6 +339,7 @@ public class CartaModeloService {
         // ===== ACTUALIZACIÓN =====
 
         existing.setNombre(dto.getNombre());
+        existing.setNumero(dto.getNumero());
         existing.setTipoCarta(dto.getTipoCarta());
         existing.setRareza(dto.getRareza());
         existing.setImagenUrl(dto.getImagenUrl());
@@ -318,6 +351,7 @@ public class CartaModeloService {
         return Mapper.cartaModeloToDTO(saved);
     }
 
+    @Transactional // seguridad extra al haber múltiples cambios en las entidades (rollback ante fallo, nada a medias)
     public void delete(Long id) {
 
         if (id == null) {
@@ -345,24 +379,25 @@ public class CartaModeloService {
         // 4️⃣ Separar cartas físicas con intercambios pendientes de las que no
         List<CartaFisica> conPendientes = cfRepository.findConIntercambiosPendientes(id);
 
-        for (CartaFisica cf : conPendientes) {
-            // Marcar como no disponible
-            cf.setDisponible(false);
+        for (CartaFisica cf : cartasFisicas) {
 
-            // Rechazar intercambios pendientes
-            cf.getIntercambios().stream()
-                    .filter(i -> i.getEstado() == Estado.PENDIENTE)
-                    .forEach(i -> i.setEstado(Estado.RECHAZADO));
+            List<Intercambio> pendientesOrigen =
+                    intercambioRepository.findByCartaOrigenIdAndEstado(
+                            cf.getId(), EstadoIntercambio.PENDIENTE);
+
+            List<Intercambio> pendientesDestino =
+                    intercambioRepository.findByCartaDestinoIdAndEstado(
+                            cf.getId(), EstadoIntercambio.PENDIENTE);
+
+            if (!pendientesOrigen.isEmpty() || !pendientesDestino.isEmpty()) {
+
+
+                pendientesOrigen.forEach(i -> i.setEstado(EstadoIntercambio.RECHAZADO));
+                pendientesDestino.forEach(i -> i.setEstado(EstadoIntercambio.RECHAZADO));
+
+                cf.setDisponible(false);
+            }
         }
-
-        // 5️⃣ Cartas físicas sin intercambios pendientes → marcar disponible = false opcional
-        // Si quieres que las cartas físicas sin intercambios sigan disponibles para reactivación,
-        // no hagas nada. Si quieres bloquearlas también, descomenta:
-    /*
-    List<CartaFisica> sinPendientes = new ArrayList<>(cartasFisicas);
-    sinPendientes.removeAll(conPendientes);
-    sinPendientes.forEach(cf -> cf.setDisponible(false));
-    */
 
         // 6️⃣ Guardar todos los cambios de cartas físicas
         cfRepository.saveAll(cartasFisicas);

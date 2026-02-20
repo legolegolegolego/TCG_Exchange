@@ -28,29 +28,31 @@ public class CartaModeloController {
     // Obtener todas las cartas modelo (con filtros opcionales)
     @GetMapping
     public ResponseEntity<Page<CartaModeloDTO>> getCartasModelo(
-            @RequestParam(required = false) Long idMin,
-            @RequestParam(required = false) Long idMax,
+            @RequestParam(required = false) Long numeroMin,
+            @RequestParam(required = false) Long numeroMax,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) TipoCarta tipoCarta,
             @RequestParam(required = false) Rareza rareza,
             @RequestParam(required = false) TipoPokemon tipoPokemon,
             @RequestParam(required = false) EtapaEvolucion evolucion,
-            Pageable pageable
+            Pageable pageable,
+            Authentication authentication
     ) {
 
         Page<CartaModeloDTO> resultado = cmService.findAll(
-                idMin,
-                idMax,
+                numeroMin,
+                numeroMax,
                 nombre,
                 tipoCarta,
                 rareza,
                 tipoPokemon,
                 evolucion,
-                pageable
+                pageable,
+                authentication
         );
 
 //        List<CartaModeloDTO> cmsDTO = cmService.findAll(
-//                idMin, idMax, tipoCarta, rareza, tipoPokemon, evolucion
+//                numeroMin, numeroMax, tipoCarta, rareza, tipoPokemon, evolucion
 //        );
 
 //        return new ResponseEntity<List<CartaModeloDTO>>(cmsDTO, HttpStatus.OK);
