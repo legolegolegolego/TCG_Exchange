@@ -262,7 +262,7 @@ public class CartaFisicaService {
 
         // Si tiene intercambios:
         if (!intercambios.isEmpty()) {
-            // Rechazar automáticamente los intercambios pendientes
+            // Rechazar automáticamente los intercambios pendientes (si no tiene pos nada)
             intercambios.stream()
                     .filter(i -> i.getEstado() == EstadoIntercambio.PENDIENTE)
                     .forEach(i -> {
@@ -273,7 +273,6 @@ public class CartaFisicaService {
             // Marcar la carta como no disponible
             carta.setDisponible(false);
             cfRepository.save(carta);
-
 
             return; // No se elimina físicamente
         }

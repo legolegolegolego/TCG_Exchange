@@ -5,6 +5,8 @@ import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.model.enums.EstadoIntercambio;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +19,16 @@ public interface IntercambioRepository extends JpaRepository<Intercambio, Long> 
      * @return true si existen intercambios relacionados con el usuario, false si no
      */
     boolean existsByUsuarioOrigenOrUsuarioDestino(Usuario usuarioOrigen, Usuario usuarioDestino);
+
+    @Query("SELECT i FROM Intercambio i " +
+            "WHERE i.usuarioOrigen.id = :usuarioId OR i.usuarioDestino.id = :usuarioId")
+    List<Intercambio> findByUsuario(@Param("usuarioId") Long usuarioId);
+
+    @Query("SELECT i FROM Intercambio i " +
+            "WHERE (i.usuarioOrigen.id = :usuarioId OR i.usuarioDestino.id = :usuarioId) " +
+            "AND i.estado = :estado")
+    List<Intercambio> findByUsuarioAndEstado(@Param("usuarioId") Long usuarioId,
+                                             @Param("estado") EstadoIntercambio estado);
 
     List<Intercambio> findByCartaOrigenIdAndEstado(Long cartaId, EstadoIntercambio estado);
 

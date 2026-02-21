@@ -1,10 +1,13 @@
 package com.es.tcg_exchange.controller;
 
+import com.es.tcg_exchange.dto.IntercambioCreateDTO;
 import com.es.tcg_exchange.dto.IntercambioDTO;
+import com.es.tcg_exchange.model.enums.EstadoIntercambio;
 import com.es.tcg_exchange.service.IntercambioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,44 +21,54 @@ public class IntercambioController {
 
     // Obtener intercambios de un usuario
     @GetMapping("/usuario/{username}")
-    public ResponseEntity<List<IntercambioDTO>> getIntercambiosDeUsuario(@PathVariable String username,
-                                                                         @RequestParam(required = false) String estado) {
-        List<IntercambioDTO> intercambiosDTO = intercambioService.findByUsuario(username, estado);
-        return new ResponseEntity<>(intercambiosDTO, HttpStatus.OK);
+    public ResponseEntity<List<IntercambioDTO>> getIntercambiosByUsuario(
+            @PathVariable String username,
+            @RequestParam(required = false) EstadoIntercambio estado,
+            Authentication authentication
+    ) {
+        List<IntercambioDTO> intercambios = intercambioService.getIntercambiosByUsuario(username, estado, authentication);
+        return ResponseEntity.ok(intercambios);
     }
 
     // Obtener intercambio por id
     @GetMapping("/{id}")
-    public ResponseEntity<IntercambioDTO> getIntercambioById(@PathVariable Long id) {
-        IntercambioDTO intercambioDTO = intercambioService.findById(id);
-        return new ResponseEntity<>(intercambioDTO, HttpStatus.OK);
+    public ResponseEntity<IntercambioDTO> getIntercambioById(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        IntercambioDTO dto = intercambioService.findById(id, authentication);
+        return ResponseEntity.ok(dto);
     }
 
     // Crear nuevo intercambio
     @PostMapping
-    public ResponseEntity<IntercambioDTO> createIntercambio(@RequestBody IntercambioDTO intercambioDTO) {
-        intercambioService.insert(intercambioDTO);
-        return new ResponseEntity<>(intercambioDTO, HttpStatus.CREATED);
+    public ResponseEntity<IntercambioDTO> createIntercambio(
+            @RequestBody IntercambioCreateDTO dto,
+            Authentication authentication) {
+
+        IntercambioDTO intercambioCreado = intercambioService.create(dto, authentication);
+        return new ResponseEntity<>(intercambioCreado, HttpStatus.CREATED);
     }
 
     // Aceptar intercambio
     @PutMapping("/{id}/aceptar")
-    public ResponseEntity<IntercambioDTO> aceptarIntercambio(@PathVariable Long id) {
-        IntercambioDTO intercambioDTO = intercambioService.aceptar(id);
-        return new ResponseEntity<>(intercambioDTO, HttpStatus.OK);
+    public ResponseEntity<IntercambioDTO> aceptarIntercambio(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        IntercambioDTO intercambioActualizado = intercambioService.aceptarIntercambio(id, authentication);
+        return ResponseEntity.ok(intercambioActualizado);
     }
 
     // Rechazar intercambio
     @PutMapping("/{id}/rechazar")
-    public ResponseEntity<IntercambioDTO> rechazarIntercambio(@PathVariable Long id) {
-        IntercambioDTO intercambioDTO = intercambioService.rechazar(id);
-        return new ResponseEntity<>(intercambioDTO, HttpStatus.OK);
+    public ResponseEntity<IntercambioDTO> rechazarIntercambio(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        IntercambioDTO intercambioActualizado = intercambioService.rechazarIntercambio(id, authentication);
+        return ResponseEntity.ok(intercambioActualizado);
     }
 
-    // Eliminar intercambio
-    @DeleteMapping("/{id}")
-    public ResponseEntity<IntercambioDTO> deleteIntercambio(@PathVariable Long id) {
-        IntercambioDTO intercambioDTO = intercambioService.delete(id);
-        return new ResponseEntity<>(intercambioDTO, HttpStatus.OK);
-    }
+    // no se pueden eliminar intercambios
 }
