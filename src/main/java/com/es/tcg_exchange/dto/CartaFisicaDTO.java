@@ -13,14 +13,6 @@ public class CartaFisicaDTO {
     public CartaFisicaDTO() {
     }
 
-    public CartaFisicaDTO(Long id, EstadoCarta estadoCarta, String imagenUrl, Long idUsuario, Long idCartaModelo) {
-        this.id = id;
-        this.estadoCarta = estadoCarta;
-        this.imagenUrl = imagenUrl;
-        this.idUsuario = idUsuario;
-        this.idCartaModelo = idCartaModelo;
-    }
-
     public CartaFisicaDTO(Long id, EstadoCarta estadoCarta, Boolean disponible, String imagenUrl, Long idUsuario,
                           Long idCartaModelo) {
         this.id = id;

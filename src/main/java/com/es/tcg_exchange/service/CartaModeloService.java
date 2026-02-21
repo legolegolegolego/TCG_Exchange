@@ -14,7 +14,6 @@ import com.es.tcg_exchange.repository.CartaFisicaRepository;
 import com.es.tcg_exchange.repository.CartaModeloRepository;
 import com.es.tcg_exchange.repository.IntercambioRepository;
 import com.es.tcg_exchange.utils.Mapper;
-import com.es.tcg_exchange.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +23,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 @Service
@@ -243,6 +244,14 @@ public class CartaModeloService {
         if (dto.getImagenUrl() == null || dto.getImagenUrl().isBlank()) {
             throw new BadRequestException("La imagen de la carta es obligatoria");
         }
+        // Validar formato de URL
+        try {
+            new URL(dto.getImagenUrl());
+        } catch (MalformedURLException e) {
+            throw new BadRequestException("La URL de la imagen no es válida");
+        }
+        // en carta modelo no valida extensión porque al consumir de api externa puede no corresponder a formatos típicos
+
 
         // Validar campos específicos de POKEMON
         if (dto.getTipoCarta() == TipoCarta.POKEMON) {
@@ -315,8 +324,15 @@ public class CartaModeloService {
             throw new BadRequestException("Rareza es obligatoria");
         }
 
+        // Validar imagen
         if (dto.getImagenUrl() == null || dto.getImagenUrl().isBlank()) {
             throw new BadRequestException("ImagenUrl es obligatoria");
+        }
+        // Validar formato de URL
+        try {
+            new URL(dto.getImagenUrl());
+        } catch (MalformedURLException e) {
+            throw new BadRequestException("La URL de la imagen no es válida");
         }
 
         if (dto.getTipoCarta() == TipoCarta.POKEMON) {
@@ -368,7 +384,7 @@ public class CartaModeloService {
         List<CartaFisica> cartasFisicas = cfRepository.findByCartaModeloId(id);
 
         if (cartasFisicas.isEmpty()) {
-            // ✅ No hay cartas físicas: borrado físico real
+            // No hay cartas físicas: borrado físico real
             cmRepository.delete(existing);
             return;
         }

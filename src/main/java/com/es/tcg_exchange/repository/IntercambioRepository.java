@@ -1,5 +1,6 @@
 package com.es.tcg_exchange.repository;
 
+import com.es.tcg_exchange.model.CartaFisica;
 import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.model.enums.EstadoIntercambio;
@@ -20,4 +21,10 @@ public interface IntercambioRepository extends JpaRepository<Intercambio, Long> 
     List<Intercambio> findByCartaOrigenIdAndEstado(Long cartaId, EstadoIntercambio estado);
 
     List<Intercambio> findByCartaDestinoIdAndEstado(Long cartaId, EstadoIntercambio estado);
+
+    /**
+     * Devuelve todos los intercambios en los que participa una carta física,
+     * ya sea como carta origen o carta destino, sin importar el estado.
+     */
+    List<Intercambio> findByCartaOrigenOrCartaDestino(CartaFisica cartaOrigen, CartaFisica cartaDestino);
 }

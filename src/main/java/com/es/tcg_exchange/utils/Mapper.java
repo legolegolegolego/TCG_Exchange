@@ -105,6 +105,7 @@ public class Mapper {
         return new CartaFisicaDTO(
                 cartaFisica.getId(),
                 cartaFisica.getEstadoCarta(),
+                cartaFisica.isDisponible(),
                 cartaFisica.getImagenUrl(),
                 cartaFisica.getUsuario().getId(),
                 cartaFisica.getCartaModelo().getId()

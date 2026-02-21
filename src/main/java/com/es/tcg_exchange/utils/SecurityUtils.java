@@ -19,7 +19,7 @@ public class SecurityUtils {
         }
     }
 
-    // esto eliminar este procedimiento en cada metodo de controller o service:
+    // esto elimina este procedimiento en cada metodo de controller o service:
     //        if (!authentication.getName().equals(username)){
 //            throw new ForbiddenException("No tienes permiso para eliminar este usuario");
 //        }

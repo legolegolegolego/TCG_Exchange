@@ -1,9 +1,12 @@
 package com.es.tcg_exchange.controller;
 
+import com.es.tcg_exchange.dto.CartaFisicaCreateDTO;
+import com.es.tcg_exchange.dto.CartaFisicaDTO;
 import com.es.tcg_exchange.service.CartaFisicaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,47 +18,64 @@ public class CartaFisicaController {
     @Autowired
     private CartaFisicaService cfService;
 
-    // Obtener las cartas físicas de un usuario por su username
+    // todas las cartas disponibles de tal usuario
     @GetMapping("/usuario/{username}")
-    public ResponseEntity<List<CartaFisicaDTO>> getCartasDeUsuario(
-            @PathVariable String username){
-        List<CartaFisicaDTO> cfsDTO = cfService.getByUsername(username);
+    public ResponseEntity<List<CartaFisicaDTO>> getDisponiblesByUsername(
+            @PathVariable String username) {
+        List<CartaFisicaDTO> cartas = cfService.findDisponiblesByUsername(username);
+        return ResponseEntity.ok(cartas);
+    }
 
-        return new ResponseEntity<List<CartaFisicaDTO>>(cfsDTO, HttpStatus.OK);
+    // cartas no disponibles de tal usuario
+    @GetMapping("/usuario/{username}/no-disponibles")
+    public ResponseEntity<List<CartaFisicaDTO>> getNoDisponiblesByUsername(
+            @PathVariable String username,
+            Authentication authentication
+    ) {
+        List<CartaFisicaDTO> cartas = cfService.findNoDisponiblesByUsername(username, authentication);
+        return ResponseEntity.ok(cartas);
     }
 
     // Obtener una carta física por id
     @GetMapping("/{id}")
     public ResponseEntity<CartaFisicaDTO> getCartaFisicaById(
-            @PathVariable Long id){
-        CartaFisicaDTO cfDTO = cfService.findById(id);
+            @PathVariable Long id,
+            Authentication authentication){
+        CartaFisicaDTO cfDTO = cfService.findById(id, authentication);
 
-        return new ResponseEntity<CartaFisicaDTO>(cfDTO, HttpStatus.OK);
+        return ResponseEntity.ok(cfDTO);
     }
 
     // Crear carta física
     @PostMapping
     public ResponseEntity<CartaFisicaDTO> createCartaFisica(
-            @RequestBody CartaFisicaDTO cfDTO){
-        cfService.insert(cfDTO);
+            @RequestBody CartaFisicaCreateDTO cfDTO,
+            Authentication authentication){
+        CartaFisicaDTO cartaCreada =  cfService.create(cfDTO, authentication);
 
-        return new ResponseEntity<CartaFisicaDTO>(cfDTO, HttpStatus.CREATED);
+        return new ResponseEntity<CartaFisicaDTO>(cartaCreada, HttpStatus.CREATED);
     }
 
     // Actualizar carta física
     @PutMapping("/{id}")
     public ResponseEntity<CartaFisicaDTO> updateCartaFisica(
             @PathVariable Long id,
-            @RequestBody CartaFisicaDTO cfDTO){
-        cfService.update(id, cfDTO);
+            @RequestBody CartaFisicaCreateDTO cartaCreateDTO,
+            Authentication authentication) {
 
-        return new ResponseEntity<CartaFisicaDTO>(cfDTO, HttpStatus.OK);
+        CartaFisicaDTO updated = cfService.update(id, cartaCreateDTO, authentication);
+
+        return ResponseEntity.ok(updated);
     }
 
-    // Eliminar carta física
+    // Borrar carta física
     @DeleteMapping("/{id}")
-    public ResponseEntity<CartaFisicaDTO> deleteCartaFisica(@PathVariable Long id){
+    public ResponseEntity<Void> deleteCartaFisica(
+            @PathVariable Long id,
+            Authentication authentication) {
 
-        return new ResponseEntity<CartaFisicaDTO>(cfService.delete(id), HttpStatus.OK);
+        cfService.delete(id, authentication);
+
+        return ResponseEntity.noContent().build();
     }
 }
