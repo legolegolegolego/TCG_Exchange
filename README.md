@@ -117,14 +117,14 @@ Propuesta de intercambio entre usuarios.
   - Se marca como `activo = false`.
   - Los intercambios en estado `PENDIENTE` relacionados con cartas físicas asociadas con la carta modelo pasan a `RECHAZADO`.
   - Todas las cartas físicas asociadas pasan a `disponible = false`.
-- No se pueden crear ni actualizar cartas físicas asociándolas a una carta modelo con `activo = false`.
 
 ### CartaFisica
 - Solo el usuario propietario puede crear, modificar o eliminar sus cartas físicas.
 - Un ADMIN puede eliminar cartas físicas de cualquier usuario.
+- No se pueden crear ni actualizar cartas físicas asociándolas a una carta modelo con `activo = false`.
 - Las cartas físicas que hayan participado o estén participando en intercambios no se eliminan de la base de datos.
-- Si una carta ha estado involucrada en un intercambio `RECHAZADO`, al solicitar el usuario su eliminación,
-la carta pasa a estado `disponible = false`, quedando cerrada para futuros intercambios y manteniéndose por motivos históricos.
+- Si una carta ha participado en algún intercambio (cualquier estado) no puede eliminarse físicamente, por motivos históricos, 
+en su lugar: se marca como disponible = false, y si hubieran intercambios `PENDIENTE`s, se rechazarían automáticamente.
 - Al aceptar un intercambio, la carta pasa automáticamente a `disponible = false`.
 - No se transfiere la propiedad de la carta al aceptar un intercambio.
 - Una carta aceptada no puede reutilizarse en otros intercambios.
@@ -135,15 +135,14 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 ### Intercambio
 - El estado inicial de un intercambio es `PENDIENTE`.
 - Solo el usuario destino puede aceptar o rechazar un intercambio.
+- Antes de aceptar un intercambio se valida nuevamente que ambas cartas siguen disponibles.
 - Al aceptar un intercambio:
   - El estado pasa a `ACEPTADO`.
   - Las cartas físicas involucradas pasan a no disponibles (`disponible = false`).
 - Al rechazar un intercambio:
   - El estado pasa a `RECHAZADO`.
   - Las cartas físicas continúan disponibles.
-- Al eliminar un intercambio:
-  - Las cartas (y su disponibilidad) y usuarios involucrados no se ven alterados.
-- Solo se pueden eliminar intercambios en estado `PENDIENTE` o `RECHAZADO`.
+- No se pueden eliminar intercambios, por cuestiones de: integridad, trazabilidad, consistencia y seguridad.
 - No se permite crear intercambios con cartas no disponibles.
 - Un usuario solo puede consultar intercambios en los que participa.
 - Un ADMIN puede consultar cualquier intercambio.
@@ -164,6 +163,7 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - Un ADMIN puede consultar cualquier recurso.
 - Un ADMIN no puede modificar recursos reservados al propietario.
 - En los endpoints públicos, los recursos inactivos o restringidos no son accesibles aunque el cliente conozca su identificador interno.
+- Cualquier endpoint no marcado como público requiere autenticación mediante JWT.
 
 ### Cifrado de contraseñas
 - Contraseñas almacenadas mediante hashing seguro.
@@ -171,11 +171,13 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 
 ### Validaciones de seguridad
 - Username único.
+- Solo pueden acceder a la app usuarios con rol `USER` o `ADMIN`.
+- Un usuario no puede registrarse como `ADMIN` desde la app.
 - Contraseña mínima de 6 caracteres.
 - No se permiten intercambios consigo mismo.
 - Validación de existencia y disponibilidad de cartas y usuarios.
 - No se permite asociar una carta física a una carta modelo inactiva.
-- No se permite eliminar intercambios en estado `ACEPTADO`.
+- No se permiten eliminar intercambios, por cuestiones de: integridad, trazabilidad, consistencia y seguridad.
 - Las respuestas de la API no exponen información sensible como contraseñas, hashes o datos internos del sistema.
 - Antes de realizar operaciones críticas, el sistema vuelve a verificar el estado actual de los recursos implicados para evitar inconsistencias.
 
@@ -202,14 +204,14 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - `GET /cartas-modelo/{id}`
   - Público: solo si la carta está activa.
   - ADMIN: puede consultar cartas activas e inactivas.
+- `GET /cartas-modelo/{id}/usuarios` Público.
 - `POST /cartas-modelo` – Solo ADMIN.
 - `PUT /cartas-modelo/{id}` – Solo ADMIN.
 - `DELETE /cartas-modelo/{id}` – Solo ADMIN.
 
 ### Gestión de Cartas Físicas
-- `GET /cartas-fisicas/usuario/{username}`
-  - Si `disponible = true`: Público.
-  - Si `disponible = false`: Propietario o ADMIN
+- `GET /cartas-fisicas/usuario/{username}` Público.
+- `GET /cartas-fisicas/usuario/{username}/no-disponibles` ADMIN o propio usuario.
 - `GET /cartas-fisicas/{id}`
   - Si `disponible = true`: Público.
   - Si `disponible = false`: Propietario o ADMIN
@@ -223,7 +225,6 @@ la carta pasa a estado `disponible = false`, quedando cerrada para futuros inter
 - `POST /intercambios` – Usuario autenticado.
 - `PUT /intercambios/{id}/aceptar` – Usuario destino.
 - `PUT /intercambios/{id}/rechazar` – Usuario destino.
-- `DELETE /intercambios/{id}` – Solo ADMIN.
 
 ---
 
