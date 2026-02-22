@@ -394,7 +394,7 @@ public class CartaModeloService {
         cmRepository.save(existing);
 
         // Separar cartas físicas con intercambios pendientes de las que no
-        List<CartaFisica> conPendientes = cfRepository.findConIntercambiosPendientes(id);
+        List<CartaFisica> conPendientes = cfRepository.findConIntercambiosPendientes(id, EstadoIntercambio.PENDIENTE);
 
         for (CartaFisica cf : cartasFisicas) {
 
