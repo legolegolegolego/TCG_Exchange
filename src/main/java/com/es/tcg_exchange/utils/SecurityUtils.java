@@ -12,7 +12,7 @@ public class SecurityUtils {
     public static void checkAdminOrSelf(Authentication auth, String username) {
         boolean isAdmin = auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        boolean isSelf = auth.getName().equals(username);
+        boolean isSelf = auth.getName().toLowerCase().equals(username.toLowerCase());
 
         if (!isAdmin && !isSelf) {
             throw new ForbiddenException("No tienes los permisos para acceder al recurso");

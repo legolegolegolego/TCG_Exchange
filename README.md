@@ -104,7 +104,14 @@ Propuesta de intercambio entre usuarios.
   - `true`: cuenta desactivada.
 - Cuando un usuario solicita eliminar su cuenta:
   - Si no ha participado en ningún intercambio (PENDIENTE, ACEPTADO o RECHAZADO), se elimina físicamente de la base de datos.
-  - Si ha participado en algún intercambio, la cuenta no se elimina físicamente y se marca como `desactivado = true`.
+  - Si ha participado en algún intercambio, la cuenta no se elimina físicamente:
+    - Se marca como `desactivado = true`.
+    - Las cartas físicas disponibles:
+      - Se eliminan si no han participado en intercambios.
+      - Si han participado en intercambios:
+        - Pasan a `disponible = false`. 
+        - Sus intercambios en estado `PENDIENTE` se rechazan automáticamente.
+    - Las cartas físicas no disponibles se mantienen sin cambios y no se eliminan físicamente.
 - Un usuario desactivado no puede iniciar sesión ni acceder a endpoints protegidos, pero sus datos e intercambios se conservan para mantener la integridad histórica.
 - Un usuario solo puede modificar o eliminar (desactivar) su propio perfil.
 - Un ADMIN puede acceder y gestionar cualquier usuario.
@@ -126,6 +133,7 @@ Propuesta de intercambio entre usuarios.
 - Las cartas físicas que hayan participado o estén participando en intercambios no se eliminan de la base de datos.
 - Si una carta ha participado en algún intercambio (cualquier estado) no puede eliminarse físicamente, por motivos históricos, 
 en su lugar: se marca como disponible = false, y si hubieran intercambios `PENDIENTE`s, se rechazarían automáticamente.
+- No se pueden eliminar cartas no disponibles.
 - Al aceptar un intercambio, la carta pasa automáticamente a `disponible = false`.
 - No se transfiere la propiedad de la carta al aceptar un intercambio.
 - Una carta aceptada no puede reutilizarse en otros intercambios.

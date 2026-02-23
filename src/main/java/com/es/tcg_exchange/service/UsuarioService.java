@@ -5,7 +5,11 @@ import com.es.tcg_exchange.error.exception.BadRequestException;
 import com.es.tcg_exchange.error.exception.DuplicateException;
 import com.es.tcg_exchange.error.exception.NotFoundException;
 import com.es.tcg_exchange.error.exception.UnauthorizedException;
+import com.es.tcg_exchange.model.CartaFisica;
+import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
+import com.es.tcg_exchange.model.enums.EstadoIntercambio;
+import com.es.tcg_exchange.repository.CartaFisicaRepository;
 import com.es.tcg_exchange.repository.IntercambioRepository;
 import com.es.tcg_exchange.repository.UsuarioRepository;
 import com.es.tcg_exchange.utils.Mapper;
@@ -21,10 +25,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
 @Service
 public class UsuarioService implements UserDetailsService {
@@ -37,6 +44,9 @@ public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CartaFisicaRepository cfRepository;
 
 
     // no hace falta inyectarlo si no es componente
@@ -255,22 +265,61 @@ public class UsuarioService implements UserDetailsService {
     }
 
     // borrar usuario
+    @Transactional
     public void deleteUser(Long id, Authentication authentication){
 
-        // Buscamos la entidad directamente, validando null y not found
         Usuario usuario = findByIdToModel(id);
 
-        // Validar permisos: admin o el propio usuario
         SecurityUtils.checkAdminOrSelf(authentication, usuario.getUsername());
 
-        // Comprobar si ha participado en algún intercambio
-        boolean haParticipado = intercambioRepository.existsByUsuarioOrigenOrUsuarioDestino(usuario, usuario);
+        List<CartaFisica> cartas = cfRepository.findByUsuarioId(usuario.getId());
+
+        boolean haParticipado = intercambioRepository
+                .existsByUsuarioOrigenOrUsuarioDestino(usuario, usuario);
+
         if (haParticipado) {
-            // Desactivar usuario en lugar de borrarlo
+
+            // Desactivar usuario
             usuario.setDesactivado(true);
+
+            for (CartaFisica cf : cartas) {
+
+                if(cf.isDisponible()){ // si no está disponible se queda como está
+                    // Obtener intercambios de la carta
+                    List<Intercambio> intercambios =
+                            intercambioRepository.findByCartaOrigenOrCartaDestino(cf, cf);
+
+                    if (intercambios.isEmpty()) {
+                        // No ha participado → se puede borrar
+                        cfRepository.delete(cf);
+
+                    } else {
+                        // Ha participado → NO se borra
+
+                        // Rechazar pendientes
+                        intercambios.stream()
+                                .filter(i -> i.getEstado() == EstadoIntercambio.PENDIENTE)
+                                .forEach(i -> i.setEstado(EstadoIntercambio.RECHAZADO));
+
+                        // Marcar como no disponible
+                        cf.setDisponible(false);
+
+                        cfRepository.save(cf);
+                    }
+                }
+
+            }
+
             usuarioRepository.save(usuario);
+
         } else {
-            // Borrado físico
+
+            // No ha participado → borrado físico completo
+
+            if (!cartas.isEmpty()) {
+                cfRepository.deleteAll(cartas);
+            }
+
             usuarioRepository.delete(usuario);
         }
 

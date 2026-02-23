@@ -411,8 +411,9 @@ public class CartaModeloService {
                 pendientesOrigen.forEach(i -> i.setEstado(EstadoIntercambio.RECHAZADO));
                 pendientesDestino.forEach(i -> i.setEstado(EstadoIntercambio.RECHAZADO));
 
-                cf.setDisponible(false);
             }
+
+            cf.setDisponible(false);
         }
 
         // Guardar todos los cambios de cartas físicas

@@ -257,6 +257,10 @@ public class CartaFisicaService {
         // Verificar permisos: propietario o admin
         SecurityUtils.checkAdminOrSelf(authentication, carta.getUsuario().getUsername());
 
+        if (!carta.isDisponible()){
+            throw new BadRequestException("No se pueden eliminar cartas no disponibles");
+        }
+
         // Obtener todos los intercambios asociados a la carta
         List<Intercambio> intercambios = intercambioRepository.findByCartaOrigenOrCartaDestino(carta, carta);
 

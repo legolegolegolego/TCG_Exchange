@@ -28,5 +28,6 @@ public interface CartaFisicaRepository extends JpaRepository <CartaFisica, Long>
     );
 
     List<CartaFisica> findByUsuarioIdAndDisponible(Long usuarioId, boolean disponible);
+    List<CartaFisica> findByUsuarioId(Long usuarioId);
 
 }
