@@ -16,7 +16,8 @@ public class CartaModelo {
     private Long id;
 
     // número oficial de la carta
-    @Column(nullable = false, unique = true)
+    // no pongo unique para controlar condiciones de si esta desactivada o no para reusar el numero
+    @Column(nullable = false)
     private Long numero;
 
     @Column(nullable = false)

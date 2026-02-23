@@ -15,7 +15,7 @@ public class CartaModeloDTO {
     // segun tipocarta:
     private TipoPokemon tipoPokemon;
     private EtapaEvolucion evolucion;
-    private Boolean activo; // en dto uso Boolean objeto para validaciones null
+    private Boolean activo = true; // en dto uso Boolean objeto para validaciones null
 
     public CartaModeloDTO() {
     }

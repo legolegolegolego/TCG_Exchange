@@ -5,7 +5,7 @@ import com.es.tcg_exchange.model.enums.EstadoCarta;
 public class CartaFisicaDTO {
     private Long id;
     private EstadoCarta estadoCarta;
-    private Boolean disponible;
+    private Boolean disponible = true;
     private String imagenUrl;
     private Long idUsuario;
     private Long idCartaModelo;

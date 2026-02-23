@@ -217,8 +217,9 @@ public class CartaModeloService {
         if (dto.getNumero() == null) {
             throw new BadRequestException("El número oficial es obligatorio");
         }
-        if (cmRepository.existsByNumero(dto.getNumero())) {
-            throw new DuplicateException("Ya existe una carta modelo con número " + dto.getNumero());
+        if (cmRepository.existsByNumeroAndActivoTrue(dto.getNumero())) {
+            throw new DuplicateException("Ya existe una carta modelo activa con ese número");
+            // si la carta está desactivada se puede "tomar" su numero
         }
 
         // Validar nombre
@@ -285,7 +286,7 @@ public class CartaModeloService {
             throw new BadRequestException("El cuerpo de la petición no puede ser null");
         }
 
-        // Coherencia id path vs body, no es necesario pero por si acaso
+        // Coherencia id path vs body, no es necesario porque no envia el id, pero por si acaso
         if (dto.getId() != null && !dto.getId().equals(id)) {
             throw new BadRequestException("El id del body debe coincidir con el id del path");
         }
@@ -293,6 +294,10 @@ public class CartaModeloService {
         CartaModelo existing = cmRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException("Carta modelo con id " + id + " no encontrada"));
+
+        if (!existing.isActivo()) {
+            throw new BadRequestException("No se puede modificar una carta modelo inactiva");
+        }
 
         // ===== VALIDACIONES DTO =====
 
@@ -309,10 +314,9 @@ public class CartaModeloService {
         if (!dto.getNumero().equals(existing.getNumero())) {
 
             // Verificar que no lo tenga otra carta
-            if (cmRepository.existsByNumeroAndIdNot(dto.getNumero(), id)) {
-                throw new DuplicateException(
-                        "Ya existe otra carta modelo con número " + dto.getNumero()
-                );
+            if (cmRepository.existsByNumeroAndActivoTrueAndIdNot(dto.getNumero(), id)) {
+                throw new DuplicateException("Ya existe una carta modelo activa con ese número");
+                // si la carta está desactivada se puede "tomar" su numero
             }
         }
 
@@ -347,12 +351,6 @@ public class CartaModeloService {
             dto.setEvolucion(null);
         }
 
-        // si se manda parametro: se actualiza
-        // si no (llega null): no se hace nada: se queda como está ese campo anteriormente
-        if (dto.getActivo() != null) {
-            existing.setActivo(dto.getActivo()); // seguro, no da NullPointerException
-        }
-
         // ===== ACTUALIZACIÓN =====
 
         existing.setNombre(dto.getNombre());
@@ -362,6 +360,7 @@ public class CartaModeloService {
         existing.setImagenUrl(dto.getImagenUrl());
         existing.setTipoPokemon(dto.getTipoPokemon());
         existing.setEvolucion(dto.getEvolucion());
+        existing.setActivo(existing.isActivo()); // evita reseteo por defecto de dto
 
         CartaModelo saved = cmRepository.save(existing);
 

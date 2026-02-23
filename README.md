@@ -112,6 +112,7 @@ Propuesta de intercambio entre usuarios.
 ### CartaModelo
 - Solo un ADMIN puede crear, modificar o eliminar cartas modelo.
 - Una carta modelo puede existir sin cartas físicas asociadas.
+- No se puede actualizar una carta modelo inactiva (`activo = true`).
 - El atributo `numero` es único y representa el número oficial de la carta.
 - Una carta modelo solo puede eliminarse físicamente si no tiene cartas físicas asociadas. Si tiene cartas físicas asociadas:
   - Se marca como `activo = false`.

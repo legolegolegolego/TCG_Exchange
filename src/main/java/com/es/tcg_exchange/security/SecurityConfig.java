@@ -39,12 +39,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth // Filtros para securizar diferentes endpoints de la aplicación
                                 // Filtro que deja pasar todas las peticiones que vayan a los endpoints que definamos:
                                 // Públicas:
-                                .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.POST,
+                                        "/auth/login", "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.GET,
                                         "/cartas-modelo",
-                                        "/cartas-modelo/id/{id}",
+                                        "/cartas-modelo/{id}",
                                         "/cartas-modelo/{id}/usuarios").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/cartas-fisicas/{id}").permitAll()
+                                .requestMatchers(HttpMethod.GET,
+                                        "/cartas-fisicas/usuario/{username}",
+                                        "/cartas-fisicas/{id}").permitAll()
 
 
                                 // solo pueden acceder a estar rutas usuarios logueados con rol ADMIN:
@@ -53,7 +56,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/usuarios/id/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/usuarios/username/{username}").hasRole("ADMIN")
 
-                                .requestMatchers(HttpMethod.POST, "/cartas-modelo/").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/cartas-modelo").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/cartas-modelo/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/cartas-modelo/{id}").hasRole("ADMIN")
 
