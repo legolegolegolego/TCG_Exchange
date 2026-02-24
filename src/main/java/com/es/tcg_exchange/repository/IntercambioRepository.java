@@ -19,6 +19,11 @@ public interface IntercambioRepository extends JpaRepository<Intercambio, Long> 
      * @return true si existen intercambios relacionados con el usuario, false si no
      */
     boolean existsByUsuarioOrigenOrUsuarioDestino(Usuario usuarioOrigen, Usuario usuarioDestino);
+    boolean existsByCartaOrigenAndCartaDestinoAndEstado(
+            CartaFisica cartaOrigen,
+            CartaFisica cartaDestino,
+            EstadoIntercambio estado
+    );
 
     @Query("SELECT i FROM Intercambio i " +
             "WHERE i.usuarioOrigen.id = :usuarioId OR i.usuarioDestino.id = :usuarioId")

@@ -2,10 +2,7 @@ package com.es.tcg_exchange.service;
 
 import com.es.tcg_exchange.dto.IntercambioCreateDTO;
 import com.es.tcg_exchange.dto.IntercambioDTO;
-import com.es.tcg_exchange.error.exception.BadRequestException;
-import com.es.tcg_exchange.error.exception.ForbiddenException;
-import com.es.tcg_exchange.error.exception.NotFoundException;
-import com.es.tcg_exchange.error.exception.UnauthorizedException;
+import com.es.tcg_exchange.error.exception.*;
 import com.es.tcg_exchange.model.CartaFisica;
 import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
@@ -120,6 +117,30 @@ public class IntercambioService {
             throw new BadRequestException("La carta destino no está disponible para intercambio");
         }
 
+        if(cartaOrigen.getUsuario() == cartaDestino.getUsuario()){
+            throw new BadRequestException("No puedes intercambiar tus propias cartas entre sí");
+        }
+
+        // Evitar duplicados en estado PENDIENTE
+        boolean yaExistePendiente = intercambioRepository
+                .existsByCartaOrigenAndCartaDestinoAndEstado(
+                        cartaOrigen,
+                        cartaDestino,
+                        EstadoIntercambio.PENDIENTE
+                );
+        boolean yaExisteInverso = intercambioRepository
+                .existsByCartaOrigenAndCartaDestinoAndEstado(
+                        cartaDestino,
+                        cartaOrigen,
+                        EstadoIntercambio.PENDIENTE
+                );
+
+        if (yaExistePendiente || yaExisteInverso) {
+            throw new DuplicateException(
+                    "Ya existe un intercambio pendiente con estas cartas"
+            );
+        }
+
         // Crear intercambio
         Intercambio intercambio = new Intercambio();
         intercambio.setUsuarioOrigen(usuario);
@@ -144,9 +165,17 @@ public class IntercambioService {
 
         String username = authentication.getName();
 
+
         // Solo el destinatario puede aceptar
         if (!intercambio.getUsuarioDestino().getUsername().equals(username)) {
             throw new ForbiddenException("Solo el destinatario puede aceptar este intercambio");
+        }
+
+        // Solo se puede actualizar si el estado actual es PENDIENTE
+        if (intercambio.getEstado() != EstadoIntercambio.PENDIENTE) {
+            throw new BadRequestException(
+                    "El estado de un intercambio aceptado o rechazado no puede modificarse"
+            );
         }
 
         // Actualizar estado
@@ -188,6 +217,13 @@ public class IntercambioService {
         // Solo el destinatario puede rechazar
         if (!intercambio.getUsuarioDestino().getUsername().equals(username)) {
             throw new ForbiddenException("Solo el destinatario puede rechazar este intercambio");
+        }
+
+        // Solo se puede actualizar si el estado actual es PENDIENTE
+        if (intercambio.getEstado() != EstadoIntercambio.PENDIENTE) {
+            throw new BadRequestException(
+                    "El estado de un intercambio aceptado o rechazado no puede modificarse"
+            );
         }
 
         // Actualizar estado

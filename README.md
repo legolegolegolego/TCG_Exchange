@@ -155,6 +155,9 @@ en su lugar: se marca como disponible = false, y si hubieran intercambios `PENDI
 - No se permite crear intercambios con cartas no disponibles.
 - Un usuario solo puede consultar intercambios en los que participa.
 - Un ADMIN puede consultar cualquier intercambio.
+- No se permite crear un intercambio si ya existe otro en estado PENDIENTE con la misma cartaOrigen y cartaDestino,
+ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ cartaDestino).
+- Un intercambio solo puede pasar de `PENDIENTE` a `ACEPTADO` o `RECHAZADO`; una vez aceptado o rechazado, su estado no se puede modificar.
 
 ---
 

@@ -4,6 +4,7 @@ import com.es.tcg_exchange.model.enums.EstadoIntercambio;
 
 // apuntesDTO: si el id es autoincremental, no poner en el DTO
 public class IntercambioDTO {
+    private Long id;
     private Long idUsuarioOrigen;
     private Long idUsuarioDestino;
     private Long idCartaOrigen;
@@ -13,13 +14,21 @@ public class IntercambioDTO {
     public IntercambioDTO() {
     }
 
-    public IntercambioDTO(Long idUsuarioOrigen, Long idUsuarioDestino, Long idCartaOrigen, Long idCartaDestino,
-                          EstadoIntercambio estado) {
+    public IntercambioDTO(Long id, Long idUsuarioOrigen, Long idUsuarioDestino, Long idCartaOrigen, Long idCartaDestino, EstadoIntercambio estado) {
+        this.id = id;
         this.idUsuarioOrigen = idUsuarioOrigen;
         this.idUsuarioDestino = idUsuarioDestino;
         this.idCartaOrigen = idCartaOrigen;
         this.idCartaDestino = idCartaDestino;
         this.estado = estado;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getIdUsuarioOrigen() {
@@ -37,7 +46,6 @@ public class IntercambioDTO {
     public void setIdUsuarioDestino(Long idUsuarioDestino) {
         this.idUsuarioDestino = idUsuarioDestino;
     }
-
 
     public Long getIdCartaOrigen() {
         return idCartaOrigen;
