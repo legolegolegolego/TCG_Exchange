@@ -155,7 +155,7 @@ public class CartaModeloService {
      * @param id
      * @return dto de cartaModelo
      */
-    public CartaModeloDTO findById(Long id, Authentication authentication) {
+    public CartaModeloDTO findById(Long id) {
 
         /*
             Si el id viene por path (/{id}), Spring nunca enviará null.
@@ -171,18 +171,10 @@ public class CartaModeloService {
 //            throw new BadRequestException("El id no puede ser null");
 //        }
 
-        boolean isAdmin = authentication != null &&
-                authentication.getAuthorities().stream()
-                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         CartaModelo cartaModelo = cmRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException("Carta modelo con id " + id + " no encontrada"));
-
-        // Devuelvo 404 en lugar de 403 para no revelar que existe a un usuario no ADMIN
-        if (!cartaModelo.isActivo() && !isAdmin) {
-            throw new NotFoundException("Carta no encontrada");
-        }
 
         return Mapper.cartaModeloToDTO(cartaModelo);
     }

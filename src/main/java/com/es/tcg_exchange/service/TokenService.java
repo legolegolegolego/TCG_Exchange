@@ -1,5 +1,9 @@
 package com.es.tcg_exchange.service;
 
+import com.es.tcg_exchange.dto.UsuarioDTO;
+import com.es.tcg_exchange.dto.UsuarioFullDTO;
+import com.es.tcg_exchange.model.Usuario;
+import com.es.tcg_exchange.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +22,9 @@ public class TokenService {
     @Autowired
     private JwtEncoder jwtEncoder;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
 
@@ -25,12 +32,17 @@ public class TokenService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
+        String username = authentication.getName();
+
+        UsuarioFullDTO usuario = usuarioService.findByUsername(username);
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .expiresAt(now.plus(1, ChronoUnit.DAYS))
                 .subject(authentication.getName())
                 .claim("roles", roles)
+                .claim("id", usuario.getId())
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

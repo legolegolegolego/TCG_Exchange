@@ -39,9 +39,8 @@ public class CartaFisicaController {
     // Obtener una carta física por id
     @GetMapping("/{id}")
     public ResponseEntity<CartaFisicaDTO> getCartaFisicaById(
-            @PathVariable Long id,
-            Authentication authentication){
-        CartaFisicaDTO cfDTO = cfService.findById(id, authentication);
+            @PathVariable Long id){
+        CartaFisicaDTO cfDTO = cfService.findById(id);
 
         return ResponseEntity.ok(cfDTO);
     }

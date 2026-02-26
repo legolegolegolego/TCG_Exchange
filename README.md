@@ -213,9 +213,7 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - `GET /cartas-modelo`
   - Público: solo cartas activas.
   - ADMIN: puede ver cartas activas e inactivas.
-- `GET /cartas-modelo/{id}`
-  - Público: solo si la carta está activa.
-  - ADMIN: puede consultar cartas activas e inactivas.
+- `GET /cartas-modelo/{id}` Público.
 - `GET /cartas-modelo/{id}/usuarios` Público.
 - `POST /cartas-modelo` – Solo ADMIN.
 - `PUT /cartas-modelo/{id}` – Solo ADMIN.
@@ -224,9 +222,7 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 ### Gestión de Cartas Físicas
 - `GET /cartas-fisicas/usuario/{username}` Público.
 - `GET /cartas-fisicas/usuario/{username}/no-disponibles` ADMIN o propio usuario.
-- `GET /cartas-fisicas/{id}`
-  - Si `disponible = true`: Público.
-  - Si `disponible = false`: Propietario o ADMIN
+- `GET /cartas-fisicas/{id}` Público.
 - `POST /cartas-fisicas` – Usuario autenticado.
 - `PUT /cartas-fisicas/{id}` – Propietario.
 - `DELETE /cartas-fisicas/{id}` – Propietario o ADMIN.

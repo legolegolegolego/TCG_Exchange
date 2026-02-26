@@ -70,25 +70,11 @@ public class CartaFisicaService {
     /**
      * Obtener carta física por id
      * @param id
-     * @param authentication Si disponible = false, solo admin o propio usuario autenticado
      * @return
      */
-    public CartaFisicaDTO findById(Long id, Authentication authentication) {
+    public CartaFisicaDTO findById(Long id) {
         CartaFisica carta = cfRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Carta física con id " + id + " no encontrada"));
-
-        // Si la carta NO está disponible, se requiere autenticación
-        if (!carta.isDisponible()) {
-
-            if (authentication == null) {
-                // Usuario no autenticado
-                throw new UnauthorizedException("Necesitas estar autenticado para ver esta carta");
-            }
-
-            // Comprobamos permisos: admin o propietario de la carta
-            String usernamePropietario = carta.getUsuario().getUsername();
-            SecurityUtils.checkAdminOrSelf(authentication, usernamePropietario);
-        }
 
         return Mapper.cartaFisicaToDTO(carta);
     }

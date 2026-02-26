@@ -2,11 +2,10 @@ package com.es.tcg_exchange.dto;
 
 import com.es.tcg_exchange.model.enums.EstadoIntercambio;
 
-// apuntesDTO: si el id es autoincremental, no poner en el DTO
 public class IntercambioDTO {
     private Long id;
-    private Long idUsuarioOrigen;
-    private Long idUsuarioDestino;
+    private String usernameOrigen;
+    private String usernameDestino;
     private Long idCartaOrigen;
     private Long idCartaDestino;
     private EstadoIntercambio estado;
@@ -14,10 +13,10 @@ public class IntercambioDTO {
     public IntercambioDTO() {
     }
 
-    public IntercambioDTO(Long id, Long idUsuarioOrigen, Long idUsuarioDestino, Long idCartaOrigen, Long idCartaDestino, EstadoIntercambio estado) {
+    public IntercambioDTO(Long id, String usernameOrigen, String usernameDestino, Long idCartaOrigen, Long idCartaDestino, EstadoIntercambio estado) {
         this.id = id;
-        this.idUsuarioOrigen = idUsuarioOrigen;
-        this.idUsuarioDestino = idUsuarioDestino;
+        this.usernameOrigen = usernameOrigen;
+        this.usernameDestino = usernameDestino;
         this.idCartaOrigen = idCartaOrigen;
         this.idCartaDestino = idCartaDestino;
         this.estado = estado;
@@ -31,20 +30,20 @@ public class IntercambioDTO {
         this.id = id;
     }
 
-    public Long getIdUsuarioOrigen() {
-        return idUsuarioOrigen;
+    public String getUsernameOrigen() {
+        return usernameOrigen;
     }
 
-    public void setIdUsuarioOrigen(Long idUsuarioOrigen) {
-        this.idUsuarioOrigen = idUsuarioOrigen;
+    public void setUsernameOrigen(String usernameOrigen) {
+        this.usernameOrigen = usernameOrigen;
     }
 
-    public Long getIdUsuarioDestino() {
-        return idUsuarioDestino;
+    public String getUsernameDestino() {
+        return usernameDestino;
     }
 
-    public void setIdUsuarioDestino(Long idUsuarioDestino) {
-        this.idUsuarioDestino = idUsuarioDestino;
+    public void setUsernameDestino(String usernameDestino) {
+        this.usernameDestino = usernameDestino;
     }
 
     public Long getIdCartaOrigen() {

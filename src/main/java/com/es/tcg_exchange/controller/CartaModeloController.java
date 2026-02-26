@@ -62,10 +62,9 @@ public class CartaModeloController {
     // Obtener una carta modelo por id
     @GetMapping("/{id}")
     public ResponseEntity<CartaModeloDTO> getCartaModeloById(
-            @PathVariable Long id,
-            Authentication authentication) {
+            @PathVariable Long id) {
 
-        CartaModeloDTO cmDTO = cmService.findById(id, authentication);
+        CartaModeloDTO cmDTO = cmService.findById(id);
 
         return new ResponseEntity<CartaModeloDTO>(cmDTO, HttpStatus.OK);
     }
