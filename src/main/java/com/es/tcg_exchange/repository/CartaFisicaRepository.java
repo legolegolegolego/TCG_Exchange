@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface CartaFisicaRepository extends JpaRepository <CartaFisica, Long> {
 
-    @Query("SELECT DISTINCT c.usuario FROM CartaFisica c WHERE c.cartaModelo.id = :cartaModeloId")
+    @Query("SELECT DISTINCT c.usuario FROM CartaFisica c WHERE c.cartaModelo.id = :cartaModeloId AND c.disponible = true")
     List<Usuario> findUsuariosConCartaModelo(@Param("cartaModeloId") Long cartaModeloId);
 
     List<CartaFisica> findByCartaModeloId(Long cartaModeloId);
