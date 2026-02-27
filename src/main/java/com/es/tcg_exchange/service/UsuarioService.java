@@ -101,8 +101,11 @@ public class UsuarioService implements UserDetailsService {
         }
 
         // Logica de pass
-        if (usuarioRegisterDTO.getPassword().length() < 6){
-            throw new BadRequestException("La longitud de la contraseña debe ser superior o igual da 6 caracteres");
+        if (usuarioRegisterDTO.getPassword() == null
+                || !usuarioRegisterDTO.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")) {
+            throw new BadRequestException(
+                    "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial"
+            );
         }
 
         //lo quito porque me da problemas el regex
@@ -221,9 +224,10 @@ public class UsuarioService implements UserDetailsService {
             throw new BadRequestException("El id no puede ser null");
         }
 
-        if (dto.getPasswordNueva() == null || dto.getPasswordNueva().length() < 6) {
+        if (dto.getPasswordNueva() == null
+                || !dto.getPasswordNueva().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")) {
             throw new BadRequestException(
-                    "La nueva contraseña debe tener al menos 6 caracteres"
+                    "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial"
             );
         }
 

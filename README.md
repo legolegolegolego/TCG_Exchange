@@ -95,7 +95,8 @@ Propuesta de intercambio entre usuarios.
 
 ### Usuarios
 - El `username` es único y obligatorio.
-- La contraseña es obligatoria y debe tener una longitud mínima de 6 caracteres.
+- La contraseña es obligatoria.
+- La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial
 - Al actualizar la contraseña, la nueva no puede ser la misma que la actual.
 - Solo el propio usuario o un ADMIN pueden modificar el perfil.
 - No es posible registrarse como ADMIN.
@@ -185,7 +186,7 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - Username único.
 - Solo pueden acceder a la app usuarios con rol `USER` o `ADMIN`.
 - Un usuario no puede registrarse como `ADMIN` desde la app.
-- Contraseña mínima de 6 caracteres.
+- La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial
 - No se permiten intercambios consigo mismo.
 - Validación de existencia y disponibilidad de cartas y usuarios.
 - No se permite asociar una carta física a una carta modelo inactiva.
