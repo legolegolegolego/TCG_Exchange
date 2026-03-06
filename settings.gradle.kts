@@ -1,1 +1,1 @@
-rootProject.name = "TCG_Commerce"
+rootProject.name = "TCG_Exchange"

@@ -60,40 +60,12 @@ public class Mapper {
         return usuariosDTO; // Retorna la lista de DTOs
     }
 
-    public static UsuarioLoginDTO usuarioToLoginDTO(Usuario u) {
-    return new UsuarioLoginDTO(
-            u.getUsername(),
-            u.getPassword()
-    );
-    }
-
-    public static UsuarioRegisterDTO usuarioToRegisterDTO(Usuario u) {
-        return new UsuarioRegisterDTO(
-                u.getUsername(),
-                u.getPassword()
-        );
-    }
-
     // ---------------- DTO/s to entity/ies ----------------
-//    public static Usuario usuarioDTOToModel(UsuarioDTO uDTO){
-//        return new Usuario(
-//                uDTO.getUsername(),
-//                uDTO.getPassword(), // si programo null al final este atributo no se manda
-//                uDTO.getRoles()
-//                Mapper.DTOsToEntities(uDTO.getCartasFisicas())
-//        );
-//    }
-
-    public static Usuario usuarioLoginDTOToModel(UsuarioLoginDTO ulDTO){
-        return new Usuario(
-                ulDTO.getUsername(),
-                ulDTO.getPassword()
-        );
-    }
 
     public static Usuario usuarioRegisterDTOToModel(UsuarioRegisterDTO urDTO){
         return new Usuario(
                 urDTO.getUsername(),
+                urDTO.getEmail(),
                 urDTO.getPassword()
         );
     }

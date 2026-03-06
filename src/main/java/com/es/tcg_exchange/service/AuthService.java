@@ -5,6 +5,10 @@ import com.es.tcg_exchange.dto.UsuarioRegisterDTO;
 import com.es.tcg_exchange.error.exception.ForbiddenException;
 import com.es.tcg_exchange.error.exception.InternalServerErrorException;
 import com.es.tcg_exchange.error.exception.UnauthorizedException;
+import com.es.tcg_exchange.model.Usuario;
+import com.es.tcg_exchange.model.VerificationToken;
+import com.es.tcg_exchange.model.enums.TipoToken;
+import com.es.tcg_exchange.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -26,6 +31,16 @@ public class AuthService {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+
+    @Autowired
+    private EmailService emailService;
+
+
     public String login(UsuarioLoginDTO dto) {
 
         Authentication authentication;
@@ -33,10 +48,17 @@ public class AuthService {
         try {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            dto.getUsername(),
+                            dto.getIdentifier(),
                             dto.getPassword()
                     )
             );
+
+            // Obtener el usuario real desde la base de datos
+            Usuario usuario = usuarioService.findByUsernameOrEmail(dto.getIdentifier());
+
+            if (!usuario.isEmailVerificado()) {
+                throw new UnauthorizedException("Email no verificado. Revisa tu correo.");
+            }
 
             return tokenService.generateToken(authentication);
 
@@ -52,6 +74,28 @@ public class AuthService {
     }
 
     public void register(UsuarioRegisterDTO dto) {
-        usuarioService.registerUser(dto);
+        Usuario usuario = usuarioService.registerUser(dto);
+
+        VerificationToken token =
+                verificationTokenService.createToken(usuario, TipoToken.EMAIL_VERIFICATION);
+
+        emailService.sendVerificationEmail(
+                usuario.getEmail(),
+                token.getToken()
+        );
+    }
+
+    @Transactional
+    public void verifyEmail(String token) {
+        // Buscar y validar el token
+        VerificationToken verificationToken = verificationTokenService.validateToken(token, TipoToken.EMAIL_VERIFICATION);
+
+        // Marcar el usuario como verificado
+        Usuario usuario = verificationToken.getUsuario();
+        usuario.setEmailVerificado(true);
+        usuarioRepository.save(usuario);
+
+        // Marcar el token como usado
+        verificationTokenService.markAsUsed(verificationToken);
     }
 }

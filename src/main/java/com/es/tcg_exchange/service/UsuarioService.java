@@ -31,8 +31,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
-
 @Service
 public class UsuarioService implements UserDetailsService {
 
@@ -55,10 +53,10 @@ public class UsuarioService implements UserDetailsService {
 
 //    para el login
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
 
         Usuario usuario = usuarioRepository
-                .findByUsername(username)
+                .findByUsernameOrEmail(identifier, identifier)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario No encontrado"));
 
         /* RETORNAMOS UN USERDETAILS
@@ -86,14 +84,7 @@ public class UsuarioService implements UserDetailsService {
      * @param usuarioRegisterDTO
      * @return UsuarioDetailDTO
      */
-    public UsuarioDetailDTO registerUser(UsuarioRegisterDTO usuarioRegisterDTO) {
-
-        // Esto no hace falta ni es buena práctica (puede fallar si dos registros llegan al mismo tiempo),
-        // basta con tener unique en username model y capturar DataIntegrityViolationException
-        // Compruebo que el usuario no existe en la base de datos
-//        if (usuarioRepository.findByUsername(usuarioRegisterDTO.getUsername()).isPresent()) {
-//            throw new DuplicateException("El nombre de usuario ya existe");
-//        }
+    public Usuario registerUser(UsuarioRegisterDTO usuarioRegisterDTO) {
 
         if (usuarioRegisterDTO.getUsername() == null ||
                 usuarioRegisterDTO.getUsername().isBlank()) {
@@ -108,31 +99,18 @@ public class UsuarioService implements UserDetailsService {
             );
         }
 
-        //lo quito porque me da problemas el regex
-//        // Compruebo que es alfanumérica sin símbolos
-//        if (usuarioRegisterDTO.getPassword().matches("^[a-zA-Z0-9]+$")) {
-//            throw new BadRequestException("La contraseña debe ser alfanumérica (solo letras y números, sin símbolos)");
-//        }
-
         // Compruebo que ambas contraseñas coinciden
         if (!usuarioRegisterDTO.getPassword().equals(usuarioRegisterDTO.getPassword2())) {
             throw new BadRequestException("Ambas contraseñas deben coincidir");
         }
-
-        // Ya me aseguro del rol inicializandolo por defecto en USER desde el model
-        // y el usuario no tiene opción de elegir
-//        if (!usuarioRegisterDTO.getRoles().equals("USER") && !usuarioRegisterDTO.getRoles().equals("ADMIN")){
-//            throw new BadRequestException("Roles inválidos");
-//        }
 
         try {
             Usuario newUsuario = Mapper.usuarioRegisterDTOToModel(usuarioRegisterDTO);
 
             newUsuario.setPassword(passwordEncoder.encode(usuarioRegisterDTO.getPassword()));
 
-            usuarioRepository.save(newUsuario);
+            return usuarioRepository.save(newUsuario);
 
-            return Mapper.usuarioToDetailDTO(newUsuario);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateException("El nombre de usuario ya existe");
         }
@@ -177,6 +155,18 @@ public class UsuarioService implements UserDetailsService {
 
         return Mapper.usuarioToFullDTO(usuario);
 
+    }
+
+    /**
+     * Busca un usuario por username o email.
+     * Lanza NotFoundException si no existe.
+     */
+    public Usuario findByUsernameOrEmail(String identifier) {
+        return usuarioRepository
+                .findByUsernameOrEmail(identifier, identifier)
+                .orElseThrow(() -> new NotFoundException(
+                        "Usuario con username o email '" + identifier + "' no encontrado"
+                ));
     }
 
     // actualizar username

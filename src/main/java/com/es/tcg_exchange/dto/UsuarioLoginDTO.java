@@ -1,23 +1,23 @@
 package com.es.tcg_exchange.dto;
 
 public class UsuarioLoginDTO {
-    private String username;
+    private String identifier; // username o email
     private String password;
 
     public UsuarioLoginDTO() {
     }
 
-    public UsuarioLoginDTO(String username, String password) {
-        this.username = username;
+    public UsuarioLoginDTO(String identifier, String password) {
+        this.identifier = identifier;
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public String getPassword() {

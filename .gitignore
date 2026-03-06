@@ -42,3 +42,6 @@ externo/
 *.pem
 src/main/java/resources/certs/
 apuntes/
+
+# Ignorar credenciales sensibles
+src/main/resources/application.properties

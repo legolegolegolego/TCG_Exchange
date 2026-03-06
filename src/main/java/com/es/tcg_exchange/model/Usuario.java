@@ -21,6 +21,9 @@ public class Usuario implements UserDetails {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
     @Column(nullable = false)
     private String password;
 
@@ -33,6 +36,10 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private boolean desactivado = false;
 
+    // por defecto: el usuario aun no ha confirmado su correo electronico
+    @Column(nullable = false)
+    private boolean emailVerificado = false;
+
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<CartaFisica> cartasFisicas;
 
@@ -44,20 +51,11 @@ public class Usuario implements UserDetails {
         this.password = password;
     }
 
-    public Usuario(String username, String password, String roles) {
+    public Usuario(String username, String email, String password) {
         this.username = username;
+        this.email = email;
         this.password = password;
-        this.roles = roles;
     }
-
-    public Usuario(Long id, String username, String password, String roles) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
-
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -112,5 +110,21 @@ public class Usuario implements UserDetails {
 
     public void setCartasFisicas(List<CartaFisica> cartasFisicas) {
         this.cartasFisicas = cartasFisicas;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isEmailVerificado() {
+        return emailVerificado;
+    }
+
+    public void setEmailVerificado(boolean emailVerificado) {
+        this.emailVerificado = emailVerificado;
     }
 }

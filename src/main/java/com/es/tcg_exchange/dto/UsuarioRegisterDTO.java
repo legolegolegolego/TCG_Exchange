@@ -2,6 +2,7 @@ package com.es.tcg_exchange.dto;
 
 public class UsuarioRegisterDTO {
     private String username;
+    private String email;
     private String password;
     private String password2;
 
@@ -9,13 +10,15 @@ public class UsuarioRegisterDTO {
     public UsuarioRegisterDTO() {
     }
 
-    public UsuarioRegisterDTO(String username, String password) {
+    public UsuarioRegisterDTO(String username, String email, String password) {
         this.username = username;
+        this.email = email;
         this.password = password;
     }
 
-    public UsuarioRegisterDTO(String username, String password, String password2) {
+    public UsuarioRegisterDTO(String username, String email, String password, String password2) {
         this.username = username;
+        this.email = email;
         this.password = password;
         this.password2 = password2;
     }
@@ -26,6 +29,14 @@ public class UsuarioRegisterDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

@@ -25,7 +25,7 @@ public class CartaFisica {
     private String imagenUrl; // foto real subida por el usuario
 
     // Dueño de la carta
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false) // si no especifico fetch es EAGER por defecto
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
