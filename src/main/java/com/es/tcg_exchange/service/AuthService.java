@@ -68,6 +68,8 @@ public class AuthService {
             throw new UnauthorizedException("Credenciales incorrectas");
         } catch (AuthenticationException e) {
             throw new UnauthorizedException("Error en autenticación");
+        } catch (UnauthorizedException | ForbiddenException e) {
+            throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException("Error interno");
         }

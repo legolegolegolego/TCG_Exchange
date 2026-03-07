@@ -40,7 +40,8 @@ out/
 externo/
 *.pdf
 *.pem
-src/main/java/resources/certs/
+src/main/resources/certs/
+src/main/resources/sql/
 apuntes/
 
 # Ignorar credenciales sensibles

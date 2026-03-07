@@ -35,7 +35,7 @@ public class AuthController {
     * */
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<String> register(
             @RequestBody UsuarioRegisterDTO dto) {
 
         authService.register(dto);
@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
         authService.verifyEmail(token);
         return ResponseEntity.ok("Email verificado");
     }

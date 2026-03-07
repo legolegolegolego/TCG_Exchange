@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 // Públicas:
                                 .requestMatchers(HttpMethod.POST,
                                         "/auth/login", "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/auth/verify/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,
                                         "/cartas-modelo",
                                         "/cartas-modelo/{id}",

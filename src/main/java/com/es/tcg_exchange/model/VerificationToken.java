@@ -19,23 +19,16 @@ public class VerificationToken {
     @Column(nullable = false)
     private TipoToken tipo;
 
-    // manytoone?
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    // se asigna al crear token en service
     private LocalDateTime expiracion;
 
     @Column(nullable = false)
     private boolean usado = false;
 
-
-    // o asignarlo al crear token:
-    /*
-    VerificationToken token = new VerificationToken();
-token.setFechaCreacion(LocalDateTime.now());
-token.setExpiracion(LocalDateTime.now().plusHours(24));
-     */
     @Column(nullable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
