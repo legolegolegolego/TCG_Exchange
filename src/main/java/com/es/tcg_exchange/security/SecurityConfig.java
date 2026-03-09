@@ -40,13 +40,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth // Filtros para securizar diferentes endpoints de la aplicación
                                 // Filtro que deja pasar todas las peticiones que vayan a los endpoints que definamos:
                                 // Públicas:
+                                // Auth
                                 .requestMatchers(HttpMethod.POST,
-                                        "/auth/login", "/auth/register").permitAll()
+                                        "/auth/login", "/auth/register",
+                                        "auth/password/**", "auth/verify/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/auth/verify/**").permitAll()
+                                // Cartas modelo
                                 .requestMatchers(HttpMethod.GET,
                                         "/cartas-modelo",
                                         "/cartas-modelo/{id}",
                                         "/cartas-modelo/{id}/usuarios").permitAll()
+                                // Cartas fisicas
                                 .requestMatchers(HttpMethod.GET,
                                         "/cartas-fisicas/usuario/{username}",
                                         "/cartas-fisicas/{id}").permitAll()

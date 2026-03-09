@@ -49,6 +49,12 @@ public class AuthController {
         return ResponseEntity.ok("Email verificado");
     }
 
+    @PostMapping("/verify/resend")
+    public ResponseEntity<String> resendVerification(@RequestParam String email) {
+        authService.resendVerificationToken(email);
+        return ResponseEntity.ok("Se ha enviado un nuevo enlace de verificación.");
+    }
+
     @PostMapping("/password/forgot")
     public ResponseEntity<String> forgotPassword(@RequestParam String email) {
         authService.initiatePasswordReset(email);

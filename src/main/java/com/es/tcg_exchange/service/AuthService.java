@@ -3,10 +3,7 @@ package com.es.tcg_exchange.service;
 import com.es.tcg_exchange.dto.PasswordResetDTO;
 import com.es.tcg_exchange.dto.UsuarioLoginDTO;
 import com.es.tcg_exchange.dto.UsuarioRegisterDTO;
-import com.es.tcg_exchange.error.exception.ForbiddenException;
-import com.es.tcg_exchange.error.exception.InternalServerErrorException;
-import com.es.tcg_exchange.error.exception.NotFoundException;
-import com.es.tcg_exchange.error.exception.UnauthorizedException;
+import com.es.tcg_exchange.error.exception.*;
 import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.model.VerificationToken;
 import com.es.tcg_exchange.model.enums.TipoToken;
@@ -108,8 +105,28 @@ public class AuthService {
     }
 
     @Transactional
+    public void resendVerificationToken(String email) {
+        Usuario usuario = usuarioService.findByEmail(email);
+
+        // Solo usuarios no verificados pueden solicitar reenvío
+        if (usuario.isEmailVerificado()) {
+            throw new BadRequestException("El email ya está verificado");
+        }
+
+        // Crea un nuevo token de verificación
+        VerificationToken token = verificationTokenService.createToken(usuario, TipoToken.EMAIL_VERIFICATION);
+
+        // Envía email con enlace
+        emailService.sendVerificationEmail(usuario.getEmail(), token.getToken());
+    }
+
+    @Transactional
     public void initiatePasswordReset(String email) {
         Usuario usuario = usuarioService.findByEmail(email);
+
+        if (!usuario.isEmailVerificado()) {
+            throw new ForbiddenException("Debes verificar tu email antes de recuperar la contraseña.");
+        }
 
         // Crear token de tipo PASSWORD_RESET
         VerificationToken token = verificationTokenService.createToken(usuario, TipoToken.PASSWORD_RESET);
@@ -124,6 +141,13 @@ public class AuthService {
 
         Usuario usuario = token.getUsuario();
 
+        // Logica de pass
+        if (dto.getNewPassword() == null
+                || !dto.getNewPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")) {
+            throw new BadRequestException(
+                    "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial"
+            );
+        }
         // Encriptar la contraseña antes de guardar
         usuario.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         usuarioRepository.save(usuario);
