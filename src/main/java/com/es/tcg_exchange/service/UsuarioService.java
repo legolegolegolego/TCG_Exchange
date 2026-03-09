@@ -46,6 +46,9 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     private CartaFisicaRepository cfRepository;
 
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+
 
     // no hace falta inyectarlo si no es componente
 //    @Autowired
@@ -283,6 +286,8 @@ public class UsuarioService implements UserDetailsService {
         Usuario usuario = findByIdToModel(id);
 
         SecurityUtils.checkAdminOrSelf(authentication, usuario.getUsername());
+
+        verificationTokenService.deleteByUsuario(usuario);
 
         List<CartaFisica> cartas = cfRepository.findByUsuarioId(usuario.getId());
 

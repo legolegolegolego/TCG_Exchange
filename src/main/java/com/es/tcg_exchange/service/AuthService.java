@@ -108,6 +108,10 @@ public class AuthService {
     public void resendVerificationToken(String email) {
         Usuario usuario = usuarioService.findByEmail(email);
 
+        if (usuario.isDesactivado()){
+            throw new ForbiddenException("No se puede realizar la accion: usuario desactivado");
+        }
+
         // Solo usuarios no verificados pueden solicitar reenvío
         if (usuario.isEmailVerificado()) {
             throw new BadRequestException("El email ya está verificado");
@@ -128,6 +132,10 @@ public class AuthService {
             throw new ForbiddenException("Debes verificar tu email antes de recuperar la contraseña.");
         }
 
+        if (usuario.isDesactivado()){
+            throw new ForbiddenException("No se puede realizar la accion: usuario desactivado");
+        }
+
         // Crear token de tipo PASSWORD_RESET
         VerificationToken token = verificationTokenService.createToken(usuario, TipoToken.PASSWORD_RESET);
 
@@ -140,6 +148,10 @@ public class AuthService {
         VerificationToken token = verificationTokenService.validateToken(dto.getToken(), TipoToken.PASSWORD_RESET);
 
         Usuario usuario = token.getUsuario();
+
+        if (usuario.isDesactivado()){
+            throw new ForbiddenException("No se puede realizar la accion: usuario desactivado");
+        }
 
         // Logica de pass
         if (dto.getNewPassword() == null

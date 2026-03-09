@@ -66,4 +66,8 @@ public class VerificationTokenService {
     public void deleteByUsuarioAndTipo(Usuario usuario, TipoToken tipo) {
         VTRepository.deleteByUsuarioAndTipo(usuario, tipo);
     }
+
+    public void deleteByUsuario(Usuario usuario) {
+        VTRepository.deleteByUsuario(usuario);
+    }
 }
