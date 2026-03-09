@@ -1,9 +1,11 @@
 package com.es.tcg_exchange.service;
 
+import com.es.tcg_exchange.dto.PasswordResetDTO;
 import com.es.tcg_exchange.dto.UsuarioLoginDTO;
 import com.es.tcg_exchange.dto.UsuarioRegisterDTO;
 import com.es.tcg_exchange.error.exception.ForbiddenException;
 import com.es.tcg_exchange.error.exception.InternalServerErrorException;
+import com.es.tcg_exchange.error.exception.NotFoundException;
 import com.es.tcg_exchange.error.exception.UnauthorizedException;
 import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.model.VerificationToken;
@@ -16,6 +18,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +42,9 @@ public class AuthService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     public String login(UsuarioLoginDTO dto) {
@@ -99,5 +105,30 @@ public class AuthService {
 
         // Marcar el token como usado
         verificationTokenService.markAsUsed(verificationToken);
+    }
+
+    @Transactional
+    public void initiatePasswordReset(String email) {
+        Usuario usuario = usuarioService.findByEmail(email);
+
+        // Crear token de tipo PASSWORD_RESET
+        VerificationToken token = verificationTokenService.createToken(usuario, TipoToken.PASSWORD_RESET);
+
+        // Enviar email con enlace
+        emailService.sendPasswordResetEmail(usuario.getEmail(), token.getToken());
+    }
+
+    @Transactional
+    public void resetPassword(PasswordResetDTO dto) {
+        VerificationToken token = verificationTokenService.validateToken(dto.getToken(), TipoToken.PASSWORD_RESET);
+
+        Usuario usuario = token.getUsuario();
+
+        // Encriptar la contraseña antes de guardar
+        usuario.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        usuarioRepository.save(usuario);
+
+        // Marcar token como usado
+        verificationTokenService.markAsUsed(token);
     }
 }

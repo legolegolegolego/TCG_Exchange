@@ -169,6 +169,18 @@ public class UsuarioService implements UserDetailsService {
                 ));
     }
 
+    /**
+     * Busca un usuario por email.
+     * Lanza NotFoundException si no existe.
+     */
+    public Usuario findByEmail(String email) {
+        return usuarioRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new NotFoundException(
+                        "Usuario con email '" + email + "' no encontrado"
+                ));
+    }
+
     // actualizar username
     public UsernameUpdateDTO updateUsername(
             Long id,

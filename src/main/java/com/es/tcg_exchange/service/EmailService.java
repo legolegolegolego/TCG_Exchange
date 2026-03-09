@@ -25,4 +25,19 @@ public class EmailService {
 
         mailSender.send(message);
     }
+
+    public void sendPasswordResetEmail(String to, String token) {
+        // url del front
+        String resetUrl = "http://localhost:8080/auth/reset-password?token=" + token;
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Restablece tu contraseña");
+        message.setText(
+                "Para restablecer tu contraseña haz click en el siguiente enlace:\n\n"
+                        + resetUrl
+        );
+
+        mailSender.send(message);
+    }
 }

@@ -1,5 +1,6 @@
 package com.es.tcg_exchange.controller;
 
+import com.es.tcg_exchange.dto.PasswordResetDTO;
 import com.es.tcg_exchange.dto.UsuarioLoginDTO;
 import com.es.tcg_exchange.dto.UsuarioRegisterDTO;
 import com.es.tcg_exchange.service.AuthService;
@@ -46,5 +47,17 @@ public class AuthController {
     public ResponseEntity<String> verifyEmail(@RequestParam String token) {
         authService.verifyEmail(token);
         return ResponseEntity.ok("Email verificado");
+    }
+
+    @PostMapping("/password/forgot")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        authService.initiatePasswordReset(email);
+        return ResponseEntity.ok("Se ha enviado un email con el enlace para restablecer la contraseña.");
+    }
+
+    @PostMapping("/password/reset")
+    public ResponseEntity<String> resetPassword(@RequestBody PasswordResetDTO dto) {
+        authService.resetPassword(dto);
+        return ResponseEntity.ok("Contraseña actualizada correctamente.");
     }
 }
