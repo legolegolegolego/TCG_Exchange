@@ -91,6 +91,12 @@ public class UsuarioService implements UserDetailsService {
             throw new BadRequestException("El username es obligatorio");
         }
 
+        // Validación del email
+        if (usuarioRegisterDTO.getEmail() == null || usuarioRegisterDTO.getEmail().isBlank() ||
+                !usuarioRegisterDTO.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
+            throw new BadRequestException("El email es obligatorio y debe tener un formato válido");
+        }
+
         // Logica de pass
         if (usuarioRegisterDTO.getPassword() == null
                 || !usuarioRegisterDTO.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")) {
