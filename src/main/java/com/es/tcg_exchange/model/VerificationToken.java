@@ -24,6 +24,7 @@ public class VerificationToken {
     private Usuario usuario;
 
     // se asigna al crear token en service
+    @Column(nullable = false)
     private LocalDateTime expiracion;
 
     @Column(nullable = false)

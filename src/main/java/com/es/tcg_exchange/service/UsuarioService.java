@@ -101,7 +101,7 @@ public class UsuarioService implements UserDetailsService {
         }
 
         // Logica de pass
-        if (usuarioRegisterDTO.getPassword() == null
+        if (usuarioRegisterDTO.getPassword() == null || usuarioRegisterDTO.getPassword().isBlank()
                 || !usuarioRegisterDTO.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")) {
             throw new BadRequestException(
                     "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial"

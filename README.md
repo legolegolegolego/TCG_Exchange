@@ -10,6 +10,8 @@ La aplicación está compuesta por dos partes principales:
 
 La aplicación permite a los usuarios:
 - Registrarse e iniciar sesión de forma segura.
+- Verificar el correo electrónico tras el registro.
+- Recuperar la contraseña mediante enlace enviado al email.
 - Explorar el catálogo de cartas disponibles.
 - Publicar cartas propias para intercambio.
 - Consultar perfiles de otros usuarios y las cartas que ofrecen.
@@ -43,11 +45,15 @@ TCG Exchange ofrece una solución moderna y digital a un proceso tradicionalment
 Representa a los usuarios registrados en la plataforma.
 - `id (Long)`: identificador único autogenerado.
 - `username (String)`: nombre de usuario único.
+- `email (String)`: correo electrónico del usuario (único).
 - `password (String)`: contraseña cifrada mediante hash.
 - `roles (String)`: USER o ADMIN.
 - `desactivado (boolean)`:
   - `false` (por defecto): cuenta activa y operativa.
   - `true`: cuenta desactivada; el usuario no puede autenticarse ni operar en el sistema, pero sus datos e intercambios se conservan.
+- `emailVerificado (boolean)`:
+  - `false` (por defecto): el usuario aún no ha confirmado su correo electrónico.
+  - `true`: el usuario ha verificado su correo electrónico mediante el enlace enviado al registrarse.
 - `cartasFisicas (List<CartaFisica>)`: cartas físicas asociadas.
 
 ### CartaModelo
@@ -84,6 +90,18 @@ Propuesta de intercambio entre usuarios.
 - `cartaDestino (CartaFisica)`: carta solicitada que pertenece a usuarioDestino.
 - `estado (Enum)`: PENDIENTE, ACEPTADO, RECHAZADO.
 
+### VerificationToken
+Token temporal utilizado para operaciones sensibles relacionadas con la cuenta.
+- `id (Long)`: identificador único autogenerado.
+- `token (String)`: cadena única generada mediante UUID.
+- `tipo (Enum)`: EMAIL_VERIFICATION, PASSWORD_RESET.
+- `usuario (Usuario)`: usuario al que pertenece el token.
+- `expiracion (LocalDateTime)`: fecha y hora límite de validez.
+- `usado (boolean)`:
+  - `false` (por defecto): el token no ha sido utilizado.
+  - `true`: el token ya ha sido utilizado y no puede reutilizarse.
+- `fechaCreacion (LocalDateTime)`: momento en el que se generó el token.
+
 ---
 
 ## Diagrama Entidad-Relación
@@ -95,11 +113,16 @@ Propuesta de intercambio entre usuarios.
 
 ### Usuarios
 - El `username` es único y obligatorio.
+- El `email` es obligatorio, único y debe cumplir un formato válido (usuario@dominio.ext).
 - La contraseña es obligatoria.
 - La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial
 - Al actualizar la contraseña, la nueva no puede ser la misma que la actual.
 - Solo el propio usuario o un ADMIN pueden modificar el perfil.
 - No es posible registrarse como ADMIN.
+- El atributo `emailVerificado` gestiona la confirmación del correo electrónico:
+  - `false` (por defecto): el usuario no ha confirmado su correo.
+  - `true`: el usuario ha verificado su dirección de email.
+- Un usuario no puede iniciar sesión si `emailVerificado = false`.
 - El atributo `desactivado` gestiona el estado de la cuenta:
   - `false` (por defecto): cuenta activa.
   - `true`: cuenta desactivada.
@@ -160,6 +183,34 @@ en su lugar: se marca como disponible = false, y si hubieran intercambios `PENDI
 ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ cartaDestino).
 - Un intercambio solo puede pasar de `PENDIENTE` a `ACEPTADO` o `RECHAZADO`; una vez aceptado o rechazado, su estado no se puede modificar.
 
+### VerificationToken
+- Se utiliza para operaciones de verificación de email y recuperación de contraseña.
+- El token se genera automáticamente mediante UUID.
+- Tiene una expiración por defecto de 24 horas desde su creación.
+- Un token solo puede utilizarse una vez.
+- Si se utiliza correctamente, se marca como `usado = true`.
+- Antes de validar un token se comprueba que:
+  - Existe en la base de datos.
+  - No está usado.
+  - No ha expirado.
+- Para un mismo usuario y tipo de token solo puede existir uno en el sistema.
+- Al generar uno nuevo se eliminan los tokens anteriores del mismo tipo.
+
+**Verificación de email**
+- Al registrarse un usuario se genera un token `EMAIL_VERIFICATION`.
+- Se envía un enlace de verificación al email del usuario.
+- Si el token es válido:
+  - `emailVerificado` pasa a `true`.
+  - el token se marca como usado.
+
+**Recuperación de contraseña**
+- El usuario solicita restablecer su contraseña.
+- Se genera un token `PASSWORD_RESET`.
+- Se envía un enlace al email del usuario.
+- Si el token es válido:
+  - se permite establecer una nueva contraseña
+  - el token se marca como usado.
+
 ---
 
 ## Seguridad
@@ -187,20 +238,31 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - Solo pueden acceder a la app usuarios con rol `USER` o `ADMIN`.
 - Un usuario no puede registrarse como `ADMIN` desde la app.
 - La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial
+- Se valida que el email tenga un formato correcto.
+- Solo los usuarios con email verificado pueden iniciar sesión.
 - No se permiten intercambios consigo mismo.
 - Validación de existencia y disponibilidad de cartas y usuarios.
 - No se permite asociar una carta física a una carta modelo inactiva.
 - No se permiten eliminar intercambios, por cuestiones de: integridad, trazabilidad, consistencia y seguridad.
 - Las respuestas de la API no exponen información sensible como contraseñas, hashes o datos internos del sistema.
 - Antes de realizar operaciones críticas, el sistema vuelve a verificar el estado actual de los recursos implicados para evitar inconsistencias.
+- Los tokens utilizados para verificar email o recuperar contraseña:
+  - deben existir en el sistema,
+  - no pueden estar usados,
+  - no pueden haber expirado,
+  - solo pueden utilizarse una vez.
 
 ---
 
 ## Endpoints
 
 ### Autenticación
-- `POST /auth/login` – Login de usuario (ruta pública).
-- `POST /auth/register` – Registro de usuario (ruta pública).
+- `POST /auth/login` – Público.
+- `POST /auth/register` – Público.
+- `GET /auth/verify` – Público.
+- `POST /auth/verify/resend` – Público.
+- `POST /auth/password/forgot` – Público.
+- `POST /auth/password/reset` – Público.
 
 ### Gestión de Usuarios
 - `GET /usuarios` – Solo ADMIN.

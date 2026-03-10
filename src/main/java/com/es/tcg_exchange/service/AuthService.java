@@ -149,6 +149,12 @@ public class AuthService {
 
         Usuario usuario = token.getUsuario();
 
+        // Validaciones de nuevo por si de alguna manera accede a establecer nueva contraseña sin solicitarlo
+
+        if (!usuario.isEmailVerificado()) {
+            throw new ForbiddenException("Debes verificar tu email antes de recuperar la contraseña.");
+        }
+
         if (usuario.isDesactivado()){
             throw new ForbiddenException("No se puede realizar la accion: usuario desactivado");
         }
