@@ -94,6 +94,16 @@ public class UsuarioService implements UserDetailsService {
             throw new BadRequestException("El username es obligatorio");
         }
 
+        // Verificar si username ya existe
+        if (usuarioRepository.existsByUsername(usuarioRegisterDTO.getUsername())) {
+            throw new DuplicateException("El nombre de usuario ya existe");
+        }
+
+        // Verificar si email ya existe
+        if (usuarioRepository.existsByEmail(usuarioRegisterDTO.getEmail())) {
+            throw new DuplicateException("El email ya está registrado");
+        }
+
         // Validación del email
         if (usuarioRegisterDTO.getEmail() == null || usuarioRegisterDTO.getEmail().isBlank() ||
                 !usuarioRegisterDTO.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
@@ -113,16 +123,12 @@ public class UsuarioService implements UserDetailsService {
             throw new BadRequestException("Ambas contraseñas deben coincidir");
         }
 
-        try {
-            Usuario newUsuario = Mapper.usuarioRegisterDTOToModel(usuarioRegisterDTO);
+        Usuario newUsuario = Mapper.usuarioRegisterDTOToModel(usuarioRegisterDTO);
 
-            newUsuario.setPassword(passwordEncoder.encode(usuarioRegisterDTO.getPassword()));
+        newUsuario.setPassword(passwordEncoder.encode(usuarioRegisterDTO.getPassword()));
 
-            return usuarioRepository.save(newUsuario);
+        return usuarioRepository.save(newUsuario);
 
-        } catch (DataIntegrityViolationException e) {
-            throw new DuplicateException("El nombre de usuario ya existe");
-        }
     }
 
     // obtener todos los usuarios de la bd
