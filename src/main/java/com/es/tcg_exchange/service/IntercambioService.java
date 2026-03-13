@@ -37,6 +37,9 @@ public class IntercambioService {
     @Autowired
     private DireccionRepository direccionRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     /**
      * Obtener intercambios de un usuario, opcionalmente filtrando por estado
      *
@@ -159,6 +162,22 @@ public class IntercambioService {
 
         intercambioRepository.save(intercambio);
 
+        // Envío de emails de notificación:
+        emailService.sendIntercambioPropuestaRecibida(
+                cartaDestino.getUsuario().getEmail(),
+                usuario.getUsername(),
+                cartaOrigen.getCartaModelo().getNombre(),
+                cartaDestino.getCartaModelo().getNombre(),
+                intercambio.getId()
+        );
+        emailService.sendIntercambioPropuestaEnviada(
+                usuario.getEmail(),
+                cartaDestino.getUsuario().getUsername(),
+                cartaOrigen.getCartaModelo().getNombre(),
+                cartaDestino.getCartaModelo().getNombre(),
+                intercambio.getId()
+        );
+
         return Mapper.intercambioToDTO(intercambio);
     }
 
@@ -240,6 +259,31 @@ public class IntercambioService {
 
         intercambioRepository.save(intercambio);
 
+        // Envío de emails de notificación:
+
+        String dirOrigen = intercambio.getDireccionOrigen();
+        String dirDestino = intercambio.getDireccionDestino();
+
+        emailService.sendIntercambioAceptado(
+                intercambio.getUsuarioOrigen().getEmail(),
+                intercambio.getUsuarioDestino().getUsername(),
+                false, // esDestino=false para usuario origen
+                intercambio.getCartaOrigen().getCartaModelo().getNombre(),
+                intercambio.getCartaDestino().getCartaModelo().getNombre(),
+                dirDestino,
+                intercambio.getId()
+        );
+
+        emailService.sendIntercambioAceptado(
+                intercambio.getUsuarioDestino().getEmail(),
+                intercambio.getUsuarioOrigen().getUsername(),
+                true, // esDestino=true para usuario destino
+                intercambio.getCartaOrigen().getCartaModelo().getNombre(),
+                intercambio.getCartaDestino().getCartaModelo().getNombre(),
+                dirOrigen,
+                intercambio.getId()
+        );
+
         return Mapper.intercambioToDTO(intercambio);
     }
 
@@ -270,6 +314,25 @@ public class IntercambioService {
         intercambio.setEstado(EstadoIntercambio.RECHAZADO);
 
         intercambioRepository.save(intercambio);
+
+        // Envío de emails de notificación:
+        emailService.sendIntercambioRechazado(
+                intercambio.getUsuarioOrigen().getEmail(),
+                intercambio.getUsuarioDestino().getUsername(),
+                false,
+                intercambio.getCartaOrigen().getCartaModelo().getNombre(),
+                intercambio.getCartaDestino().getCartaModelo().getNombre(),
+                intercambio.getId()
+        );
+
+        emailService.sendIntercambioRechazado(
+                intercambio.getUsuarioDestino().getEmail(),
+                intercambio.getUsuarioOrigen().getUsername(),
+                true,
+                intercambio.getCartaOrigen().getCartaModelo().getNombre(),
+                intercambio.getCartaDestino().getCartaModelo().getNombre(),
+                intercambio.getId()
+        );
 
         return Mapper.intercambioToDTO(intercambio);
     }
