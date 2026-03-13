@@ -8,17 +8,22 @@ public class IntercambioDTO {
     private String usernameDestino;
     private Long idCartaOrigen;
     private Long idCartaDestino;
+    private String direccionOrigen;
+    private String direccionDestino;
     private EstadoIntercambio estado;
 
     public IntercambioDTO() {
     }
 
-    public IntercambioDTO(Long id, String usernameOrigen, String usernameDestino, Long idCartaOrigen, Long idCartaDestino, EstadoIntercambio estado) {
+    public IntercambioDTO(Long id, String usernameOrigen, String usernameDestino, Long idCartaOrigen,
+                          Long idCartaDestino, String direccionOrigen, String direccionDestino, EstadoIntercambio estado) {
         this.id = id;
         this.usernameOrigen = usernameOrigen;
         this.usernameDestino = usernameDestino;
         this.idCartaOrigen = idCartaOrigen;
         this.idCartaDestino = idCartaDestino;
+        this.direccionOrigen = direccionOrigen;
+        this.direccionDestino = direccionDestino;
         this.estado = estado;
     }
 
@@ -68,5 +73,21 @@ public class IntercambioDTO {
 
     public void setEstado(EstadoIntercambio estado) {
         this.estado = estado;
+    }
+
+    public String getDireccionOrigen() {
+        return direccionOrigen;
+    }
+
+    public void setDireccionOrigen(String direccionOrigen) {
+        this.direccionOrigen = direccionOrigen;
+    }
+
+    public String getDireccionDestino() {
+        return direccionDestino;
+    }
+
+    public void setDireccionDestino(String direccionDestino) {
+        this.direccionDestino = direccionDestino;
     }
 }

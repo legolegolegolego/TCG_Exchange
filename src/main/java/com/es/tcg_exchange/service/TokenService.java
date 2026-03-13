@@ -34,7 +34,7 @@ public class TokenService {
 
         String username = authentication.getName();
 
-        UsuarioFullDTO usuario = usuarioService.findByUsername(username);
+        Usuario usuario = usuarioService.findByUsernameOrEmail(username);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")

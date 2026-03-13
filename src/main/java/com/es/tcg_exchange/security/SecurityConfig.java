@@ -68,7 +68,7 @@ public class SecurityConfig {
 
                                 .requestMatchers(HttpMethod.DELETE, "/intercambios/{id}").hasRole("ADMIN")
 
-                                // cualquier otra ruta requiere USER o ADMIN
+                                // cualquier ruta requiere USER o ADMIN
                                 .anyRequest().hasAnyRole("USER", "ADMIN") // evita roles "lechuga"
 
                                 //ejemplos:

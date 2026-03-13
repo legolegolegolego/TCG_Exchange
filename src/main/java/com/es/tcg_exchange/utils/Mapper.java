@@ -1,10 +1,7 @@
 package com.es.tcg_exchange.utils;
 
 import com.es.tcg_exchange.dto.*;
-import com.es.tcg_exchange.model.CartaFisica;
-import com.es.tcg_exchange.model.CartaModelo;
-import com.es.tcg_exchange.model.Intercambio;
-import com.es.tcg_exchange.model.Usuario;
+import com.es.tcg_exchange.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +16,8 @@ public class Mapper {
         return new UsuarioDetailDTO(
                 usuario.getId(),
                 usuario.getUsername(),
+                usuario.getEmail(),
+                direccionToDTO(usuario.getDireccion()),
                 usuario.getRoles(),
                 usuario.isDesactivado()
         );
@@ -37,11 +36,12 @@ public class Mapper {
 
     }
 
-
     public static UsuarioFullDTO usuarioToFullDTO(Usuario usuario) {
         return new UsuarioFullDTO(
                 usuario.getId(),
                 usuario.getUsername(),
+                usuario.getEmail(),
+                direccionToDTO(usuario.getDireccion()),
                 usuario.getRoles(),
                 usuario.isDesactivado(),
                 Mapper.cartasFisicasToDTO(usuario.getCartasFisicas())
@@ -162,11 +162,43 @@ public class Mapper {
                 intercambio.getUsuarioDestino().getUsername(),
                 intercambio.getCartaOrigen().getId(),
                 intercambio.getCartaDestino().getId(),
+                intercambio.getDireccionOrigen(),
+                intercambio.getDireccionDestino(),
                 intercambio.getEstado()
         );
     }
 
+    // ---------------- DIRECCION ----------------
+    // ---------------- entity/ies to DTO/s ----------------
+    public static DireccionDTO direccionToDTO(Direccion direccion){
+
+        if (direccion == null) {
+            return null;
+        }
+
+        return new DireccionDTO(
+                direccion.getId(),
+                direccion.getUsuario().getId(),
+                direccion.getCalleYNumero(),
+                direccion.getPisoYPuerta(),
+                direccion.getCodigoPostal(),
+                direccion.getCiudad(),
+                direccion.getPais()
+        );
+    }
+
     // ---------------- DTO/s to entity/ies ----------------
-    // lo mismo que en cartaFisica: hace falta un dto to entity de intercambio?
+    // de direccioncreatedto a direccion
+    public static Direccion direccionCreateDTOToModel(DireccionCreateDTO createDTO, Usuario usuario){
+
+        return new Direccion(
+                usuario,
+                createDTO.calleYNumero(),
+                createDTO.pisoYPuerta(),
+                createDTO.codigoPostal(),
+                createDTO.ciudad(),
+                createDTO.pais()
+        );
+    }
 
 }

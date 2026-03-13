@@ -12,6 +12,9 @@ public class CartaFisica {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Long version;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EstadoCarta estadoCarta;

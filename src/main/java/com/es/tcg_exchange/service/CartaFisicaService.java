@@ -7,9 +7,7 @@ import com.es.tcg_exchange.error.exception.UnauthorizedException;
 import com.es.tcg_exchange.model.CartaModelo;
 import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.enums.EstadoIntercambio;
-import com.es.tcg_exchange.repository.CartaFisicaRepository;
-import com.es.tcg_exchange.repository.CartaModeloRepository;
-import com.es.tcg_exchange.repository.IntercambioRepository;
+import com.es.tcg_exchange.repository.*;
 import com.es.tcg_exchange.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,6 @@ import com.es.tcg_exchange.dto.CartaFisicaDTO;
 import com.es.tcg_exchange.error.exception.NotFoundException;
 import com.es.tcg_exchange.model.CartaFisica;
 import com.es.tcg_exchange.model.Usuario;
-import com.es.tcg_exchange.repository.UsuarioRepository;
 import com.es.tcg_exchange.utils.Mapper;
 import org.springframework.security.core.Authentication;
 import java.net.URL;
@@ -38,6 +35,9 @@ public class CartaFisicaService {
 
     @Autowired
     private IntercambioRepository intercambioRepository;
+
+    @Autowired
+    private DireccionRepository direccionRepository;
 
     /**
      * Obtener cartas físicas disponibles de un usuario
@@ -93,8 +93,30 @@ public class CartaFisicaService {
             throw new UnauthorizedException("Debes estar autenticado");
         }
 
+        // Obtener usuario autenticado
+        String username = authentication.getName();
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        // Validar que el usuario tiene una dirección asignada
+        if (usuario.getDireccion() == null) {
+            throw new BadRequestException("Debes registrar una dirección antes de crear cartas para intercambio");
+        }
+
+        // Validaciones carta
+
         if (cartaParaCrear.idCartaModelo() == null) {
             throw new BadRequestException("El id de carta modelo no puede ser null");
+        }
+
+        // Obtener carta modelo
+        CartaModelo modelo = cmRepository.findById(cartaParaCrear.idCartaModelo())
+                .orElseThrow(() -> new NotFoundException(
+                        "Carta modelo con id " + cartaParaCrear.idCartaModelo() + " no encontrada"
+                ));
+
+        if (!modelo.isActivo()){
+            throw new BadRequestException("No se puede enlazar a una carta modelo inactiva");
         }
 
         if (cartaParaCrear.estadoCarta() == null) {
@@ -120,21 +142,6 @@ public class CartaFisicaService {
          */
         if (!cartaParaCrear.imagenUrl().toLowerCase().matches(".*\\.(jpg|jpeg|png|webp)(\\?.*)?$")) {
             throw new BadRequestException("La imagen debe tener formato válido (jpg, jpeg, png, webp)");
-        }
-
-        // Obtener usuario autenticado
-        String username = authentication.getName();
-        Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
-
-        // Obtener carta modelo
-        CartaModelo modelo = cmRepository.findById(cartaParaCrear.idCartaModelo())
-                .orElseThrow(() -> new NotFoundException(
-                        "Carta modelo con id " + cartaParaCrear.idCartaModelo() + " no encontrada"
-                ));
-
-        if (!modelo.isActivo()){
-            throw new BadRequestException("No se puede enlazar a una carta modelo inactiva");
         }
 
         // Crear entidad

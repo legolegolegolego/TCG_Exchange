@@ -3,15 +3,19 @@ package com.es.tcg_exchange.dto;
 public class UsuarioDetailDTO {
     private Long id;
     private String username;
+    private String email;
+    private DireccionDTO direccionDTO;
     private String roles;
     private boolean desactivado;
 
     public UsuarioDetailDTO() {
     }
 
-    public UsuarioDetailDTO(Long id, String username, String roles, boolean desactivado) {
+    public UsuarioDetailDTO(Long id, String username, String email, DireccionDTO direccionDTO, String roles, boolean desactivado) {
         this.id = id;
         this.username = username;
+        this.email = email;
+        this.direccionDTO = direccionDTO;
         this.roles = roles;
         this.desactivado = desactivado;
     }
@@ -46,5 +50,21 @@ public class UsuarioDetailDTO {
 
     public void setDesactivado(boolean desactivado) {
         this.desactivado = desactivado;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public DireccionDTO getDireccionDTO() {
+        return direccionDTO;
+    }
+
+    public void setDireccionDTO(DireccionDTO direccionDTO) {
+        this.direccionDTO = direccionDTO;
     }
 }

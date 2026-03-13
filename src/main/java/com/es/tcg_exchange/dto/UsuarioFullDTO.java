@@ -6,6 +6,8 @@ import java.util.List;
 public class UsuarioFullDTO {
     private Long id;
     private String username;
+    private String email;
+    private DireccionDTO direccionDTO;
     private String roles;
     private boolean desactivado;
     private List<CartaFisicaDTO> cartasFisicasDTO;
@@ -14,9 +16,12 @@ public class UsuarioFullDTO {
     public UsuarioFullDTO() {
     }
 
-    public UsuarioFullDTO(Long id, String username, String roles, boolean desactivado, List<CartaFisicaDTO> cartasFisicasDTO) {
+    public UsuarioFullDTO(Long id, String username, String email, DireccionDTO direccionDTO, String roles,
+                          boolean desactivado, List<CartaFisicaDTO> cartasFisicasDTO) {
         this.id = id;
         this.username = username;
+        this.email = email;
+        this.direccionDTO = direccionDTO;
         this.roles = roles;
         this.desactivado = desactivado;
         this.cartasFisicasDTO = cartasFisicasDTO;
@@ -60,5 +65,21 @@ public class UsuarioFullDTO {
 
     public void setCartasFisicasDTO(List<CartaFisicaDTO> cartasFisicasDTO) {
         this.cartasFisicasDTO = cartasFisicasDTO;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public DireccionDTO getDireccionDTO() {
+        return direccionDTO;
+    }
+
+    public void setDireccionDTO(DireccionDTO direccionDTO) {
+        this.direccionDTO = direccionDTO;
     }
 }

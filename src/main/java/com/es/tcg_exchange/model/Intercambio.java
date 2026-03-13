@@ -29,6 +29,10 @@ public class Intercambio {
     @JoinColumn(name = "id_carta_destino", nullable = false)
     private CartaFisica cartaDestino;
 
+    // se setean en service, antes están null
+    private String direccionOrigen;
+    private String direccionDestino;
+
     // estado (pendiente, aceptado, rechazado):
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -102,5 +106,21 @@ public class Intercambio {
 
     public void setEstado(EstadoIntercambio estado) {
         this.estado = estado;
+    }
+
+    public String getDireccionOrigen() {
+        return direccionOrigen;
+    }
+
+    public void setDireccionOrigen(String direccionOrigen) {
+        this.direccionOrigen = direccionOrigen;
+    }
+
+    public String getDireccionDestino() {
+        return direccionDestino;
+    }
+
+    public void setDireccionDestino(String direccionDestino) {
+        this.direccionDestino = direccionDestino;
     }
 }

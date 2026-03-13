@@ -43,6 +43,9 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<CartaFisica> cartasFisicas;
 
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Direccion direccion;
+
     public Usuario() {
     }
 
@@ -126,5 +129,13 @@ public class Usuario implements UserDetails {
 
     public void setEmailVerificado(boolean emailVerificado) {
         this.emailVerificado = emailVerificado;
+    }
+
+    public Direccion getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Direccion direccion) {
+        this.direccion = direccion;
     }
 }

@@ -4,15 +4,19 @@ import com.es.tcg_exchange.dto.IntercambioCreateDTO;
 import com.es.tcg_exchange.dto.IntercambioDTO;
 import com.es.tcg_exchange.error.exception.*;
 import com.es.tcg_exchange.model.CartaFisica;
+import com.es.tcg_exchange.model.Direccion;
 import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.model.enums.EstadoIntercambio;
 import com.es.tcg_exchange.repository.CartaFisicaRepository;
+import com.es.tcg_exchange.repository.DireccionRepository;
 import com.es.tcg_exchange.repository.IntercambioRepository;
 import com.es.tcg_exchange.repository.UsuarioRepository;
 import com.es.tcg_exchange.utils.Mapper;
 import com.es.tcg_exchange.utils.SecurityUtils;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +34,15 @@ public class IntercambioService {
     @Autowired
     private CartaFisicaRepository cfRepository;
 
+    @Autowired
+    private DireccionRepository direccionRepository;
+
     /**
      * Obtener intercambios de un usuario, opcionalmente filtrando por estado
+     *
      * @param username usuario a consultar
-     * @param estado estado de los intercambios (opcional)
-     * @param auth autenticación del usuario que hace la petición
+     * @param estado   estado de los intercambios (opcional)
+     * @param auth     autenticación del usuario que hace la petición
      * @return lista de intercambios
      */
     public List<IntercambioDTO> getIntercambiosByUsuario(String username, EstadoIntercambio estado, Authentication auth) {
@@ -117,7 +125,7 @@ public class IntercambioService {
             throw new BadRequestException("La carta destino no está disponible para intercambio");
         }
 
-        if(cartaOrigen.getUsuario() == cartaDestino.getUsuario()){
+        if (cartaOrigen.getUsuario() == cartaDestino.getUsuario()) {
             throw new BadRequestException("No puedes intercambiar tus propias cartas entre sí");
         }
 
@@ -178,20 +186,52 @@ public class IntercambioService {
             );
         }
 
+        // Validación disponibilidad de cartas para proteger de posible conflicto de aceptación simultánea de intercambios
+        if (!intercambio.getCartaOrigen().isDisponible() ||
+                !intercambio.getCartaDestino().isDisponible()) {
+
+            throw new BadRequestException(
+                    "Una de las cartas ya no está disponible"
+            );
+        }
+
         // Actualizar estado
         intercambio.setEstado(EstadoIntercambio.ACEPTADO);
 
-        // Marcar cartas como no disponibles
-        intercambio.getCartaOrigen().setDisponible(false);
-        intercambio.getCartaDestino().setDisponible(false);
-        cfRepository.save(intercambio.getCartaOrigen());
-        cfRepository.save(intercambio.getCartaDestino());
+        // Añadir direcciones
+
+        Direccion direccionOrigen = intercambio.getUsuarioOrigen().getDireccion();
+        if (direccionOrigen == null) {
+            throw new BadRequestException("El usuario origen no tiene dirección registrada");
+        }
+
+        Direccion direccionDestino = intercambio.getUsuarioDestino().getDireccion();
+        if (direccionDestino == null) {
+            throw new BadRequestException("El usuario destino no tiene dirección registrada");
+        }
+
+        intercambio.setDireccionOrigen(formatearDireccion(direccionOrigen));
+        intercambio.setDireccionDestino(formatearDireccion(direccionDestino));
+
+        try {
+            // Marcar cartas como no disponibles
+            intercambio.getCartaOrigen().setDisponible(false);
+            intercambio.getCartaDestino().setDisponible(false);
+            cfRepository.save(intercambio.getCartaOrigen());
+            cfRepository.save(intercambio.getCartaDestino());
+        } catch (ObjectOptimisticLockingFailureException | OptimisticLockException e) {
+            throw new DuplicateException("La carta ya ha sido utilizada en otro intercambio");
+        }
 
         // Rechazar automáticamente otros intercambios pendientes que involucren estas cartas
-        List<Intercambio> otrosPendientes = intercambioRepository.findByCartaOrigenIdAndEstado(intercambio.getCartaOrigen().getId(), EstadoIntercambio.PENDIENTE);
-        otrosPendientes.addAll(intercambioRepository.findByCartaDestinoIdAndEstado(intercambio.getCartaOrigen().getId(), EstadoIntercambio.PENDIENTE));
-        otrosPendientes.addAll(intercambioRepository.findByCartaOrigenIdAndEstado(intercambio.getCartaDestino().getId(), EstadoIntercambio.PENDIENTE));
-        otrosPendientes.addAll(intercambioRepository.findByCartaDestinoIdAndEstado(intercambio.getCartaDestino().getId(), EstadoIntercambio.PENDIENTE));
+        List<Intercambio> otrosPendientes = intercambioRepository.findByCartaOrigenIdAndEstado
+                (intercambio.getCartaOrigen().getId(), EstadoIntercambio.PENDIENTE);
+        otrosPendientes.addAll(intercambioRepository.findByCartaDestinoIdAndEstado
+                (intercambio.getCartaOrigen().getId(), EstadoIntercambio.PENDIENTE));
+        otrosPendientes.addAll(intercambioRepository.findByCartaOrigenIdAndEstado
+                (intercambio.getCartaDestino().getId(), EstadoIntercambio.PENDIENTE));
+        otrosPendientes.addAll(intercambioRepository.findByCartaDestinoIdAndEstado
+                (intercambio.getCartaDestino().getId(), EstadoIntercambio.PENDIENTE));
 
         for (Intercambio otro : otrosPendientes) {
             otro.setEstado(EstadoIntercambio.RECHAZADO);
@@ -232,6 +272,16 @@ public class IntercambioService {
         intercambioRepository.save(intercambio);
 
         return Mapper.intercambioToDTO(intercambio);
+    }
+
+    private String formatearDireccion(Direccion d) {
+        String piso = d.getPisoYPuerta() != null ? ", " + d.getPisoYPuerta() : "";
+
+        return d.getCalleYNumero() +
+                piso +
+                ", " + d.getCodigoPostal() +
+                ", " + d.getCiudad() +
+                ", " + d.getPais();
     }
 
 }

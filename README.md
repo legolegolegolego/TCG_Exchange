@@ -55,6 +55,7 @@ Representa a los usuarios registrados en la plataforma.
   - `false` (por defecto): el usuario aún no ha confirmado su correo electrónico.
   - `true`: el usuario ha verificado su correo electrónico mediante el enlace enviado al registrarse.
 - `cartasFisicas (List<CartaFisica>)`: cartas físicas asociadas.
+- `direccion (Direccion)`: dirección física de un usuario.
 
 ### CartaModelo
 Modelo conceptual de una carta del catálogo.
@@ -73,6 +74,7 @@ Modelo conceptual de una carta del catálogo.
 ### CartaFisica
 Carta real ofrecida para intercambio.
 - `id (Long)`: identificador único autogenerado.
+- `version (Long)`: control de concurrencia optimista de JPA; se incrementa automáticamente en cada actualización.
 - `estadoCarta (Enum)`: EXCELENTE, ACEPTABLE.
 - `disponible (boolean)`:
   - `true` (por defecto): la carta está publicada y puede participar en intercambios.
@@ -88,6 +90,8 @@ Propuesta de intercambio entre usuarios.
 - `usuarioDestino (Usuario)`: usuario que recibe la propuesta de intercambio.
 - `cartaOrigen (CartaFisica)`: carta ofrecida por usuarioOrigen.
 - `cartaDestino (CartaFisica)`: carta solicitada que pertenece a usuarioDestino.
+- `direccionOrigen (String)`: dirección de usuarioOrigen.
+- `direccionDestino (String)`: dirección de usuarioDestino.
 - `estado (Enum)`: PENDIENTE, ACEPTADO, RECHAZADO.
 
 ### VerificationToken
@@ -101,6 +105,17 @@ Token temporal utilizado para operaciones sensibles relacionadas con la cuenta.
   - `false` (por defecto): el token no ha sido utilizado.
   - `true`: el token ya ha sido utilizado y no puede reutilizarse.
 - `fechaCreacion (LocalDateTime)`: momento en el que se generó el token.
+
+
+### Direccion
+Representa la dirección física asociada a un usuario.
+- `id (Long)`: identificador único autogenerado.
+- `usuario (Usuario)`: usuario propietario de la dirección.
+- `calleYNumero (String)`: calle y número de la dirección.
+- `pisoYPuerta (String)`: piso, puerta o apartamento.
+- `codigoPostal (String)`: código postal.
+- `ciudad (String)`: ciudad de la dirección.
+- `pais (String)`: país de la dirección.
 
 ---
 
@@ -154,6 +169,7 @@ Token temporal utilizado para operaciones sensibles relacionadas con la cuenta.
 - Solo el usuario propietario puede crear, modificar o eliminar sus cartas físicas.
 - Un ADMIN puede eliminar cartas físicas de cualquier usuario.
 - No se pueden crear ni actualizar cartas físicas asociándolas a una carta modelo con `activo = false`.
+- Un usuario no puede crear una carta física si no tiene una dirección asociada.
 - Las cartas físicas que hayan participado o estén participando en intercambios no se eliminan de la base de datos.
 - Si una carta ha participado en algún intercambio (cualquier estado) no puede eliminarse físicamente, por motivos históricos, 
 en su lugar: se marca como disponible = false, y si hubieran intercambios `PENDIENTE`s, se rechazarían automáticamente.
@@ -169,9 +185,12 @@ en su lugar: se marca como disponible = false, y si hubieran intercambios `PENDI
 - El estado inicial de un intercambio es `PENDIENTE`.
 - Solo el usuario destino puede aceptar o rechazar un intercambio.
 - Antes de aceptar un intercambio se valida nuevamente que ambas cartas siguen disponibles.
+- Antes de aceptar un intercambio, se verifica que usuarioOrigen y usuarioDestino tengan dirección registrada.
 - Al aceptar un intercambio:
+  - Se valida que ambos usuarios tienen una dirección registrada.
   - El estado pasa a `ACEPTADO`.
   - Las cartas físicas involucradas pasan a no disponibles (`disponible = false`).
+  - Se setean `direccionOrigen` y `direccionDestino` con la información formateada de cada usuario.
 - Al rechazar un intercambio:
   - El estado pasa a `RECHAZADO`.
   - Las cartas físicas continúan disponibles.
@@ -210,6 +229,14 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - Si el token es válido:
   - se permite establecer una nueva contraseña
   - el token se marca como usado.
+
+### Direccion
+- Cada usuario solo puede tener una dirección asociada.
+- La dirección está vinculada directamente al usuario y no puede asociarse a otro usuario.
+- El codigoPostal no puede superar 10 caracteres/dígitos.
+- Solo el propietario de la dirección puede modificarla.
+- No se permite eliminar direcciones; solo se pueden actualizar.
+- Al crear o actualizar una dirección, los valores se validan para no permitir campos nulos o vacíos en los obligatorios.
 
 ---
 
@@ -296,6 +323,11 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - `POST /intercambios` – Usuario autenticado.
 - `PUT /intercambios/{id}/aceptar` – Usuario destino.
 - `PUT /intercambios/{id}/rechazar` – Usuario destino.
+
+### Gestión de Direcciones
+- `GET /direccion/{username}` - ADMIN o propio usuario
+- `POST /direccion` - Usuario autenticado
+- `PUT /direccion` - Usuario autenticado
 
 ---
 

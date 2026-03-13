@@ -74,7 +74,10 @@ public class AuthService {
         } catch (UnauthorizedException | ForbiddenException e) {
             throw e;
         } catch (Exception e) {
-            throw new InternalServerErrorException("Error interno");
+//            throw new InternalServerErrorException("Error interno");
+//            Prueba:
+            e.printStackTrace();
+            throw e;
         }
     }
 
