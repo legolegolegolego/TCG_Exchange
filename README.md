@@ -186,14 +186,17 @@ en su lugar: se marca como disponible = false, y si hubieran intercambios `PENDI
 - Solo el usuario destino puede aceptar o rechazar un intercambio.
 - Antes de aceptar un intercambio se valida nuevamente que ambas cartas siguen disponibles.
 - Antes de aceptar un intercambio, se verifica que usuarioOrigen y usuarioDestino tengan dirección registrada.
+- Al crear un intercambio se envía un email a cada usuario con los detalles y un enlace a la web.
 - Al aceptar un intercambio:
   - Se valida que ambos usuarios tienen una dirección registrada.
   - El estado pasa a `ACEPTADO`.
   - Las cartas físicas involucradas pasan a no disponibles (`disponible = false`).
   - Se setean `direccionOrigen` y `direccionDestino` con la información formateada de cada usuario.
+  - Se envía un email a cada usuario con la dirección del otro para realizar el envío.
 - Al rechazar un intercambio:
   - El estado pasa a `RECHAZADO`.
   - Las cartas físicas continúan disponibles.
+  - Se envía un email a cada usuario notificando del rechazo.
 - No se pueden eliminar intercambios, por cuestiones de: integridad, trazabilidad, consistencia y seguridad.
 - No se permite crear intercambios con cartas no disponibles.
 - Un usuario solo puede consultar intercambios en los que participa.
@@ -254,7 +257,7 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - Un ADMIN puede consultar cualquier recurso.
 - Un ADMIN no puede modificar recursos reservados al propietario.
 - En los endpoints públicos, los recursos inactivos o restringidos no son accesibles aunque el cliente conozca su identificador interno.
-- Cualquier endpoint no marcado como público requiere autenticación mediante JWT.
+- Cualquier endpoint no marcado como público requiere autenticación mediante JWT y email verificado.
 
 ### Cifrado de contraseñas
 - Contraseñas almacenadas mediante hashing seguro.
