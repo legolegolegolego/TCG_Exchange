@@ -245,6 +245,9 @@ public class CartaModeloService {
         }
         // en carta modelo no valida extensión porque al consumir de api externa puede no corresponder a formatos típicos
 
+        if (cmRepository.existsByImagenUrl(dto.getImagenUrl())){
+            throw new DuplicateException("La imagen ya está asociada a otra carta modelo");
+        }
 
         // Validar campos específicos de POKEMON
         if (dto.getTipoCarta() == TipoCarta.POKEMON) {
@@ -329,6 +332,10 @@ public class CartaModeloService {
             new URL(dto.getImagenUrl());
         } catch (MalformedURLException e) {
             throw new BadRequestException("La URL de la imagen no es válida");
+        }
+
+        if (cmRepository.existsByImagenUrl(dto.getImagenUrl())){
+            throw new DuplicateException("La imagen ya está asociada a otra carta modelo");
         }
 
         if (dto.getTipoCarta() == TipoCarta.POKEMON) {

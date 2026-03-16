@@ -13,4 +13,5 @@ import org.springframework.stereotype.Repository;
 public interface CartaModeloRepository extends JpaRepository <CartaModelo, Long>, JpaSpecificationExecutor<CartaModelo> {
     boolean existsByNumeroAndActivoTrue(Long numero);
     boolean existsByNumeroAndActivoTrueAndIdNot(Long numero, Long id);
+    boolean existsByImagenUrl(String imagenUrl);
 }

@@ -33,7 +33,7 @@ public class CartaModelo {
     @Column(nullable = false)
     private Rareza rareza;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String imagenUrl;
 
     // ---- SOLO PARA POKÉMON ----
