@@ -30,7 +30,7 @@ public class EmailService {
 
     public void sendPasswordResetEmail(String to, String token) {
         // url del front
-        String resetUrl = "http://localhost:8080/auth/reset-password?token=" + token;
+        String resetUrl = "http://localhost:5173/reset-password?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);

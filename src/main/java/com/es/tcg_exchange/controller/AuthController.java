@@ -4,10 +4,13 @@ import com.es.tcg_exchange.dto.PasswordResetDTO;
 import com.es.tcg_exchange.dto.UsuarioLoginDTO;
 import com.es.tcg_exchange.dto.UsuarioRegisterDTO;
 import com.es.tcg_exchange.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/auth")
@@ -44,9 +47,12 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
+    public void verifyEmail(@RequestParam String token, HttpServletResponse response) throws IOException {
         authService.verifyEmail(token);
-        return ResponseEntity.ok("Email verificado");
+
+        // Redirige al frontend con query param de notificación
+        String redirectUrl = "http://localhost:5173/login?verified=true";
+        response.sendRedirect(redirectUrl);
     }
 
     @PostMapping("/verify/resend")
