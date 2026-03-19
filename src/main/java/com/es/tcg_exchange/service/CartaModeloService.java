@@ -307,7 +307,6 @@ public class CartaModeloService {
         }
         // Si el número cambia
         if (!dto.getNumero().equals(existing.getNumero())) {
-
             // Verificar que no lo tenga otra carta
             if (cmRepository.existsByNumeroAndActivoTrueAndIdNot(dto.getNumero(), id)) {
                 throw new DuplicateException("Ya existe una carta modelo activa con ese número");
@@ -334,8 +333,11 @@ public class CartaModeloService {
             throw new BadRequestException("La URL de la imagen no es válida");
         }
 
-        if (cmRepository.existsByImagenUrl(dto.getImagenUrl())){
-            throw new DuplicateException("La imagen ya está asociada a otra carta modelo");
+        // Si está actualizando la imagen, se comprueba que no la tiene ninguna otra
+        if (!existing.getImagenUrl().equals(dto.getImagenUrl())){
+            if (cmRepository.existsByImagenUrl(dto.getImagenUrl())){
+                throw new DuplicateException("La imagen ya está asociada a otra carta modelo");
+            }
         }
 
         if (dto.getTipoCarta() == TipoCarta.POKEMON) {
