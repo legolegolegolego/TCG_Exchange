@@ -1,6 +1,7 @@
 package com.es.tcg_exchange.dto;
 
 public record DireccionCreateDTO(
+        String nombre,
         String calleYNumero,
         String pisoYPuerta,
         String codigoPostal,

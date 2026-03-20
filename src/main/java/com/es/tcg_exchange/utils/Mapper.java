@@ -179,6 +179,7 @@ public class Mapper {
         return new DireccionDTO(
                 direccion.getId(),
                 direccion.getUsuario().getId(),
+                direccion.getNombre(),
                 direccion.getCalleYNumero(),
                 direccion.getPisoYPuerta(),
                 direccion.getCodigoPostal(),
@@ -193,6 +194,7 @@ public class Mapper {
 
         return new Direccion(
                 usuario,
+                createDTO.nombre(),
                 createDTO.calleYNumero(),
                 createDTO.pisoYPuerta(),
                 createDTO.codigoPostal(),

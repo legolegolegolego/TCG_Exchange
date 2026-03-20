@@ -15,6 +15,10 @@ public class Direccion {
     @JsonIgnore // previene StackOverflowError por recursión infinita: Usuario -> Direccion -> Usuario...
     private Usuario usuario;
 
+    // nombre de la persona o entidad/empresa de la direccion
+    @Column(nullable = false)
+    private String nombre;
+
     @Column(nullable = false)
     private String calleYNumero;
 
@@ -33,8 +37,10 @@ public class Direccion {
     public Direccion() {
     }
 
-    public Direccion(Usuario usuario, String calleYNumero, String pisoYPuerta, String codigoPostal, String ciudad, String pais) {
+    public Direccion(Usuario usuario, String nombre, String calleYNumero, String pisoYPuerta,
+                     String codigoPostal, String ciudad, String pais) {
         this.usuario = usuario;
+        this.nombre = nombre;
         this.calleYNumero = calleYNumero;
         this.pisoYPuerta = pisoYPuerta;
         this.codigoPostal = codigoPostal;
@@ -96,5 +102,13 @@ public class Direccion {
 
     public void setPais(String pais) {
         this.pais = pais;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }

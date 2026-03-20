@@ -69,6 +69,7 @@ public class DireccionService {
         validarDireccion(createDTO);
 
         // ACTUALIZACIÓN
+        direccion.setNombre(createDTO.nombre());
         direccion.setCalleYNumero(createDTO.calleYNumero());
         direccion.setPisoYPuerta(createDTO.pisoYPuerta());
         direccion.setCodigoPostal(createDTO.codigoPostal());
@@ -87,6 +88,10 @@ public class DireccionService {
 
         if (createDTO == null) {
             throw new BadRequestException("El body no puede ser null");
+        }
+
+        if (createDTO.nombre() == null || createDTO.nombre().isBlank()){
+            throw new BadRequestException("El nombre asociado a la dirección es obligatorio");
         }
 
         if ( createDTO.calleYNumero() == null || createDTO.calleYNumero().isBlank()) {

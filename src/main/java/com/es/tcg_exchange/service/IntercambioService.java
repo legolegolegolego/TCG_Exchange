@@ -340,7 +340,8 @@ public class IntercambioService {
     private String formatearDireccion(Direccion d) {
         String piso = d.getPisoYPuerta() != null ? ", " + d.getPisoYPuerta() : "";
 
-        return d.getCalleYNumero() +
+        return  d.getNombre() +
+                ", " + d.getCalleYNumero() +
                 piso +
                 ", " + d.getCodigoPostal() +
                 ", " + d.getCiudad() +
