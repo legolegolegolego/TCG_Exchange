@@ -2,16 +2,12 @@ package com.es.tcg_exchange.service;
 
 import com.es.tcg_exchange.dto.DireccionCreateDTO;
 import com.es.tcg_exchange.dto.DireccionDTO;
-import com.es.tcg_exchange.error.exception.BadRequestException;
-import com.es.tcg_exchange.error.exception.DuplicateException;
-import com.es.tcg_exchange.error.exception.NotFoundException;
-import com.es.tcg_exchange.error.exception.UnauthorizedException;
+import com.es.tcg_exchange.error.exception.*;
 import com.es.tcg_exchange.model.Direccion;
 import com.es.tcg_exchange.model.Usuario;
 import com.es.tcg_exchange.repository.DireccionRepository;
 import com.es.tcg_exchange.repository.UsuarioRepository;
 import com.es.tcg_exchange.utils.Mapper;
-import com.es.tcg_exchange.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -128,7 +124,9 @@ public class DireccionService {
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("Usuario con username " + username + " no encontrado"));
 
-        SecurityUtils.checkAdminOrSelf(authentication, username);
+        if (!username.equals(authentication.getName())){
+            throw new ForbiddenException("No tienes los permisos para ver la dirección");
+        }
 
         Direccion direccion = direccionRepository.findByUsuarioId(usuario.getId())
                 .orElseThrow(() -> new NotFoundException("Dirección no encontrada"));

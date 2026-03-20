@@ -111,6 +111,7 @@ Token temporal utilizado para operaciones sensibles relacionadas con la cuenta.
 Representa la dirección física asociada a un usuario.
 - `id (Long)`: identificador único autogenerado.
 - `usuario (Usuario)`: usuario propietario de la dirección.
+- `nombre (String)`: nombre de la persona o entidad de la dirección.
 - `calleYNumero (String)`: calle y número de la dirección.
 - `pisoYPuerta (String)`: piso, puerta o apartamento.
 - `codigoPostal (String)`: código postal.
@@ -328,7 +329,7 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - `PUT /intercambios/{id}/rechazar` – Usuario destino.
 
 ### Gestión de Direcciones
-- `GET /direccion/{username}` - ADMIN o propio usuario
+- `GET /direccion/{username}` - Propio usuario
 - `POST /direccion` - Usuario autenticado
 - `PUT /direccion` - Usuario autenticado
 
