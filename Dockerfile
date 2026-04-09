@@ -10,9 +10,6 @@ RUN chmod +x ./gradlew
 # Construir el JAR
 RUN ./gradlew build --no-daemon
 
-# Usar el JAR generado
-COPY build/libs/*.jar app.jar
-
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "java -jar build/libs/TCG_Exchange-*.jar"]
