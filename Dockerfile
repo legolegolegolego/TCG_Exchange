@@ -12,4 +12,4 @@ RUN ./gradlew build --no-daemon
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "build/libs/TCG_Exchange-*.jar"]
+ENTRYPOINT ["java", "-jar", "build/libs/TCG_Exchange-0.0.1-SNAPSHOT.jar"]
