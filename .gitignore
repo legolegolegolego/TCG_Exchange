@@ -43,6 +43,7 @@ externo/
 src/main/resources/certs/
 src/main/resources/sql/
 apuntes/
+.env
 
 # Ignorar credenciales sensibles
 src/main/resources/application.properties
