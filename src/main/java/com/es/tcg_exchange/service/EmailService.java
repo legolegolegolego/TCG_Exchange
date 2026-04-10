@@ -15,7 +15,8 @@ public class EmailService {
 
     public void sendVerificationEmail(String to, String token) {
 
-        String verifyUrl = "http://localhost:8080/auth/verify?token=" + token;
+//        String verifyUrl = "http://localhost:8080/auth/verify?token=" + token;
+        String verifyUrl = "https://tcg-exchange.onrender.com/auth/verify?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
