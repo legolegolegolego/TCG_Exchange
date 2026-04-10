@@ -31,7 +31,7 @@ public class EmailService {
 
     public void sendPasswordResetEmail(String to, String token) {
         // url del front
-        String resetUrl = "http://localhost:5173/reset-password?token=" + token;
+        String resetUrl = "https://tcg-exchange-frontend.vercel.app/reset-password?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -48,7 +48,7 @@ public class EmailService {
 
     public void sendIntercambioPropuestaRecibida(String to, String usuarioOrigen, String cartaOfrecida,
                                                  String cartaSolicitada, Long intercambioId) {
-        String url = "http://localhost:5173/intercambio/" + intercambioId; // Frontend
+        String url = "https://tcg-exchange-frontend.vercel.app/intercambio/" + intercambioId; // Frontend
         String body = "Has recibido una nueva propuesta de intercambio de " + usuarioOrigen + ":\n\n" +
                 "Carta que te ofrecen: " + cartaOfrecida + "\n" +
                 "Carta que solicitan: " + cartaSolicitada + "\n\n" +
@@ -58,7 +58,7 @@ public class EmailService {
 
     public void sendIntercambioPropuestaEnviada(String to, String usuarioDestino, String cartaOfrecida,
                                                 String cartaSolicitada, Long intercambioId) {
-        String url = "http://localhost:5173/intercambio/" + intercambioId; // Frontend
+        String url = "https://tcg-exchange-frontend.vercel.app/intercambio/" + intercambioId; // Frontend
         String body = "Has enviado una propuesta de intercambio a " + usuarioDestino + ":\n\n" +
                 "Carta que ofreces: " + cartaOfrecida + "\n" +
                 "Carta que solicitas: " + cartaSolicitada + "\n\n" +
@@ -68,7 +68,7 @@ public class EmailService {
 
     public void sendIntercambioAceptado(String to, String otroUsuario, boolean esDestino, String cartaOrigen,
                                         String cartaDestino, String direccionOtroUsuario, Long intercambioId) {
-        String url = "http://localhost:5173/intercambio/" + intercambioId;
+        String url = "https://tcg-exchange-frontend.vercel.app/intercambio/" + intercambioId;
         String body;
         if (esDestino) {
             body = "¡Has aceptado el intercambio de " + otroUsuario + "!\n\n" +
@@ -90,7 +90,7 @@ public class EmailService {
 
     public void sendIntercambioRechazado(String to, String otroUsuario, boolean esDestino, String cartaOrigen,
                                          String cartaDestino, Long intercambioId) {
-        String url = "http://localhost:5173/intercambio/" + intercambioId;
+        String url = "https://tcg-exchange-frontend.vercel.app/intercambio/" + intercambioId;
         String body;
         if (esDestino) {
             body = "Has rechazado el intercambio de " + otroUsuario + "\n\n" +

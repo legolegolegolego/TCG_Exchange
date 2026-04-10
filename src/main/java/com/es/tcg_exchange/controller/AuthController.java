@@ -51,7 +51,8 @@ public class AuthController {
         authService.verifyEmail(token);
 
         // Redirige al frontend con query param de notificación
-        String redirectUrl = "http://localhost:5173/login?verified=true";
+//        String redirectUrl = "http://localhost:5173/login?verified=true";
+        String redirectUrl = "https://tcg-exchange-frontend.vercel.app/login?verified=true";
         response.sendRedirect(redirectUrl);
     }
 
