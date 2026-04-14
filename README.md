@@ -8,6 +8,8 @@ La aplicación está compuesta por dos partes principales:
 - **Backend** implementado como una API REST, responsable de la lógica de negocio, gestión de usuarios, cartas, intercambios y seguridad.
 - **Frontend web**, que actúa como interfaz visual y permite a los usuarios interactuar de forma intuitiva con la plataforma.
 
+Enlace a repositorio del Frontend: https://github.com/legolegolegolego/TCG_Exchange_Frontend
+
 La aplicación permite a los usuarios:
 - Registrarse e iniciar sesión de forma segura.
 - Verificar el correo electrónico tras el registro.
@@ -351,12 +353,12 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - **Spring Boot**
 - **Spring Data JPA (Hibernate)**
 - **Spring Security**
-- **MySQL Connector/J**
+- **PostgreSQL JDBC Driver**
 
 ### Software utilizado
 - IntelliJ IDEA
 - Insomnia
-- XAMPP (MySQL + phpMyAdmin)
+- XAMPP
 - Git y GitHub
 - Navegador web (Brave)
 
@@ -364,7 +366,7 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - **Spring Boot**: base del backend REST.
 - **Spring Data JPA**: persistencia y acceso a datos.
 - **Spring Security**: autenticación JWT y autorización.
-- **MySQL Connector/J**: conexión con MySQL.
+- **PostgreSQL**: sistema de gestión de bases de datos relacional.
 - **Insomnia**: pruebas de la API REST.
 - **XAMPP**: entorno local de base de datos.
 - **GitHub**: control de versiones.
