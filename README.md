@@ -12,13 +12,26 @@ Enlace a repositorio del Frontend: https://github.com/legolegolegolego/TCG_Excha
 
 La aplicación permite a los usuarios:
 - Registrarse e iniciar sesión de forma segura.
+- Actualizar sus datos: username, contraseña, dirección, cartas.
 - Verificar el correo electrónico tras el registro.
 - Recuperar la contraseña mediante enlace enviado al email.
 - Explorar el catálogo de cartas disponibles.
-- Publicar cartas propias para intercambio.
-- Consultar perfiles de otros usuarios y las cartas que ofrecen.
+- Ver usuarios que tienen determinada carta.
+- Buscar cartas por nombre, número, rareza, tipo y etapa evolución.
+- Consultar, publicar, editar y eliminar cartas propias para intercambio.
+- Consultar las cartas que ofrecen otros usuarios.
 - Proponer, aceptar o rechazar intercambios.
-- Gestionar sus intercambios activos desde una sección personal.
+- Gestionar sus intercambios desde una sección personal.
+- Ver, añadir y editar dirección propia.
+
+Y a los admin:
+- Ver todos los usuarios del sistema, su rol, estado actual y cartas físicas.
+- Actualizar información de los usuarios: username y contraseña.
+- Eliminar / desactivar usuarios.
+- Crear, editar y eliminar cartas modelo.
+- Ver cartas no disponibles de los usuarios.
+- Eliminar / desactivar cartas de los usuarios.
+- Ver intercambios (y su información) de los usuarios.
 
 El sistema está diseñado para fomentar el intercambio directo entre jugadores, sin transacciones económicas, priorizando la colaboración y el coleccionismo responsable.
 
