@@ -46,9 +46,9 @@ public class CartaFisicaController {
     }
 
     // Crear carta física
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<CartaFisicaDTO> createCartaFisica(
-            @RequestBody CartaFisicaCreateDTO cfDTO,
+            @ModelAttribute CartaFisicaCreateDTO cfDTO,
             Authentication authentication){
         CartaFisicaDTO cartaCreada =  cfService.create(cfDTO, authentication);
 
@@ -56,10 +56,10 @@ public class CartaFisicaController {
     }
 
     // Actualizar carta física
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     public ResponseEntity<CartaFisicaDTO> updateCartaFisica(
             @PathVariable Long id,
-            @RequestBody CartaFisicaCreateDTO cartaCreateDTO,
+            @ModelAttribute CartaFisicaCreateDTO cartaCreateDTO,
             Authentication authentication) {
 
         CartaFisicaDTO updated = cfService.update(id, cartaCreateDTO, authentication);

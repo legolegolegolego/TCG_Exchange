@@ -4,6 +4,7 @@ import com.es.tcg_exchange.error.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -56,6 +60,13 @@ public class APIExceptionHandler {
     @ResponseBody
     public ErrorMessageForClient handleDuplicate(HttpServletRequest request, Exception e) {
         return new ErrorMessageForClient(e.getMessage(), request.getRequestURI());
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<?> handleMaxSize(MaxUploadSizeExceededException exc) {
+        return ResponseEntity
+                .badRequest()
+                .body(Map.of("mensaje", "La imagen supera el tamaño máximo permitido (5MB)"));
     }
 
 }

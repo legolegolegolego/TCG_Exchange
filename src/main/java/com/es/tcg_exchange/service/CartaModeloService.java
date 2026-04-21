@@ -233,7 +233,7 @@ public class CartaModeloService {
             throw new BadRequestException("La rareza es obligatoria");
         }
 
-        // Validar imagenUrl
+        // Validar imagen
         if (dto.getImagenUrl() == null || dto.getImagenUrl().isBlank()) {
             throw new BadRequestException("La imagen de la carta es obligatoria");
         }

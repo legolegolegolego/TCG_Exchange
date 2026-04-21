@@ -1,6 +1,7 @@
 package com.es.tcg_exchange.service;
 
 import com.es.tcg_exchange.dto.CartaFisicaCreateDTO;
+import com.es.tcg_exchange.dto.CloudinaryImage;
 import com.es.tcg_exchange.error.exception.BadRequestException;
 import com.es.tcg_exchange.error.exception.ForbiddenException;
 import com.es.tcg_exchange.error.exception.UnauthorizedException;
@@ -8,6 +9,7 @@ import com.es.tcg_exchange.model.CartaModelo;
 import com.es.tcg_exchange.model.Intercambio;
 import com.es.tcg_exchange.model.enums.EstadoIntercambio;
 import com.es.tcg_exchange.repository.*;
+import com.es.tcg_exchange.utils.ImageValidator;
 import com.es.tcg_exchange.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,7 @@ public class CartaFisicaService {
     private IntercambioRepository intercambioRepository;
 
     @Autowired
-    private DireccionRepository direccionRepository;
+    private ImagenService imagenService;
 
     /**
      * Obtener cartas físicas disponibles de un usuario
@@ -123,32 +125,17 @@ public class CartaFisicaService {
             throw new BadRequestException("El estado de la carta es obligatorio");
         }
 
-        if (cartaParaCrear.imagenUrl() == null || cartaParaCrear.imagenUrl().isBlank()) {
-            throw new BadRequestException("La imagen es obligatoria");
-        }
+        // Validaciones imagen
+        ImageValidator.validarImagenObligatoria(cartaParaCrear.imagen());
 
-        // Validar formato de URL
-        try {
-            new URL(cartaParaCrear.imagenUrl());
-        } catch (MalformedURLException e) {
-            throw new BadRequestException("La URL de la imagen no es válida");
-        }
-
-        // Validar extensión de imagen
-        /*
-        Funciona para ambos casos:
-        https://img.com/foto.png
-        https://img.com/foto.png?size=large
-         */
-        if (!cartaParaCrear.imagenUrl().toLowerCase().matches(".*\\.(jpg|jpeg|png|webp)(\\?.*)?$")) {
-            throw new BadRequestException("La imagen debe tener formato válido (jpg, jpeg, png, webp)");
-        }
+        CloudinaryImage img = imagenService.subirImagen(cartaParaCrear.imagen());
 
         // Crear entidad
         CartaFisica carta = new CartaFisica();
         carta.setCartaModelo(modelo);
         carta.setEstadoCarta(cartaParaCrear.estadoCarta());
-        carta.setImagenUrl(cartaParaCrear.imagenUrl());
+        carta.setImagenUrl(img.url());
+        carta.setImagenPublicId(img.publicId());
         carta.setUsuario(usuario);
 
         cfRepository.save(carta);
@@ -167,10 +154,6 @@ public class CartaFisicaService {
 
         if (id == null) {
             throw new BadRequestException("El id no puede ser null");
-        }
-
-        if (createDTO == null) {
-            throw new BadRequestException("El body no puede ser null");
         }
 
         // Buscar carta
@@ -195,16 +178,18 @@ public class CartaFisicaService {
             throw new BadRequestException("El estado de la carta es obligatorio");
         }
 
-        if (createDTO.imagenUrl() == null || createDTO.imagenUrl().isBlank()) {
-            throw new BadRequestException("La imagen es obligatoria");
-        }
-        try {
-            new URL(createDTO.imagenUrl());
-        } catch (MalformedURLException e) {
-            throw new BadRequestException("La URL de la imagen no es válida");
-        }
-        if (!createDTO.imagenUrl().toLowerCase().matches(".*\\.(jpg|jpeg|png|webp)(\\?.*)?$")) {
-            throw new BadRequestException("La imagen debe tener formato válido (jpg, jpeg, png, webp)");
+        ImageValidator.validarImagenOpcional(createDTO.imagen());
+
+        if (createDTO.imagen() != null && !createDTO.imagen().isEmpty()) {
+
+            CloudinaryImage img = imagenService.subirImagen(createDTO.imagen());
+            // borrar imagen anterior una vez se ha subido con éxito la nueva
+            if (carta.getImagenPublicId() != null) {
+                imagenService.eliminarImagen(carta.getImagenPublicId());
+            }
+
+            carta.setImagenUrl(img.url());
+            carta.setImagenPublicId(img.publicId());
         }
 
         if (createDTO.idCartaModelo() == null) {
@@ -223,7 +208,6 @@ public class CartaFisicaService {
         // ===== ACTUALIZACIÓN =====
 
         carta.setEstadoCarta(createDTO.estadoCarta());
-        carta.setImagenUrl(createDTO.imagenUrl());
         carta.setCartaModelo(modelo);
 
         cfRepository.save(carta);
@@ -275,6 +259,10 @@ public class CartaFisicaService {
         }
 
         // Si no hay intercambios asociados, se puede borrar físicamente
+        // por lo tanto quitamos la imagen de Cloudinary
+        if (carta.getImagenPublicId() != null) {
+            imagenService.eliminarImagen(carta.getImagenPublicId());
+        }
         cfRepository.delete(carta);
     }
 }

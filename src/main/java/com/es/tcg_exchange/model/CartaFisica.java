@@ -25,7 +25,10 @@ public class CartaFisica {
     private boolean disponible = true;
 
     @Column(nullable = false)
-    private String imagenUrl; // foto real subida por el usuario
+    private String imagenUrl; // foto real subida por el usuario, url cloudinary
+
+    @Column(nullable = false)
+    private String imagenPublicId; // id imagen cloudinary
 
     // Dueño de la carta
     @ManyToOne(optional = false) // si no especifico fetch es EAGER por defecto
@@ -96,5 +99,11 @@ public class CartaFisica {
         this.cartaModelo = cartaModelo;
     }
 
+    public String getImagenPublicId() {
+        return imagenPublicId;
+    }
 
+    public void setImagenPublicId(String imagenPublicId) {
+        this.imagenPublicId = imagenPublicId;
+    }
 }

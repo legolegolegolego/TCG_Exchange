@@ -31,6 +31,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mail") // email
 //	implementation("org.springframework.boot:spring-boot-starter-tomcat") redundante, springboot lo incluye
 	implementation("org.postgresql:postgresql:42.7.10") // PostgreSQL
+//	implementation("com.cloudinary:cloudinary-core:2.3.2") // Cloudinary (imagenes)
+	implementation ("com.cloudinary:cloudinary-http5:2.0.0") // Cloudinary
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 //	runtimeOnly("com.mysql:mysql-connector-j") MYSQL
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
