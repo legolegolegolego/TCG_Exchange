@@ -19,6 +19,7 @@ La aplicación permite a los usuarios:
 - Ver usuarios que tienen determinada carta.
 - Buscar cartas por nombre, número, rareza, tipo y etapa evolución.
 - Consultar, publicar, editar y eliminar cartas propias para intercambio.
+- Subir imagen de sus cartas.
 - Consultar las cartas que ofrecen otros usuarios.
 - Proponer, aceptar o rechazar intercambios.
 - Gestionar sus intercambios desde una sección personal.
@@ -94,7 +95,8 @@ Carta real ofrecida para intercambio.
 - `disponible (boolean)`:
   - `true` (por defecto): la carta está publicada y puede participar en intercambios.
   - `false`: la carta no está disponible para intercambiar.
-- `imagenUrl (String)`: url de la imagen real de la carta.
+- `imagenUrl (String)`: URL generada en el servidor tras la subida de imagen real de la carta por el usuario.
+- `imagenPublicId (String)`: ID de la imagen en el servicio de imágenes en la nube.
 - `usuario (Usuario)`: usuario autenticado que crea la carta física.
 - `cartaModelo (CartaModelo)`: modelo conceptual al que pertenece la carta física.
 
@@ -182,6 +184,10 @@ Representa la dirección física asociada a un usuario.
   - Todas las cartas físicas asociadas pasan a `disponible = false`.
 
 ### CartaFisica
+- Tipo MIME permitido para la imagen: `image/jpeg`, `image/png`, `image/webp`. 
+- Tamaño máximo de imagen de 5MB.
+- Cuando se elimina una carta física (borrado físico), se elimina automáticamente la imagen del servicio.
+- Cuando se actualiza la imagen de la carta física, la anterior es borrada del servicio.
 - Solo el usuario propietario puede crear, modificar o eliminar sus cartas físicas.
 - Un ADMIN puede eliminar cartas físicas de cualquier usuario.
 - No se pueden crear ni actualizar cartas físicas asociándolas a una carta modelo con `activo = false`.
@@ -283,7 +289,8 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - Username único.
 - Solo pueden acceder a la app usuarios con rol `USER` o `ADMIN`.
 - Un usuario no puede registrarse como `ADMIN` desde la app.
-- La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial
+- La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial.
+- Se valida que la imagen tenga un formato permitido y no exceda el tamaño máximo.
 - Se valida que el email tenga un formato correcto.
 - Solo los usuarios con email verificado pueden iniciar sesión.
 - No se permiten intercambios consigo mismo.
@@ -367,13 +374,18 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - **Spring Data JPA (Hibernate)**
 - **Spring Security**
 - **PostgreSQL JDBC Driver**
+- **Cloudinary HTTP**
 
 ### Software utilizado
 - IntelliJ IDEA
 - Insomnia
 - XAMPP
 - Git y GitHub
-- Navegador web (Brave)
+- Navegadores web (Brave y Firefox)
+- Supabase
+- Cloudinary
+- Render
+- Vercel
 
 ### Descripción de tecnologías y su propósito
 - **Spring Boot**: base del backend REST.
@@ -383,6 +395,7 @@ ni tampoco si existe el mismo intercambio en sentido inverso (cartaOrigen ↔ ca
 - **Insomnia**: pruebas de la API REST.
 - **XAMPP**: entorno local de base de datos.
 - **GitHub**: control de versiones.
+- **Cloudinary**: servicio en la nube para la gestión y almacenamiento de imágenes.
 
 ---
 
