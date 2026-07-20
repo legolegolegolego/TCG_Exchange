@@ -8,7 +8,7 @@ La aplicación está compuesta por dos partes principales:
 - **Backend** implementado como una API REST, responsable de la lógica de negocio, gestión de usuarios, cartas, intercambios y seguridad.
 - **Frontend web**, que actúa como interfaz visual y permite a los usuarios interactuar de forma intuitiva con la plataforma.
 
-Enlace a repositorio del Frontend: https://github.com/legolegolegolego/TCG_Exchange_Frontend
+Enlace a repositorio del Frontend: https://github.com/sergioleondev/TCG_Exchange_Frontend
 
 La aplicación permite a los usuarios:
 - Registrarse e iniciar sesión de forma segura.
