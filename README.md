@@ -10,6 +10,8 @@ La aplicación está compuesta por dos partes principales:
 
 Enlace a repositorio del Frontend: https://github.com/sergioleondev/TCG_Exchange_Frontend
 
+Web desplegada: https://tcg-exchange-frontend.vercel.app/
+
 La aplicación permite a los usuarios:
 - Registrarse e iniciar sesión de forma segura.
 - Actualizar sus datos: username, contraseña, dirección, cartas.
